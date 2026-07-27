@@ -6,6 +6,17 @@
 // Must match the key used by the inline anti-FOUC script in layout.Base.
 const MALPHAS_THEME_KEY = "malphas-theme";
 
+// A note on $root vs $el, because getting it wrong fails silently:
+//
+// $el is *contextual*. Inside a method invoked from a handler bound to a child
+// element, $el is that child — not the component. So this.$el.querySelectorAll
+// in a method called from an <input>'s x-on:input searches inside the input and
+// finds nothing, and the component quietly does nothing at all.
+//
+// Any lookup that means "everything in this component" uses $root. $el is only
+// correct when the current element really is the subject, as when dispatching
+// an event from it.
+
 // rovingList implements the roving tabindex pattern shared by Tabs, Rating and
 // Radio: exactly one item is tabbable, and the arrow keys move focus and
 // selection between items.
@@ -31,7 +42,7 @@ function rovingList({ orientation = "horizontal", loop = true, active = 0 } = {}
     // Disabled items are skipped rather than focused, so a disabled tab never
     // becomes a dead end for keyboard users.
     _rovingItems() {
-      return Array.from(this.$el.querySelectorAll("[data-roving-item]")).filter(
+      return Array.from(this.$root.querySelectorAll("[data-roving-item]")).filter(
         (el) => !el.hasAttribute("data-roving-disabled"),
       );
     },
@@ -220,10 +231,135 @@ document.addEventListener("alpine:init", () => {
   Alpine.data("modal", () => ({ ...modalOverlay() }));
   Alpine.data("drawer", () => ({ ...modalOverlay() }));
 
-  Alpine.data("dropdown", () => ({
+  Alpine.data("carousel", () => ({
+    // Respecting the preference matters most in a component whose entire job
+    // is to move. matchMedia rather than CSS because the scroll is scripted.
+    get _behavior() {
+      return window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth";
+    },
+
+    _scrollBy(direction) {
+      const track = this.$refs.track;
+      if (!track) return;
+      const slide = track.firstElementChild;
+      const step = slide ? slide.getBoundingClientRect().width + 16 : track.clientWidth;
+      track.scrollBy({ left: direction * step, behavior: this._behavior });
+    },
+
+    prev() { this._scrollBy(-1); },
+    next() { this._scrollBy(1); },
+  }));
+
+  Alpine.data("otp", (length = 6) => ({
+    length,
+    value: "",
+
+    _boxes() {
+      return Array.from(this.$root.querySelectorAll("[data-otp-index]"));
+    },
+
+    _sync() {
+      this.value = this._boxes().map((b) => b.value).join("");
+    },
+
+    onInput(e, index) {
+      // Keep one character per box: a fast typist or an IME can deliver more.
+      const typed = e.target.value.replace(/\s/g, "");
+      e.target.value = typed.slice(-1);
+      this._sync();
+      if (e.target.value && index < this.length - 1) {
+        this._boxes()[index + 1].focus();
+      }
+    },
+
+    onKeydown(e, index) {
+      const boxes = this._boxes();
+      if (e.key === "Backspace" && !e.target.value && index > 0) {
+        // Stepping back on an empty box is what makes correcting a typo feel
+        // like one field instead of six.
+        e.preventDefault();
+        boxes[index - 1].focus();
+        boxes[index - 1].value = "";
+        this._sync();
+      } else if (e.key === "ArrowLeft" && index > 0) {
+        e.preventDefault();
+        boxes[index - 1].focus();
+      } else if (e.key === "ArrowRight" && index < this.length - 1) {
+        e.preventDefault();
+        boxes[index + 1].focus();
+      }
+    },
+
+    // Pasting the whole code is how most people enter it; without this it
+    // would land entirely in one box.
+    onPaste(e) {
+      const digits = (e.clipboardData || window.clipboardData)
+        .getData("text")
+        .replace(/\D/g, "")
+        .slice(0, this.length);
+      const boxes = this._boxes();
+      digits.split("").forEach((d, i) => (boxes[i].value = d));
+      this._sync();
+      boxes[Math.min(digits.length, this.length - 1)].focus();
+    },
+  }));
+
+  // The menu-button pattern, and the mirror image of modalOverlay: this
+  // overlay is NOT modal. Arrows move between items and Escape returns focus,
+  // but Tab must leave and close — trapping focus here would be as wrong as
+  // failing to trap it in a dialog.
+  Alpine.data("dropdownMenu", () => ({
+    ...rovingList({ orientation: "vertical", active: 0 }),
     open: false,
-    toggle() { this.open = !this.open; },
-    close() { this.open = false; },
+
+    toggle() {
+      this.open ? this.close() : this.show();
+    },
+
+    show() {
+      this.open = true;
+      this.active = 0;
+      // $root, not $el: show() is called from the trigger's click handler, so
+      // $el is the button — which contains no menu items. See the note on
+      // $root above.
+      //
+      // The menu lives inside x-if, so it does not exist until Alpine has
+      // rendered it. One tick is not always enough for a nested template, so
+      // this waits for the element rather than assuming.
+      this.$nextTick(() => {
+        const focusFirst = () => {
+          const first = this.$root.querySelector(
+            "[data-roving-item]:not([data-roving-disabled])",
+          );
+          if (first) first.focus();
+          else requestAnimationFrame(focusFirst);
+        };
+        focusFirst();
+      });
+    },
+
+    // restoreFocus is false when Tab closes the menu: the browser is already
+    // moving focus onward, and yanking it back to the trigger would fight it.
+    close({ restoreFocus = true } = {}) {
+      if (!this.open) return;
+      this.open = false;
+      if (restoreFocus) this.$refs.trigger?.focus();
+    },
+
+    onMenuKeydown(e) {
+      if (e.key === "Tab") {
+        this.close({ restoreFocus: false });
+        return;
+      }
+      if (e.key === "Escape") {
+        e.preventDefault();
+        this.close();
+        return;
+      }
+      this.onKeydown(e);
+    },
   }));
 
   // Reads the theme the inline script already applied, so the toggle's initial
@@ -286,7 +422,7 @@ document.addEventListener("alpine:init", () => {
     // Arrow keys move selection, not just focus, which is what a radio group
     // does natively. Checking the real input keeps the form value in step.
     onRovingSelect(i) {
-      const input = this.$el.querySelectorAll('input[type="radio"]')[i];
+      const input = this.$root.querySelectorAll('input[type="radio"]')[i];
       if (input && !input.disabled) input.checked = true;
     },
   }));

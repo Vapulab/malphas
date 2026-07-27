@@ -1,0 +1,58 @@
+package components
+
+type SelectOption struct {
+	Label    string
+	Value    string
+	Disabled bool
+}
+
+type SelectProps struct {
+	ID          string
+	Name        string
+	Label       string
+	Placeholder string // rendered as a disabled first option when set
+	Options     []SelectOption
+	Value       string
+	Disabled    bool
+	Required    bool
+	Attrs       templ.Attributes
+}
+
+// Select keeps the native element, styled — the second deliberate exception to
+// driving everything from Alpine, after Range.
+//
+// A custom listbox would have to reimplement type-ahead, the full keyboard
+// contract and form submission, and on mobile it would trade the platform
+// picker for a menu that scrolls behind the virtual keyboard. What it buys —
+// styled options, icons — is not worth that. Callers who need rich options
+// should reach for Dropdown.
+templ Select(props SelectProps) {
+	<div class="flex flex-col gap-1" { props.Attrs... }>
+		if props.Label != "" {
+			<label for={ props.ID } class="text-sm font-medium text-fg">{ props.Label }</label>
+		}
+		<div class="relative">
+			<select
+				id={ props.ID }
+				name={ props.Name }
+				disabled?={ props.Disabled }
+				required?={ props.Required }
+				class="h-10 w-full appearance-none rounded border border-border bg-surface px-3 pr-9 text-sm text-fg focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
+			>
+				if props.Placeholder != "" {
+					<option value="" disabled selected?={ props.Value == "" }>{ props.Placeholder }</option>
+				}
+				for _, o := range props.Options {
+					<option value={ o.Value } disabled?={ o.Disabled } selected?={ o.Value == props.Value && props.Value != "" }>
+						{ o.Label }
+					</option>
+				}
+			</select>
+			// appearance-none removes the platform arrow, so one is drawn back.
+			<span
+				aria-hidden="true"
+				class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted"
+			>&#9662;</span>
+		</div>
+	</div>
+}

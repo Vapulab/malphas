@@ -34,6 +34,29 @@ func (e MenuEntry) isDivider() bool {
 	return e.Kind == MenuEntryDivider
 }
 
+func carouselSlideLabel(n, total int) string {
+	return intJS(n) + " de " + intJS(total)
+}
+
+func otpDigitLabel(n, total int) string {
+	return "Dígito " + intJS(n) + " de " + intJS(total)
+}
+
+func dropdownTriggerClasses(variant string) string {
+	return map[string]string{
+		"primary":   "bg-primary text-primary-fg hover:bg-primary/90",
+		"secondary": "border border-border bg-surface text-fg hover:bg-muted/10",
+		"ghost":     "text-fg hover:bg-muted/10",
+	}[variant]
+}
+
+func dropdownItemClasses(e MenuEntry) string {
+	if e.Disabled {
+		return "cursor-not-allowed text-muted/50"
+	}
+	return "text-fg hover:bg-muted/10"
+}
+
 // navLinkClasses styles a link or action entry. Current and disabled states are
 // carried by attributes too (aria-current, disabled); these are only the paint.
 func navLinkClasses(e MenuEntry) string {

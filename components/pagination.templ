@@ -1,0 +1,99 @@
+package components
+
+import "strconv"
+
+type PaginationProps struct {
+	Current int
+	Total   int
+	// BaseHref receives the page number appended, e.g. "/todos?page=".
+	// A func(int) string would be more flexible but reads badly from a .templ
+	// and makes the component non-serialisable; callers with irregular URLs
+	// build the nav by hand.
+	BaseHref string
+	Label    string // accessible name (default "Paginação")
+	Attrs    templ.Attributes
+}
+
+func (p PaginationProps) href(page int) string {
+	return p.BaseHref + strconv.Itoa(page)
+}
+
+// pages returns the page numbers to render, collapsing long ranges around the
+// current page. 0 means an ellipsis.
+func (p PaginationProps) pages() []int {
+	if p.Total <= 7 {
+		out := make([]int, 0, p.Total)
+		for i := 1; i <= p.Total; i++ {
+			out = append(out, i)
+		}
+		return out
+	}
+	out := []int{1}
+	start, end := p.Current-1, p.Current+1
+	if start < 2 {
+		start = 2
+	}
+	if end > p.Total-1 {
+		end = p.Total - 1
+	}
+	if start > 2 {
+		out = append(out, 0)
+	}
+	for i := start; i <= end; i++ {
+		out = append(out, i)
+	}
+	if end < p.Total-1 {
+		out = append(out, 0)
+	}
+	return append(out, p.Total)
+}
+
+// Pagination is a navigation landmark. The current page is a span rather than
+// a link: linking to where you already are is a dead control, and aria-current
+// is what actually announces the position.
+templ Pagination(props PaginationProps) {
+	<nav aria-label={ or(props.Label, "Paginação") } { props.Attrs... }>
+		<ul class="flex flex-wrap items-center gap-1">
+			<li>
+				@paginationStep(props, props.Current-1, "Anterior", props.Current <= 1)
+			</li>
+			for _, page := range props.pages() {
+				<li>
+					if page == 0 {
+						<span class="px-2 text-sm text-muted" aria-hidden="true">&hellip;</span>
+					} else if page == props.Current {
+						<span
+							aria-current="page"
+							class="inline-flex min-w-9 justify-center rounded border border-primary bg-primary px-3 py-1.5 text-sm font-medium text-primary-fg"
+						>{ strconv.Itoa(page) }</span>
+					} else {
+						<a
+							href={ templ.URL(props.href(page)) }
+							aria-label={ "Página " + strconv.Itoa(page) }
+							class="inline-flex min-w-9 justify-center rounded border border-border px-3 py-1.5 text-sm text-fg hover:bg-muted/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+						>{ strconv.Itoa(page) }</a>
+					}
+				</li>
+			}
+			<li>
+				@paginationStep(props, props.Current+1, "Próxima", props.Current >= props.Total)
+			</li>
+		</ul>
+	</nav>
+}
+
+// A disabled step is a span, not a link with a dead href: a link that goes
+// nowhere still takes focus and still looks clickable.
+templ paginationStep(props PaginationProps, page int, label string, disabled bool) {
+	if disabled {
+		<span
+			aria-disabled="true"
+			class="inline-flex rounded border border-border px-3 py-1.5 text-sm text-muted/50"
+		>{ label }</span>
+	} else {
+		<a
+			href={ templ.URL(props.href(page)) }
+			class="inline-flex rounded border border-border px-3 py-1.5 text-sm text-fg hover:bg-muted/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+		>{ label }</a>
+	}
+}

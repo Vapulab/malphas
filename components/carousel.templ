@@ -1,0 +1,66 @@
+package components
+
+type CarouselProps struct {
+	ID     string
+	Label  string // what the carousel is showing, e.g. "Capturas de tela"
+	Slides []templ.Component
+	Attrs  templ.Attributes
+}
+
+// Carousel scrolls horizontally with CSS scroll-snap; Alpine only drives the
+// buttons and the arrow keys.
+//
+// A carousel reachable only by mouse is decoration. Four things keep this one
+// from being that:
+//
+//   - the track is focusable and ← → move between slides
+//   - each slide is a labelled group ("2 de 5"), so position is announced
+//   - the buttons carry text labels, not just glyphs
+//   - scrolling respects prefers-reduced-motion — this is a component that
+//     moves, which is exactly what that preference exists to limit
+templ Carousel(props CarouselProps) {
+	<div
+		class="flex flex-col gap-3"
+		x-data="carousel"
+		aria-roledescription="carrossel"
+		if props.Label != "" {
+			aria-label={ props.Label }
+		}
+		{ props.Attrs... }
+	>
+		<div
+			x-ref="track"
+			tabindex="0"
+			x-on:keydown.arrow-left.prevent="prev()"
+			x-on:keydown.arrow-right.prevent="next()"
+			class="flex snap-x snap-mandatory gap-4 overflow-x-auto rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+		>
+			for i, slide := range props.Slides {
+				<div
+					role="group"
+					aria-roledescription="slide"
+					aria-label={ carouselSlideLabel(i+1, len(props.Slides)) }
+					class="w-full shrink-0 snap-start"
+				>
+					@slide
+				</div>
+			}
+		</div>
+		<div class="flex items-center justify-center gap-2">
+			<button
+				type="button"
+				x-on:click="prev()"
+				class="rounded border border-border px-3 py-1 text-sm text-fg hover:bg-muted/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+			>
+				<span aria-hidden="true">&#8249;</span> Anterior
+			</button>
+			<button
+				type="button"
+				x-on:click="next()"
+				class="rounded border border-border px-3 py-1 text-sm text-fg hover:bg-muted/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+			>
+				Próximo <span aria-hidden="true">&#8250;</span>
+			</button>
+		</div>
+	</div>
+}
