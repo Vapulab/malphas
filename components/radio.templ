@@ -1,0 +1,83 @@
+package components
+
+type RadioOption struct {
+	Label    string
+	Value    string
+	Disabled bool
+}
+
+type RadioProps struct {
+	Name     string
+	Options  []RadioOption
+	Value    string // value of the initially selected option
+	Label    string // accessible name for the group
+	Vertical bool
+	Attrs    templ.Attributes
+}
+
+// selectedIndex is the option carrying tabindex=0. Falling back to the first
+// option matters: with nothing selected and every option at -1, the group would
+// be unreachable by keyboard entirely.
+func (p RadioProps) selectedIndex() int {
+	for i, o := range p.Options {
+		if o.Value == p.Value {
+			return i
+		}
+	}
+	return 0
+}
+
+templ Radio(props RadioProps) {
+	<div
+		role="radiogroup"
+		if props.Label != "" {
+			aria-label={ props.Label }
+		}
+		class={ "flex gap-4", templ.KV("flex-col", props.Vertical), templ.KV("flex-wrap", !props.Vertical) }
+		x-data={ "radioGroup(" + intJS(props.selectedIndex()) + ")" }
+		x-on:keydown="onKeydown"
+		{ props.Attrs... }
+	>
+		for i, opt := range props.Options {
+			<label
+				class={ "inline-flex items-center gap-2",
+					templ.KV("cursor-pointer", !opt.Disabled),
+					templ.KV("cursor-not-allowed opacity-50", opt.Disabled) }
+			>
+				<input
+					type="radio"
+					name={ props.Name }
+					value={ opt.Value }
+					class="sr-only peer"
+					checked?={ opt.Value == props.Value }
+					disabled?={ opt.Disabled }
+					x-on:change={ "select(" + intJS(i) + ")" }
+				/>
+				<span
+					role="radio"
+					aria-checked={ ariaBool(opt.Value == props.Value) }
+					x-bind:aria-checked={ "isActive(" + intJS(i) + ") ? 'true' : 'false'" }
+					data-roving-item={ intJS(i) }
+					if opt.Disabled {
+						data-roving-disabled
+					}
+					tabindex={ rovingTabindex(i, props.selectedIndex()) }
+					x-bind:tabindex={ "tabindex(" + intJS(i) + ")" }
+					class="flex size-5 shrink-0 items-center justify-center rounded-full border border-border bg-surface transition-colors peer-checked:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+				>
+					// Attribute variant rather than x-bind:class, for the same
+					// reason as Checkbox: a bound opacity-100 would coexist with
+					// the static opacity-0 and let stylesheet order decide.
+					<span
+						class="size-2.5 rounded-full bg-primary opacity-0 transition-opacity peer-checked:opacity-100 data-[state=on]:opacity-100"
+						if opt.Value == props.Value {
+							data-state="on"
+						}
+						x-bind:data-state={ "isActive(" + intJS(i) + ") ? 'on' : false" }
+					></span>
+				</span>
+				<span class="text-sm text-fg">{ opt.Label }</span>
+			</label>
+		}
+	</div>
+}

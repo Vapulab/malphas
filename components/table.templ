@@ -1,0 +1,74 @@
+package components
+
+type TableProps struct {
+	Zebra   bool // stripe alternate body rows
+	Compact bool // tighter cell padding
+	Attrs   templ.Attributes
+}
+
+type THProps struct {
+	Scope string // col | row (default col)
+	Class string
+	Attrs templ.Attributes
+}
+
+type TDProps struct {
+	Class string
+	Attrs templ.Attributes
+}
+
+// Density and striping are declared once on the table and reach the cells
+// through descendant selectors. That keeps TH and TD free of layout knobs, so
+// callers never have to pass Compact down to every cell.
+func (p TableProps) classes() string {
+	base := "w-full border-collapse text-left text-sm"
+	padding := "[&_th]:px-4 [&_th]:py-3 [&_td]:px-4 [&_td]:py-3"
+	if p.Compact {
+		padding = "[&_th]:px-3 [&_th]:py-1.5 [&_td]:px-3 [&_td]:py-1.5"
+	}
+	zebra := ""
+	if p.Zebra {
+		zebra = " [&_tbody_tr:nth-child(even)]:bg-muted/5"
+	}
+	return base + " " + padding + zebra
+}
+
+// Table keeps its own horizontal scroller so a wide table never makes the whole
+// page scroll sideways.
+templ Table(props TableProps) {
+	<div class="w-full overflow-x-auto">
+		<table class={ props.classes() } { props.Attrs... }>
+			{ children... }
+		</table>
+	</div>
+}
+
+templ THead() {
+	<thead class="border-b border-border text-xs uppercase tracking-wide text-muted">
+		{ children... }
+	</thead>
+}
+
+templ TBody() {
+	<tbody class="[&_tr]:border-b [&_tr]:border-border [&_tr:last-child]:border-0">
+		{ children... }
+	</tbody>
+}
+
+templ TR() {
+	<tr>
+		{ children... }
+	</tr>
+}
+
+templ TH(props THProps) {
+	<th scope={ or(props.Scope, "col") } class={ "font-medium", props.Class } { props.Attrs... }>
+		{ children... }
+	</th>
+}
+
+templ TD(props TDProps) {
+	<td class={ "text-fg", props.Class } { props.Attrs... }>
+		{ children... }
+	</td>
+}

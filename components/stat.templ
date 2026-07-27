@@ -1,0 +1,29 @@
+package components
+
+type StatProps struct {
+	Title       string
+	Value       string
+	Description string
+	Variant     string // fg | primary | success | warning | danger (default fg)
+	Attrs       templ.Attributes
+}
+
+func (p StatProps) valueColor() string {
+	return map[string]string{
+		"fg":      "text-fg",
+		"primary": "text-primary",
+		"success": "text-success",
+		"warning": "text-warning",
+		"danger":  "text-danger",
+	}[or(p.Variant, "fg")]
+}
+
+templ Stat(props StatProps) {
+	<div class="rounded border border-border bg-surface p-4" { props.Attrs... }>
+		<dt class="text-sm text-muted">{ props.Title }</dt>
+		<dd class={ "mt-1 text-2xl font-semibold tabular-nums", props.valueColor() }>{ props.Value }</dd>
+		if props.Description != "" {
+			<p class="mt-1 text-xs text-muted">{ props.Description }</p>
+		}
+	</div>
+}

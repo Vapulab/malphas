@@ -1,0 +1,47 @@
+package components
+
+type CollapseProps struct {
+	// ID names the panel; aria-controls needs something to point at.
+	ID    string
+	Title string
+	Open  bool
+	Attrs templ.Attributes
+}
+
+// The trigger is a button, not a styled div: a div is not focusable, does not
+// respond to Enter or Space, and is announced as nothing at all.
+templ Collapse(props CollapseProps) {
+	<div
+		class="rounded border border-border bg-surface"
+		x-data={ "collapse(" + boolJS(props.Open) + ")" }
+		{ props.Attrs... }
+	>
+		<button
+			type="button"
+			aria-expanded={ ariaBool(props.Open) }
+			aria-controls={ props.ID }
+			x-bind:aria-expanded="open ? 'true' : 'false'"
+			x-on:click="toggle()"
+			class="flex w-full items-center justify-between gap-4 px-4 py-3 text-left text-sm font-medium text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50"
+		>
+			<span>{ props.Title }</span>
+			<span class="text-muted transition-transform" x-bind:class="open && 'rotate-180'" aria-hidden="true">&#9662;</span>
+		</button>
+		// Inline display, not `hidden` or x-cloak: x-show works by setting
+		// el.style.display, so an inline style is the same channel and Alpine
+		// clears it when opening. A `hidden` attribute or class would keep
+		// applying after x-show "shows" the panel. This also renders the right
+		// state before Alpine loads, in both directions.
+		<div
+			id={ props.ID }
+			role="region"
+			x-show="open"
+			if !props.Open {
+				style="display:none"
+			}
+			class="border-t border-border px-4 py-3 text-sm text-muted"
+		>
+			{ children... }
+		</div>
+	</div>
+}

@@ -1,0 +1,35 @@
+package components
+
+type BreadcrumbItem struct {
+	Label string
+	Href  string // empty renders plain text instead of a link
+}
+
+type BreadcrumbsProps struct {
+	Items []BreadcrumbItem
+	Attrs templ.Attributes
+}
+
+// Breadcrumbs is a navigation landmark holding an ordered trail. The last item
+// is where the user already is, so it is never a link and is marked with
+// aria-current.
+templ Breadcrumbs(props BreadcrumbsProps) {
+	<nav aria-label="Trilha de navegação" { props.Attrs... }>
+		<ol class="flex flex-wrap items-center gap-2 text-sm">
+			for i, item := range props.Items {
+				<li class="flex items-center gap-2">
+					if i > 0 {
+						<span class="text-muted" aria-hidden="true">/</span>
+					}
+					if item.Href != "" && i < len(props.Items)-1 {
+						<a href={ templ.URL(item.Href) } class="text-muted hover:text-fg hover:underline">{ item.Label }</a>
+					} else if i == len(props.Items)-1 {
+						<span class="text-fg" aria-current="page">{ item.Label }</span>
+					} else {
+						<span class="text-muted">{ item.Label }</span>
+					}
+				</li>
+			}
+		</ol>
+	</nav>
+}

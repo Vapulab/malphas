@@ -1,0 +1,39 @@
+package components
+
+type ProgressProps struct {
+	Value         int
+	Max           int    // default 100
+	Variant       string // primary | success | warning | danger (default primary)
+	Indeterminate bool   // omit value entirely, letting the browser animate
+	Attrs         templ.Attributes
+}
+
+func (p ProgressProps) max() int {
+	if p.Max > 0 {
+		return p.Max
+	}
+	return 100
+}
+
+// The bar itself is a pseudo-element, so the fill colour is set through
+// arbitrary variants — one per engine.
+func (p ProgressProps) classes() string {
+	base := "h-2 w-full appearance-none overflow-hidden rounded-full border-0 [&::-webkit-progress-bar]:bg-muted/20 bg-muted/20"
+	fill := map[string]string{
+		"primary": "[&::-webkit-progress-value]:bg-primary [&::-moz-progress-bar]:bg-primary",
+		"success": "[&::-webkit-progress-value]:bg-success [&::-moz-progress-bar]:bg-success",
+		"warning": "[&::-webkit-progress-value]:bg-warning [&::-moz-progress-bar]:bg-warning",
+		"danger":  "[&::-webkit-progress-value]:bg-danger [&::-moz-progress-bar]:bg-danger",
+	}[or(p.Variant, "primary")]
+	return base + " " + fill
+}
+
+// Progress uses the native element, which brings its own accessibility. A
+// <progress> with no value attribute is the indeterminate state.
+templ Progress(props ProgressProps) {
+	if props.Indeterminate {
+		<progress class={ props.classes() } max={ props.max() } { props.Attrs... }></progress>
+	} else {
+		<progress class={ props.classes() } value={ props.Value } max={ props.max() } { props.Attrs... }></progress>
+	}
+}

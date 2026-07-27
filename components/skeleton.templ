@@ -1,0 +1,17 @@
+package components
+
+type SkeletonProps struct {
+	Class string // sizing, e.g. "h-4 w-32" or "size-12 rounded-full"
+	Attrs templ.Attributes
+}
+
+// Skeleton is a placeholder shown while data loads. It is aria-hidden because
+// it stands for content that does not exist yet; pair it with a Loading status
+// when the wait needs announcing.
+templ Skeleton(props SkeletonProps) {
+	<div
+		class={ "animate-pulse rounded bg-muted/20", props.Class }
+		aria-hidden="true"
+		{ props.Attrs... }
+	></div>
+}

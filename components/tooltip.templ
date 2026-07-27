@@ -1,0 +1,52 @@
+package components
+
+type TooltipProps struct {
+	// ID is required: aria-describedby needs something to point at, and a
+	// generated id would change on every render and break caching and tests.
+	ID       string
+	Text     string
+	Position string // top | bottom | left | right (default top)
+	Attrs    templ.Attributes
+}
+
+func (p TooltipProps) positionClasses() string {
+	return map[string]string{
+		"top":    "bottom-full left-1/2 mb-2 -translate-x-1/2",
+		"bottom": "top-full left-1/2 mt-2 -translate-x-1/2",
+		"left":   "right-full top-1/2 mr-2 -translate-y-1/2",
+		"right":  "left-full top-1/2 ml-2 -translate-y-1/2",
+	}[or(p.Position, "top")]
+}
+
+// Tooltip opens on hover *and* on focus, and closes on Escape.
+//
+// Hover alone would make the tip unreachable by keyboard, and a tip that
+// cannot be dismissed sits on top of the content for anyone using screen
+// magnification. aria-describedby is what actually delivers the text to a
+// screen reader — the styling delivers it to nobody.
+templ Tooltip(props TooltipProps) {
+	<span
+		class="relative inline-flex"
+		x-data="tooltip"
+		x-on:mouseenter="show()"
+		x-on:mouseleave="hide()"
+		x-on:focusin="show()"
+		x-on:focusout="hide()"
+		x-on:keydown.escape.window="hide()"
+		{ props.Attrs... }
+	>
+		<span aria-describedby={ props.ID } class="inline-flex">
+			{ children... }
+		</span>
+		<span
+			id={ props.ID }
+			role="tooltip"
+			x-show="open"
+			x-cloak
+			class={ "pointer-events-none absolute z-50 w-max max-w-xs rounded bg-fg px-2 py-1 text-xs text-surface shadow-lg",
+				props.positionClasses() }
+		>
+			{ props.Text }
+		</span>
+	</span>
+}

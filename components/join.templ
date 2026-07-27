@@ -1,0 +1,22 @@
+package components
+
+type JoinProps struct {
+	Vertical bool
+	Attrs    templ.Attributes
+}
+
+// Join glues buttons or inputs into a single control: inner corners are
+// squared and adjacent borders overlap by 1px so they do not double up.
+// The children keep their own styling — Join only reshapes the seams.
+func (p JoinProps) classes() string {
+	if p.Vertical {
+		return "inline-flex flex-col [&>*]:rounded-none [&>*:first-child]:rounded-t [&>*:last-child]:rounded-b [&>*:not(:first-child)]:-mt-px"
+	}
+	return "inline-flex [&>*]:rounded-none [&>*:first-child]:rounded-l [&>*:last-child]:rounded-r [&>*:not(:first-child)]:-ml-px"
+}
+
+templ Join(props JoinProps) {
+	<div class={ props.classes() } { props.Attrs... }>
+		{ children... }
+	</div>
+}

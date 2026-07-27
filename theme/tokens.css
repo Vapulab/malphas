@@ -1,0 +1,55 @@
+/* Malphas design tokens.
+ *
+ * Colors are space-separated RGB channels so Tailwind can apply alpha
+ * (see theme/preset.js). Dark values live in two places by necessity: CSS has
+ * no way to share a declaration block between a media query and a selector.
+ * Keep the two dark blocks below in sync.
+ */
+
+:root {
+  --color-primary: 79 70 229;    /* indigo-600 */
+  --color-primary-fg: 255 255 255;
+  --color-surface: 255 255 255;
+  --color-fg: 17 24 39;          /* gray-900 */
+  --color-muted: 107 114 128;    /* gray-500 */
+  --color-border: 229 231 235;   /* gray-200 */
+
+  --color-danger: 220 38 38;     /* red-600 */
+  --color-danger-fg: 255 255 255;
+  --color-success: 22 163 74;    /* green-600 */
+  --color-success-fg: 255 255 255;
+  --color-warning: 217 119 6;    /* amber-600 */
+  --color-warning-fg: 255 255 255;
+  --color-info: 2 132 199;       /* sky-600 */
+  --color-info-fg: 255 255 255;
+
+  --radius: 0.5rem;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+}
+
+/* Required by the design-system components that use Alpine's x-show (Tooltip,
+ * Swap). Without it those elements flash visible between first paint and
+ * Alpine initialising. Ships here because tokens.css is the only stylesheet
+ * the design system exports. */
+[x-cloak] {
+  display: none !important;
+}
+
+/* Follow the OS unless the user explicitly asked for light. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-surface: 17 24 39;
+    --color-fg: 243 244 246;
+    --color-muted: 156 163 175;
+    --color-border: 55 65 81;
+  }
+}
+
+/* An explicit choice wins over the OS in both directions. */
+:root[data-theme="dark"] {
+  --color-surface: 17 24 39;
+  --color-fg: 243 244 246;
+  --color-muted: 156 163 175;
+  --color-border: 55 65 81;
+}

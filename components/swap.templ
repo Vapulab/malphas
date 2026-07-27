@@ -1,0 +1,55 @@
+package components
+
+type SwapProps struct {
+	On     templ.Component // shown when active
+	Off    templ.Component // shown when inactive
+	Active bool
+	Label  string // accessible name; the faces are usually icons
+	Attrs  templ.Attributes
+}
+
+// Swap is a real button carrying aria-pressed, not a div that changes look: a
+// toggle that assistive tech cannot see the state of is just a picture.
+//
+// Both faces are rendered and one is hidden, so swapping costs no request and
+// no layout jump.
+templ Swap(props SwapProps) {
+	<button
+		type="button"
+		aria-pressed={ ariaBool(props.Active) }
+		if props.Label != "" {
+			aria-label={ props.Label }
+		}
+		class="inline-flex items-center justify-center rounded p-2 text-fg transition-colors hover:bg-muted/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+		x-data={ "swap(" + boolJS(props.Active) + ")" }
+		x-on:click="toggle()"
+		x-bind:aria-pressed="active ? 'true' : 'false'"
+		{ props.Attrs... }
+	>
+		// Inline display, not `hidden`: x-show works by setting
+		// el.style.display, so an inline style is the same channel and Alpine
+		// clears it when showing. A `hidden` attribute or class would keep
+		// applying afterwards and the face would never appear. This also puts
+		// the right face on screen before Alpine loads.
+		<span
+			x-show="active"
+			if !props.Active {
+				style="display:none"
+			}
+		>
+			if props.On != nil {
+				@props.On
+			}
+		</span>
+		<span
+			x-show="!active"
+			if props.Active {
+				style="display:none"
+			}
+		>
+			if props.Off != nil {
+				@props.Off
+			}
+		</span>
+	</button>
+}

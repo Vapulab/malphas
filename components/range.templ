@@ -1,0 +1,76 @@
+package components
+
+type RangeProps struct {
+	ID        string
+	Name      string
+	Min       int
+	Max       int // default 100
+	Step      int // default 1
+	Value     int
+	Label     string
+	ShowValue bool
+	Variant   string // primary | success | warning | danger (default primary)
+	Disabled  bool
+	Attrs     templ.Attributes
+}
+
+func (p RangeProps) max() int {
+	if p.Max > 0 {
+		return p.Max
+	}
+	return 100
+}
+
+func (p RangeProps) step() int {
+	if p.Step > 0 {
+		return p.Step
+	}
+	return 1
+}
+
+// The thumb and track are pseudo-elements, so each engine needs its own
+// arbitrary variant.
+func (p RangeProps) classes() string {
+	base := "h-2 w-full cursor-pointer appearance-none rounded-full bg-muted/20 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+	thumb := map[string]string{
+		"primary": "[&::-webkit-slider-thumb]:bg-primary [&::-moz-range-thumb]:bg-primary",
+		"success": "[&::-webkit-slider-thumb]:bg-success [&::-moz-range-thumb]:bg-success",
+		"warning": "[&::-webkit-slider-thumb]:bg-warning [&::-moz-range-thumb]:bg-warning",
+		"danger":  "[&::-webkit-slider-thumb]:bg-danger [&::-moz-range-thumb]:bg-danger",
+	}[or(p.Variant, "primary")]
+	shape := "[&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow [&::-moz-range-thumb]:size-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0"
+	return base + " " + shape + " " + thumb
+}
+
+// Range keeps the native input visible and styles it, unlike the other form
+// controls in this slice. Hiding it would mean reimplementing pointer drag,
+// capture outside the element, touch and aria-valuenow — much more code for a
+// result almost certainly worse than the browser's.
+//
+// Alpine is here only to mirror the value into the label beside it.
+templ Range(props RangeProps) {
+	<div class="flex w-full flex-col gap-1" x-data={ "rangeValue(" + intJS(props.Value) + ")" } { props.Attrs... }>
+		if props.Label != "" || props.ShowValue {
+			<div class="flex items-baseline justify-between gap-4">
+				if props.Label != "" {
+					<label for={ props.ID } class="text-sm font-medium text-fg">{ props.Label }</label>
+				}
+				if props.ShowValue {
+					<span class="text-sm tabular-nums text-muted" x-text="value">{ intJS(props.Value) }</span>
+				}
+			</div>
+		}
+		<input
+			type="range"
+			id={ props.ID }
+			name={ props.Name }
+			min={ intJS(props.Min) }
+			max={ intJS(props.max()) }
+			step={ intJS(props.step()) }
+			value={ intJS(props.Value) }
+			disabled?={ props.Disabled }
+			x-model="value"
+			class={ props.classes() }
+		/>
+	</div>
+}

@@ -1,0 +1,78 @@
+package components
+
+import "strconv"
+
+type AccordionItem struct {
+	Title   string
+	Content templ.Component
+	Open    bool
+}
+
+type AccordionProps struct {
+	// ID prefixes the generated panel ids, so two accordions on one page do
+	// not collide in aria-controls.
+	ID        string
+	Items     []AccordionItem
+	Exclusive bool // opening one panel closes the others
+	Attrs     templ.Attributes
+}
+
+func (p AccordionProps) panelID(i int) string {
+	return p.ID + "-panel-" + strconv.Itoa(i)
+}
+
+// openFlags is the initial state handed to the behavior, so a server-rendered
+// open panel stays open once Alpine takes over.
+func (p AccordionProps) openFlags() string {
+	out := "["
+	for i, item := range p.Items {
+		if i > 0 {
+			out += ","
+		}
+		out += boolJS(item.Open)
+	}
+	return out + "]"
+}
+
+// Content is a templ.Component rather than children: an accordion is a list of
+// panels, and children could only carry one.
+templ Accordion(props AccordionProps) {
+	<div
+		class="divide-y divide-border overflow-hidden rounded border border-border bg-surface"
+		x-data={ "accordion(" + props.openFlags() + ", " + boolJS(props.Exclusive) + ")" }
+		{ props.Attrs... }
+	>
+		for i, item := range props.Items {
+			<div>
+				<button
+					type="button"
+					aria-expanded={ ariaBool(item.Open) }
+					aria-controls={ props.panelID(i) }
+					x-bind:aria-expanded={ "isOpen(" + intJS(i) + ") ? 'true' : 'false'" }
+					x-on:click={ "toggle(" + intJS(i) + ")" }
+					class="flex w-full items-center justify-between gap-4 px-4 py-3 text-left text-sm font-medium text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50"
+				>
+					<span>{ item.Title }</span>
+					<span
+						class="text-muted transition-transform"
+						x-bind:class={ "isOpen(" + intJS(i) + ") && 'rotate-180'" }
+						aria-hidden="true"
+					>&#9662;</span>
+				</button>
+				<div
+					id={ props.panelID(i) }
+					role="region"
+					x-show={ "isOpen(" + intJS(i) + ")" }
+					if !item.Open {
+						style="display:none"
+					}
+					class="border-t border-border px-4 py-3 text-sm text-muted"
+				>
+					if item.Content != nil {
+						@item.Content
+					}
+				</div>
+			</div>
+		}
+	</div>
+}

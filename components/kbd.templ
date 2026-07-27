@@ -1,0 +1,21 @@
+package components
+
+type KbdProps struct {
+	Size  string // sm | md (default md)
+	Attrs templ.Attributes
+}
+
+func (p KbdProps) classes() string {
+	base := "inline-flex items-center justify-center rounded border border-border border-b-2 bg-surface font-sans font-medium text-fg"
+	size := map[string]string{
+		"sm": "min-w-6 px-1.5 py-0.5 text-xs",
+		"md": "min-w-7 px-2 py-1 text-sm",
+	}[or(p.Size, "md")]
+	return base + " " + size
+}
+
+templ Kbd(props KbdProps) {
+	<kbd class={ props.classes() } { props.Attrs... }>
+		{ children... }
+	</kbd>
+}

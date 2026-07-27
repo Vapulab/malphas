@@ -1,0 +1,61 @@
+package components
+
+type CheckboxProps struct {
+	ID    string
+	Name  string
+	Value string // default "on", like a native checkbox
+	Label string
+	// Indeterminate is the third state used by "select all" boxes. It exists
+	// only as a JS property — there is no HTML attribute for it — so it is
+	// applied on init and announced with aria-checked="mixed".
+	Indeterminate bool
+	Checked       bool
+	Disabled      bool
+	Attrs         templ.Attributes
+}
+
+templ Checkbox(props CheckboxProps) {
+	<label
+		if props.ID != "" {
+			for={ props.ID }
+		}
+		class={ "inline-flex items-start gap-2",
+			templ.KV("cursor-pointer", !props.Disabled),
+			templ.KV("cursor-not-allowed opacity-50", props.Disabled) }
+		x-data={ "checkbox(" + boolJS(props.Checked) + ", " + boolJS(props.Indeterminate) + ")" }
+		{ props.Attrs... }
+	>
+		<input
+			type="checkbox"
+			id={ props.ID }
+			name={ props.Name }
+			value={ or(props.Value, "on") }
+			class="sr-only peer"
+			x-ref="input"
+			x-model="checked"
+			checked?={ props.Checked }
+			disabled?={ props.Disabled }
+			data-indeterminate?={ props.Indeterminate }
+		/>
+		// The mixed state is styled through a data attribute, not x-bind:class.
+		// Alpine only removes classes it added, so a bound "bg-primary" would
+		// sit alongside the static "bg-surface" and CSS would pick a winner by
+		// stylesheet order — which put bg-surface last and left a white dash on
+		// a white box. An attribute variant wins on specificity instead.
+		<span
+			role="checkbox"
+			aria-checked={ ariaChecked(props.Checked, props.Indeterminate) }
+			x-bind:aria-checked="indeterminate ? 'mixed' : (checked ? 'true' : 'false')"
+			if props.Indeterminate {
+				data-state="mixed"
+			}
+			x-bind:data-state="indeterminate ? 'mixed' : false"
+			class="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border border-border bg-surface transition-colors peer-checked:border-primary peer-checked:bg-primary data-[state=mixed]:border-primary data-[state=mixed]:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary/50 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-surface"
+		>
+			<span class="text-xs font-bold text-primary-fg" x-text="indeterminate ? '–' : (checked ? '✓' : '')"></span>
+		</span>
+		if props.Label != "" {
+			<span class="text-sm text-fg">{ props.Label }</span>
+		}
+	</label>
+}

@@ -1,0 +1,38 @@
+package components
+
+type IndicatorProps struct {
+	Label    string // empty renders no badge at all
+	Position string // top-right | top-left | bottom-right | bottom-left (default top-right)
+	Variant  string // primary | danger | success (default danger)
+	Attrs    templ.Attributes
+}
+
+func (p IndicatorProps) positionClasses() string {
+	return map[string]string{
+		"top-right":    "-top-1 -right-1",
+		"top-left":     "-top-1 -left-1",
+		"bottom-right": "-bottom-1 -right-1",
+		"bottom-left":  "-bottom-1 -left-1",
+	}[or(p.Position, "top-right")]
+}
+
+func (p IndicatorProps) variantClasses() string {
+	return map[string]string{
+		"primary": "bg-primary text-primary-fg",
+		"danger":  "bg-danger text-danger-fg",
+		"success": "bg-success text-success-fg",
+	}[or(p.Variant, "danger")]
+}
+
+// Indicator pins a small badge to a corner of whatever it wraps.
+templ Indicator(props IndicatorProps) {
+	<span class="relative inline-flex" { props.Attrs... }>
+		{ children... }
+		if props.Label != "" {
+			<span class={ "absolute z-10 inline-flex min-w-5 items-center justify-center rounded-full px-1.5 py-0.5 text-xs font-medium leading-none",
+				props.positionClasses(), props.variantClasses() }>
+				{ props.Label }
+			</span>
+		}
+	</span>
+}

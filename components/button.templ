@@ -1,0 +1,36 @@
+package components
+
+type ButtonProps struct {
+	Variant string // primary | secondary | danger (default primary)
+	Size    string // sm | md | lg (default md)
+	Type    string // button | submit (default button)
+	Attrs   templ.Attributes
+}
+
+func (p ButtonProps) classes() string {
+	base := "inline-flex items-center justify-center font-medium rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-50"
+	variant := map[string]string{
+		"primary":   "bg-primary text-primary-fg hover:bg-primary/90",
+		"secondary": "bg-surface text-fg border border-border hover:bg-muted/10",
+		"danger":    "bg-danger text-danger-fg hover:bg-danger/90",
+	}[or(p.Variant, "primary")]
+	size := map[string]string{
+		"sm": "h-8 px-3 text-sm",
+		"md": "h-10 px-4 text-sm",
+		"lg": "h-12 px-6 text-base",
+	}[or(p.Size, "md")]
+	return base + " " + variant + " " + size
+}
+
+func or(v, fallback string) string {
+	if v == "" {
+		return fallback
+	}
+	return v
+}
+
+templ Button(props ButtonProps) {
+	<button type={ or(props.Type, "button") } class={ props.classes() } { props.Attrs... }>
+		{ children... }
+	</button>
+}

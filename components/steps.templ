@@ -1,0 +1,58 @@
+package components
+
+type Step struct {
+	Label string
+	State string // done | current | pending (default pending)
+}
+
+type StepsProps struct {
+	Items    []Step
+	Vertical bool
+	Attrs    templ.Attributes
+}
+
+func (s Step) markerClasses() string {
+	return map[string]string{
+		"done":    "bg-primary text-primary-fg border-primary",
+		"current": "border-primary text-primary",
+		"pending": "border-border text-muted",
+	}[or(s.State, "pending")]
+}
+
+func (s Step) labelClasses() string {
+	if or(s.State, "pending") == "pending" {
+		return "text-muted"
+	}
+	return "text-fg"
+}
+
+// Steps shows progress through a sequence. State is conveyed with colour and a
+// checkmark, so the active step also carries aria-current for screen readers.
+templ Steps(props StepsProps) {
+	<ol
+		class={ "flex gap-4", templ.KV("flex-col", props.Vertical),
+			templ.KV("flex-wrap items-center", !props.Vertical) }
+		{ props.Attrs... }
+	>
+		for i, item := range props.Items {
+			<li
+				class="flex items-center gap-2"
+				if item.State == "current" {
+					aria-current="step"
+				}
+			>
+				<span class={ "flex size-7 shrink-0 items-center justify-center rounded-full border text-xs font-medium", item.markerClasses() }>
+					if item.State == "done" {
+						<span aria-hidden="true">&check;</span>
+					} else {
+						{ i + 1 }
+					}
+				</span>
+				<span class={ "text-sm", item.labelClasses() }>{ item.Label }</span>
+				if !props.Vertical && i < len(props.Items)-1 {
+					<span class="h-px w-8 bg-border" aria-hidden="true"></span>
+				}
+			</li>
+		}
+	</ol>
+}

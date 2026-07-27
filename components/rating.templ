@@ -1,0 +1,72 @@
+package components
+
+type RatingProps struct {
+	Name     string
+	Value    int
+	Max      int    // default 5
+	Label    string // accessible name for the group
+	ReadOnly bool
+	Attrs    templ.Attributes
+}
+
+func (p RatingProps) max() int {
+	if p.Max > 0 {
+		return p.Max
+	}
+	return 5
+}
+
+templ Rating(props RatingProps) {
+	if props.ReadOnly {
+		@ratingReadOnly(props)
+	} else {
+		@ratingInteractive(props)
+	}
+}
+
+// A read-only rating is output, not input: no focus, no form value, and the
+// stars are decoration behind a single text label.
+templ ratingReadOnly(props RatingProps) {
+	<div
+		class="inline-flex items-center gap-0.5"
+		aria-label={ ratingLabel(props.Value, props.max()) }
+		{ props.Attrs... }
+	>
+		for i := 1; i <= props.max(); i++ {
+			<span aria-hidden="true" class={ "text-lg leading-none", ratingStarClass(i <= props.Value) }>&starf;</span>
+		}
+	</div>
+}
+
+templ ratingInteractive(props RatingProps) {
+	<div
+		role="radiogroup"
+		aria-label={ or(props.Label, "Avaliação") }
+		class="inline-flex items-center gap-0.5"
+		x-data={ "rating(" + intJS(props.Value) + ", " + intJS(props.max()) + ")" }
+		x-on:keydown="onKeydown"
+		{ props.Attrs... }
+	>
+		// One input carries the whole group's value, unlike Radio where each
+		// option is its own input: a rating submits a number, not a choice
+		// among labelled options.
+		<input type="hidden" name={ props.Name } value={ intJS(props.Value) } x-bind:value="value"/>
+		for i := 1; i <= props.max(); i++ {
+			<span
+				role="radio"
+				aria-label={ ratingLabel(i, props.max()) }
+				aria-checked={ ariaBool(i == props.Value) }
+				x-bind:aria-checked={ "value === " + intJS(i) + " ? 'true' : 'false'" }
+				data-roving-item={ intJS(i - 1) }
+				tabindex={ rovingTabindex(i-1, ratingActiveIndex(props.Value)) }
+				x-bind:tabindex={ "tabindex(" + intJS(i-1) + ")" }
+				x-on:click={ "select(" + intJS(i-1) + ")" }
+				if i <= props.Value {
+					data-state="filled"
+				}
+				x-bind:data-state={ "value >= " + intJS(i) + " ? 'filled' : false" }
+				class="cursor-pointer text-lg leading-none text-muted/40 transition-colors data-[state=filled]:text-warning focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+			>&starf;</span>
+		}
+	</div>
+}

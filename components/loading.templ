@@ -1,0 +1,62 @@
+package components
+
+type LoadingProps struct {
+	Kind    string // spinner | dots | bars (default spinner)
+	Size    string // sm | md | lg (default md)
+	Variant string // primary | muted | fg (default primary)
+	Label   string // announced text (default "Carregando")
+	Attrs   templ.Attributes
+}
+
+func (p LoadingProps) color() string {
+	return map[string]string{
+		"primary": "text-primary",
+		"muted":   "text-muted",
+		"fg":      "text-fg",
+	}[or(p.Variant, "primary")]
+}
+
+func (p LoadingProps) spinnerSize() string {
+	return map[string]string{
+		"sm": "size-4 border-2",
+		"md": "size-6 border-2",
+		"lg": "size-9 border-[3px]",
+	}[or(p.Size, "md")]
+}
+
+// dotSize doubles as the bar width; bars get their height from barHeight.
+func (p LoadingProps) dotSize() string {
+	return map[string]string{
+		"sm": "size-1.5",
+		"md": "size-2",
+		"lg": "size-3",
+	}[or(p.Size, "md")]
+}
+
+func (p LoadingProps) barSize() string {
+	return map[string]string{
+		"sm": "w-1 h-4",
+		"md": "w-1.5 h-6",
+		"lg": "w-2 h-9",
+	}[or(p.Size, "md")]
+}
+
+// Loading renders an animated indicator. The animation alone means nothing to a
+// screen reader, so the element is a live status region with a text label.
+templ Loading(props LoadingProps) {
+	<span role="status" class={ "inline-flex items-center gap-1 " + props.color() } { props.Attrs... }>
+		switch or(props.Kind, "spinner") {
+			case "dots":
+				<span class={ "inline-block animate-bounce rounded-full bg-current", props.dotSize() }></span>
+				<span class={ "inline-block animate-bounce rounded-full bg-current [animation-delay:150ms]", props.dotSize() }></span>
+				<span class={ "inline-block animate-bounce rounded-full bg-current [animation-delay:300ms]", props.dotSize() }></span>
+			case "bars":
+				<span class={ "inline-block animate-pulse rounded-sm bg-current", props.barSize() }></span>
+				<span class={ "inline-block animate-pulse rounded-sm bg-current [animation-delay:150ms]", props.barSize() }></span>
+				<span class={ "inline-block animate-pulse rounded-sm bg-current [animation-delay:300ms]", props.barSize() }></span>
+			default:
+				<span class={ "inline-block animate-spin rounded-full border-current border-r-transparent", props.spinnerSize() }></span>
+		}
+		<span class="sr-only">{ or(props.Label, "Carregando") }</span>
+	</span>
+}

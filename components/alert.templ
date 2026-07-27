@@ -1,0 +1,24 @@
+package components
+
+type AlertProps struct {
+	Variant string // info | success | warning | error (default info)
+	Attrs   templ.Attributes
+}
+
+func (p AlertProps) classes() string {
+	base := "flex items-start gap-3 rounded border p-4 text-sm text-fg"
+	// "error" is the public name; danger is the token it maps to.
+	variant := map[string]string{
+		"info":    "border-info/40 bg-info/10",
+		"success": "border-success/40 bg-success/10",
+		"warning": "border-warning/40 bg-warning/10",
+		"error":   "border-danger/40 bg-danger/10",
+	}[or(p.Variant, "info")]
+	return base + " " + variant
+}
+
+templ Alert(props AlertProps) {
+	<div role="alert" class={ props.classes() } { props.Attrs... }>
+		{ children... }
+	</div>
+}

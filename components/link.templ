@@ -1,0 +1,44 @@
+package components
+
+type LinkProps struct {
+	Href     string
+	Variant  string // primary | muted | danger (default primary)
+	Underline bool  // underline always, instead of only on hover
+	External bool   // open in a new tab, with a safe rel
+	Attrs    templ.Attributes
+}
+
+func (p LinkProps) classes() string {
+	base := "rounded-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50"
+	variant := map[string]string{
+		"primary": "text-primary hover:text-primary/80",
+		"muted":   "text-muted hover:text-fg",
+		"danger":  "text-danger hover:text-danger/80",
+	}[or(p.Variant, "primary")]
+	underline := "hover:underline"
+	if p.Underline {
+		underline = "underline"
+	}
+	return base + " " + variant + " " + underline
+}
+
+// Href goes through templ.URL, which neutralises javascript: and other unsafe
+// schemes. Do NOT switch this to templ.SafeURL — that type asserts a URL is
+// already trusted and skips sanitising, which is the opposite of what a
+// component taking arbitrary caller input needs.
+//
+// External links get rel=noopener so the opened page cannot reach back through
+// window.opener.
+templ Link(props LinkProps) {
+	<a
+		href={ templ.URL(props.Href) }
+		class={ props.classes() }
+		if props.External {
+			target="_blank"
+			rel="noopener noreferrer"
+		}
+		{ props.Attrs... }
+	>
+		{ children... }
+	</a>
+}

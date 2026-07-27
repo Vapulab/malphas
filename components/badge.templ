@@ -1,0 +1,47 @@
+package components
+
+type BadgeProps struct {
+	Variant string // neutral | primary | success | warning | danger | info (default neutral)
+	Size    string // sm | md (default md)
+	Outline bool
+	Attrs   templ.Attributes
+}
+
+func (p BadgeProps) classes() string {
+	base := "inline-flex items-center gap-1 rounded-full font-medium whitespace-nowrap"
+
+	variant := or(p.Variant, "neutral")
+	var color string
+	if p.Outline {
+		color = map[string]string{
+			"neutral": "border border-border text-fg",
+			"primary": "border border-primary text-primary",
+			"success": "border border-success text-success",
+			"warning": "border border-warning text-warning",
+			"danger":  "border border-danger text-danger",
+			"info":    "border border-info text-info",
+		}[variant]
+	} else {
+		color = map[string]string{
+			"neutral": "bg-muted/20 text-fg",
+			"primary": "bg-primary text-primary-fg",
+			"success": "bg-success text-success-fg",
+			"warning": "bg-warning text-warning-fg",
+			"danger":  "bg-danger text-danger-fg",
+			"info":    "bg-info text-info-fg",
+		}[variant]
+	}
+
+	size := map[string]string{
+		"sm": "px-2 py-0.5 text-xs",
+		"md": "px-2.5 py-1 text-xs",
+	}[or(p.Size, "md")]
+
+	return base + " " + color + " " + size
+}
+
+templ Badge(props BadgeProps) {
+	<span class={ props.classes() } { props.Attrs... }>
+		{ children... }
+	</span>
+}

@@ -1,0 +1,30 @@
+package components
+
+type ModalProps struct {
+	ID    string
+	Title string
+}
+
+// Open a modal with x-on:click="$dispatch('open-modal', 'ID')" on any trigger
+// that sits inside an Alpine scope — a bare <div x-data> wrapper is enough.
+// Alpine ignores directives on elements with no x-data ancestor.
+templ Modal(props ModalProps) {
+	<div
+		x-data="{ open: false }"
+		x-on:open-modal.window={ "if ($event.detail === '" + props.ID + "') open = true" }
+		x-on:keydown.escape.window="open = false"
+	>
+		<template x-if="open">
+			<div class="fixed inset-0 z-50 flex items-center justify-center">
+				<div class="absolute inset-0 bg-black/50" x-on:click="open = false"></div>
+				<div class="relative z-10 w-full max-w-md rounded border border-border bg-surface p-6 shadow-lg" x-on:click.stop>
+					<div class="mb-4 flex items-center justify-between">
+						<h2 class="text-lg font-semibold text-fg">{ props.Title }</h2>
+						<button type="button" class="text-muted hover:text-fg" x-on:click="open = false">&times;</button>
+					</div>
+					{ children... }
+				</div>
+			</div>
+		</template>
+	</div>
+}

@@ -1,0 +1,47 @@
+package layout
+
+type BaseProps struct {
+	Title string
+	Head  templ.Component // optional extra <head> content (may be nil)
+	Body  templ.Component
+}
+
+// themeInitScript applies the saved theme synchronously, before the stylesheet
+// is fetched and before first paint. Doing this from ui.js instead would be too
+// late: Alpine loads deferred, so the page would paint in the wrong theme and
+// then snap to the right one.
+//
+// Rendered via templ.Raw so the braces are not parsed as templ expressions.
+// The storage key must match MALPHAS_THEME_KEY in ui/assets/ui.js.
+const themeInitScript = `<script>(function(){try{var t=localStorage.getItem("malphas-theme");if(t){document.documentElement.dataset.theme=t}}catch(e){}})()</script>`
+
+templ Base(props BaseProps) {
+	<!doctype html>
+	<html lang="pt-BR">
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<title>{ props.Title }</title>
+			// Declaring the icon stops the browser probing /favicon.ico, which
+			// otherwise logs a 404 on every page load. Served from the design
+			// system's embedded assets, so consumers get it for free.
+			<link rel="icon" type="image/svg+xml" href="/malphas-assets/favicon.svg"/>
+			@templ.Raw(themeInitScript)
+			<link rel="stylesheet" href="/static/app.css"/>
+			<script src="/static/vendor/htmx.min.js" defer></script>
+			// ui.js registers Alpine.data() from an alpine:init listener, so it
+			// MUST be deferred before Alpine itself: Alpine fires alpine:init as
+			// soon as it loads, and a listener attached after that never runs.
+			<script src="/malphas-assets/malphas.js" defer></script>
+			<script src="/static/vendor/alpine.min.js" defer></script>
+			if props.Head != nil {
+				@props.Head
+			}
+		</head>
+		<body class="min-h-screen bg-surface text-fg font-sans antialiased">
+			if props.Body != nil {
+				@props.Body
+			}
+		</body>
+	</html>
+}

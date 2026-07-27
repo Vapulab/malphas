@@ -1,0 +1,51 @@
+package components
+
+type ToggleProps struct {
+	ID       string
+	Name     string
+	Label    string
+	Value    string // submitted when on (default "on", like a native checkbox)
+	Checked  bool
+	Disabled bool
+	Attrs    templ.Attributes
+}
+
+// The visible switch is a div, so the browser gives it no semantics at all:
+// role and state are declared here, and the real checkbox behind it carries
+// focus, form submission and screen-reader interaction.
+templ Toggle(props ToggleProps) {
+	// The input is nested, so the association is already implicit; `for` is
+	// added on top so it survives the markup being restructured.
+	<label
+		if props.ID != "" {
+			for={ props.ID }
+		}
+		class={ "inline-flex items-center gap-3",
+			templ.KV("cursor-pointer", !props.Disabled),
+			templ.KV("cursor-not-allowed opacity-50", props.Disabled) }
+		x-data={ "toggle(" + boolJS(props.Checked) + ")" }
+		{ props.Attrs... }
+	>
+		<input
+			type="checkbox"
+			id={ props.ID }
+			name={ props.Name }
+			value={ or(props.Value, "on") }
+			class="sr-only peer"
+			x-model="on"
+			checked?={ props.Checked }
+			disabled?={ props.Disabled }
+		/>
+		<span
+			role="switch"
+			aria-checked={ ariaBool(props.Checked) }
+			x-bind:aria-checked="on ? 'true' : 'false'"
+			class="relative h-6 w-11 shrink-0 rounded-full bg-muted/30 transition-colors peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary/50 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-surface"
+		>
+			<span class="absolute left-0.5 top-0.5 size-5 rounded-full bg-surface shadow transition-transform" x-bind:class="on && 'translate-x-5'"></span>
+		</span>
+		if props.Label != "" {
+			<span class="text-sm text-fg">{ props.Label }</span>
+		}
+	</label>
+}

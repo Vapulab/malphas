@@ -1,0 +1,47 @@
+package components
+
+type TimelineItem struct {
+	Time        string
+	Title       string
+	Description string
+	Variant     string // primary | success | warning | danger | muted (default primary)
+}
+
+type TimelineProps struct {
+	Items []TimelineItem
+	Attrs templ.Attributes
+}
+
+func (i TimelineItem) dotClasses() string {
+	return map[string]string{
+		"primary": "bg-primary",
+		"success": "bg-success",
+		"warning": "bg-warning",
+		"danger":  "bg-danger",
+		"muted":   "bg-muted",
+	}[or(i.Variant, "primary")]
+}
+
+// Timeline lists events in order. The connecting rail is drawn on the list item
+// rather than between items, so the last entry simply omits it.
+templ Timeline(props TimelineProps) {
+	<ol { props.Attrs... }>
+		for i, item := range props.Items {
+			<li class="relative flex gap-4 pb-6 last:pb-0">
+				if i < len(props.Items)-1 {
+					<span class="absolute left-[5px] top-4 h-full w-px bg-border" aria-hidden="true"></span>
+				}
+				<span class={ "relative z-10 mt-1.5 size-2.5 shrink-0 rounded-full ring-4 ring-surface", item.dotClasses() }></span>
+				<div class="flex-1">
+					if item.Time != "" {
+						<time class="text-xs text-muted">{ item.Time }</time>
+					}
+					<h4 class="font-medium text-fg">{ item.Title }</h4>
+					if item.Description != "" {
+						<p class="mt-0.5 text-sm text-muted">{ item.Description }</p>
+					}
+				</div>
+			</li>
+		}
+	</ol>
+}

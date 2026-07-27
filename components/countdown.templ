@@ -1,0 +1,40 @@
+package components
+
+type CountdownProps struct {
+	Seconds int
+	Format  string // hh:mm:ss (default) | mm:ss
+	// OnEnd is a JS expression evaluated once the clock reaches zero, e.g.
+	// "$dispatch('expired')".
+	OnEnd string
+	Size  string // sm | md | lg (default md)
+	Attrs templ.Attributes
+}
+
+func (p CountdownProps) classes() string {
+	base := "inline-flex items-baseline font-mono tabular-nums text-fg"
+	size := map[string]string{
+		"sm": "text-base",
+		"md": "text-2xl",
+		"lg": "text-4xl",
+	}[or(p.Size, "md")]
+	return base + " " + size
+}
+
+// Countdown ticks in the browser, but the starting value is rendered here so
+// the clock is correct before Alpine loads instead of flashing empty.
+//
+// role=timer marks it as a live-updating clock; aria-live is off on purpose,
+// because a value announced every second makes the page unusable with a screen
+// reader.
+templ Countdown(props CountdownProps) {
+	<span
+		role="timer"
+		aria-live="off"
+		class={ props.classes() }
+		x-data={ "countdown(" + intJS(clampSeconds(props.Seconds)) + ", " + strJS(or(props.Format, "hh:mm:ss")) + ", " + strJS(props.OnEnd) + ")" }
+		x-text="display"
+		{ props.Attrs... }
+	>
+		{ formatDuration(clampSeconds(props.Seconds), or(props.Format, "hh:mm:ss")) }
+	</span>
+}

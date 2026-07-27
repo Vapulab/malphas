@@ -1,0 +1,28 @@
+package components
+
+type InputProps struct {
+	ID          string
+	Name        string
+	Type        string // default text
+	Label       string
+	Placeholder string
+	Value       string
+	Attrs       templ.Attributes
+}
+
+templ Input(props InputProps) {
+	<div class="flex flex-col gap-1">
+		if props.Label != "" {
+			<label for={ props.ID } class="text-sm font-medium text-fg">{ props.Label }</label>
+		}
+		<input
+			id={ props.ID }
+			name={ props.Name }
+			type={ or(props.Type, "text") }
+			placeholder={ props.Placeholder }
+			value={ props.Value }
+			class="h-10 px-3 rounded border border-border bg-surface text-fg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+			{ props.Attrs... }
+		/>
+	</div>
+}

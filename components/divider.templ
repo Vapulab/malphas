@@ -1,0 +1,23 @@
+package components
+
+type DividerProps struct {
+	Label    string // optional text shown in the middle
+	Vertical bool
+	Attrs    templ.Attributes
+}
+
+templ Divider(props DividerProps) {
+	if props.Vertical {
+		<div class="mx-4 w-px self-stretch bg-border" aria-hidden="true" { props.Attrs... }></div>
+	} else if props.Label != "" {
+		// A labelled divider separates real sections, so it keeps its role.
+		<div class="my-4 flex items-center gap-4" role="separator" { props.Attrs... }>
+			<div class="h-px flex-1 bg-border"></div>
+			<span class="text-sm text-muted">{ props.Label }</span>
+			<div class="h-px flex-1 bg-border"></div>
+		</div>
+	} else {
+		// A bare rule is decoration; announcing it only adds noise.
+		<hr class="my-4 border-0 border-t border-border" aria-hidden="true" { props.Attrs... }/>
+	}
+}
