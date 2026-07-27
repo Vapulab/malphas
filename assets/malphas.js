@@ -218,6 +218,7 @@ function modalOverlay() {
 
 document.addEventListener("alpine:init", () => {
   Alpine.data("modal", () => ({ ...modalOverlay() }));
+  Alpine.data("drawer", () => ({ ...modalOverlay() }));
 
   Alpine.data("dropdown", () => ({
     open: false,

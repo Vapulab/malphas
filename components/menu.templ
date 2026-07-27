@@ -1,0 +1,49 @@
+package components
+
+type MenuProps struct {
+	Entries []MenuEntry
+	Label   string // accessible name, when the menu is its own landmark
+	// Landmark wraps the list in <nav>. Leave it off when the menu already
+	// sits inside one — nested navigation landmarks just add noise.
+	Landmark bool
+	Attrs    templ.Attributes
+}
+
+// Menu is site navigation: nav > ul > li > a, with aria-current on the page
+// you are already on.
+//
+// Deliberately NOT role="menu". That role is for application menus — the kind
+// you open from a menu button — and applying it to a list of site links makes
+// a screen reader announce the page as if it were a program menu, and switches
+// it into a navigation mode where arrow keys are expected to work. For the
+// menu-button pattern, use Dropdown.
+templ Menu(props MenuProps) {
+	if props.Landmark {
+		<nav
+			if props.Label != "" {
+				aria-label={ props.Label }
+			}
+			{ props.Attrs... }
+		>
+			@menuList(props)
+		</nav>
+	} else {
+		@menuList(props)
+	}
+}
+
+templ menuList(props MenuProps) {
+	<ul class="flex flex-col gap-1">
+		for _, e := range props.Entries {
+			if e.isDivider() {
+				<li role="separator" class="my-1 h-px bg-border"></li>
+			} else {
+				<li>
+					<span class="block rounded px-3 py-2 hover:bg-muted/10">
+						@navLink(e, "text-sm")
+					</span>
+				</li>
+			}
+		}
+	</ul>
+}

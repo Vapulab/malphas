@@ -1,0 +1,78 @@
+package components
+
+import "strconv"
+
+type NavbarProps struct {
+	Brand     string
+	BrandHref string
+	Entries   []MenuEntry
+	// DrawerID wires the small-screen menu button to a Drawer with that ID.
+	// Leave it empty and no button is rendered — Navbar does not require a
+	// Drawer, it only knows how to open one if you give it the id.
+	DrawerID string
+	Attrs    templ.Attributes
+}
+
+templ Navbar(props NavbarProps) {
+	<header class="border-b border-border bg-surface" { props.Attrs... }>
+		<nav class="mx-auto flex max-w-5xl items-center gap-6 px-4 py-3">
+			if props.DrawerID != "" {
+				// x-data so $dispatch resolves: Alpine ignores directives with
+				// no component ancestor.
+				<div x-data class="md:hidden">
+					<button
+						type="button"
+						aria-label="Abrir menu"
+						aria-haspopup="dialog"
+						class="rounded p-1 text-muted hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+						x-on:click={ "$dispatch('open-drawer', " + strconv.Quote(props.DrawerID) + ")" }
+					>
+						<span aria-hidden="true">&#9776;</span>
+					</button>
+				</div>
+			}
+			if props.Brand != "" {
+				<a href={ templ.URL(or(props.BrandHref, "/")) } class="font-semibold text-fg">{ props.Brand }</a>
+			}
+			<ul class="hidden items-center gap-6 md:flex">
+				for _, e := range props.Entries {
+					if !e.isDivider() {
+						<li>
+							@navLink(e, "text-sm")
+						</li>
+					}
+				}
+			</ul>
+			<div class="ml-auto flex items-center gap-3">
+				{ children... }
+			</div>
+		</nav>
+	</header>
+}
+
+// navLink is shared by Navbar and Menu. aria-current marks the page the user is
+// already on — colour alone does not reach a screen reader.
+templ navLink(e MenuEntry, size string) {
+	if e.Href != "" {
+		<a
+			href={ templ.URL(e.Href) }
+			if e.Current {
+				aria-current="page"
+			}
+			class={ size, navLinkClasses(e) }
+		>
+			{ e.Label }
+		</a>
+	} else {
+		<button
+			type="button"
+			disabled?={ e.Disabled }
+			if e.OnClick != "" {
+				x-on:click={ e.OnClick }
+			}
+			class={ size, navLinkClasses(e), "text-left" }
+		>
+			{ e.Label }
+		</button>
+	}
+}
