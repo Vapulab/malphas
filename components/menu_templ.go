@@ -96,6 +96,9 @@ func Menu(props MenuProps) templ.Component {
 	})
 }
 
+// The padding belongs to the link, not to a wrapper around it. Putting it on a
+// span made the whole row light up on hover while only the text was clickable —
+// a 303x40 target that actually accepted clicks in 35x18.
 func menuList(props MenuProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -128,15 +131,15 @@ func menuList(props MenuProps) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<li><span class=\"block rounded px-3 py-2 hover:bg-muted/10\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<li>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = navLink(e, "text-sm").Render(ctx, templ_7745c5c3_Buffer)
+				templ_7745c5c3_Err = navLink(e, "block w-full rounded px-3 py-2 text-sm hover:bg-muted/10").Render(ctx, templ_7745c5c3_Buffer)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</span></li>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</li>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

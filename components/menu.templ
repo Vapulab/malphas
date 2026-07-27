@@ -32,6 +32,9 @@ templ Menu(props MenuProps) {
 	}
 }
 
+// The padding belongs to the link, not to a wrapper around it. Putting it on a
+// span made the whole row light up on hover while only the text was clickable —
+// a 303x40 target that actually accepted clicks in 35x18.
 templ menuList(props MenuProps) {
 	<ul class="flex flex-col gap-1">
 		for _, e := range props.Entries {
@@ -39,9 +42,7 @@ templ menuList(props MenuProps) {
 				<li role="separator" class="my-1 h-px bg-border"></li>
 			} else {
 				<li>
-					<span class="block rounded px-3 py-2 hover:bg-muted/10">
-						@navLink(e, "text-sm")
-					</span>
+					@navLink(e, "block w-full rounded px-3 py-2 text-sm hover:bg-muted/10")
 				</li>
 			}
 		}

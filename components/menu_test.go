@@ -31,6 +31,19 @@ func TestMenuUsesNavigationSemanticsNotMenuRole(t *testing.T) {
 	}
 }
 
+// The row lights up on hover, so the whole row must be clickable. Wrapping the
+// link in a padded span made the target 303x40 to the eye and 35x18 to the
+// pointer — the kind of bug that only shows up when someone tries to use it.
+func TestMenuLinkFillsTheRow(t *testing.T) {
+	html := renderToString(t, components.Menu(menuFixture()))
+	if strings.Contains(html, `<span class="block rounded px-3 py-2`) {
+		t.Errorf("the padding must be on the link, not on a wrapper around it: %s", html)
+	}
+	if !strings.Contains(html, `class="block w-full rounded px-3 py-2`) {
+		t.Errorf("expected the link itself to fill the row, got: %s", html)
+	}
+}
+
 func TestMenuMarksCurrentPage(t *testing.T) {
 	html := renderToString(t, components.Menu(menuFixture()))
 	if strings.Count(html, `aria-current="page"`) != 1 {
