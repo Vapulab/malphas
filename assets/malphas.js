@@ -90,7 +90,135 @@ function rovingList({ orientation = "horizontal", loop = true, active = 0 } = {}
   };
 }
 
+// --- Modal overlays ---------------------------------------------------------
+//
+// Making an overlay modal takes three things, and the last two are the ones
+// usually missing:
+//
+//   focus trap   without it, Tab walks the content behind — unusable by keyboard
+//   scroll lock  without it, the page scrolls under the overlay
+//   inert        without it, a screen reader's virtual cursor reads the whole
+//                page as if no dialog were open
+//
+// Trapping Tab alone gets you a modal for keyboard users and a non-modal for
+// screen reader users. All three live here so Modal and Drawer cannot
+// implement two thirds of it each.
+
+const FOCUSABLE = [
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled]):not([type=hidden])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  '[tabindex]:not([tabindex="-1"])',
+].join(",");
+
+// Nested overlays share one lock, so closing the inner one does not hand the
+// page back while the outer is still open.
+let scrollLockDepth = 0;
+let savedScrollBehavior = "";
+
+function lockBodyScroll() {
+  if (scrollLockDepth++ > 0) return;
+  const root = document.documentElement;
+  // Compensating for the scrollbar keeps the page from jumping sideways as it
+  // disappears. Note: overflow:hidden does not stop body scroll on iOS Safari;
+  // the position:fixed workaround costs a scroll-restore dance and a repaint,
+  // and is not worth it here.
+  const gutter = window.innerWidth - root.clientWidth;
+  savedScrollBehavior = root.style.scrollBehavior;
+  root.style.overflow = "hidden";
+  if (gutter > 0) root.style.paddingRight = `${gutter}px`;
+}
+
+function unlockBodyScroll() {
+  if (--scrollLockDepth > 0) return;
+  scrollLockDepth = 0;
+  const root = document.documentElement;
+  root.style.overflow = "";
+  root.style.paddingRight = "";
+  root.style.scrollBehavior = savedScrollBehavior;
+}
+
+// modalOverlay is spread into a component that owns an `open` flag and a panel
+// marked with x-ref="panel".
+function modalOverlay() {
+  return {
+    open: false,
+    _returnFocusTo: null,
+    _inerted: [],
+
+    openOverlay() {
+      if (this.open) return;
+      // Remember who opened us before the DOM changes under our feet.
+      this._returnFocusTo = document.activeElement;
+      this.open = true;
+      // The panel lives inside x-if, so it does not exist until Alpine has
+      // rendered this tick.
+      this.$nextTick(() => {
+        const panel = this.$refs.panel;
+        if (!panel) return;
+        lockBodyScroll();
+        this._applyInert(panel);
+        (panel.querySelector(FOCUSABLE) || panel).focus();
+      });
+    },
+
+    closeOverlay() {
+      if (!this.open) return;
+      this.open = false;
+      unlockBodyScroll();
+      this._releaseInert();
+      // Returning focus is what keeps a keyboard user from being dumped at the
+      // top of the document every time they dismiss something.
+      if (this._returnFocusTo && document.contains(this._returnFocusTo)) {
+        this._returnFocusTo.focus();
+      }
+      this._returnFocusTo = null;
+    },
+
+    // Everything that is not an ancestor of the panel becomes unreachable —
+    // to Tab, to the pointer, and to assistive tech.
+    _applyInert(panel) {
+      this._inerted = [];
+      for (const el of Array.from(document.body.children)) {
+        if (el.contains(panel) || el.hasAttribute("inert")) continue;
+        el.setAttribute("inert", "");
+        this._inerted.push(el);
+      }
+    },
+
+    _releaseInert() {
+      for (const el of this._inerted) el.removeAttribute("inert");
+      this._inerted = [];
+    },
+
+    // Bound to keydown.tab on the panel: wrap at both ends so focus cannot
+    // leave. inert already blocks most escapes, but not the browser chrome
+    // round-trip, and not browsers without inert support.
+    onTab(e) {
+      const panel = this.$refs.panel;
+      if (!panel) return;
+      const items = Array.from(panel.querySelectorAll(FOCUSABLE)).filter(
+        (el) => el.offsetParent !== null,
+      );
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    },
+  };
+}
+
 document.addEventListener("alpine:init", () => {
+  Alpine.data("modal", () => ({ ...modalOverlay() }));
+
   Alpine.data("dropdown", () => ({
     open: false,
     toggle() { this.open = !this.open; },
