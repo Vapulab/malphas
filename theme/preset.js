@@ -34,7 +34,10 @@ module.exports = {
         border: rgb("--color-border"),
       },
       borderRadius: { DEFAULT: "var(--radius)" },
-      fontFamily: { sans: "var(--font-sans)" },
+      fontFamily: {
+        sans: "var(--font-sans)",
+        display: "var(--font-display)",
+      },
     },
   },
 };
