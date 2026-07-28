@@ -1,0 +1,55 @@
+package components
+
+type FooterLink struct {
+	Label    string
+	Href     string
+	External bool
+}
+
+type FooterColumn struct {
+	Title string
+	Links []FooterLink
+}
+
+type FooterProps struct {
+	Columns []FooterColumn
+	Note    string // linha inferior, ex. copyright
+	Class   string
+	Attrs   templ.Attributes
+}
+
+// Footer é o rodapé estrutural do site. Os children ficam à esquerda — é onde
+// a marca vai.
+//
+// O papel é explícito de propósito: <footer> só mapeia para contentinfo
+// automaticamente quando é filho direto de <body>, e aqui ele é aninhado no
+// shell da página. Sem role, o leitor de tela não oferece o atalho.
+//
+// Os links delegam para Link em vez de escrever <a>: é lá que mora o
+// saneamento de href e o rel seguro para links externos.
+templ Footer(props FooterProps) {
+	<footer role="contentinfo" class={ "border-t border-border", props.Class } { props.Attrs... }>
+		<div class="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-12 md:flex-row md:justify-between">
+			<div class="text-sm text-muted">
+				{ children... }
+			</div>
+			<div class="flex flex-wrap gap-12">
+				for _, col := range props.Columns {
+					<nav class="flex flex-col gap-2" aria-label={ col.Title }>
+						<span class="text-xs font-semibold uppercase tracking-wider text-muted">{ col.Title }</span>
+						for _, l := range col.Links {
+							@Link(LinkProps{Href: l.Href, Variant: "muted", External: l.External}) {
+								{ l.Label }
+							}
+						}
+					</nav>
+				}
+			</div>
+		</div>
+		if props.Note != "" {
+			<div class="border-t border-border">
+				<p class="mx-auto max-w-5xl px-4 py-4 text-xs text-muted">{ props.Note }</p>
+			</div>
+		}
+	</footer>
+}
