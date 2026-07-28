@@ -48,6 +48,19 @@
 /* Follow the OS unless the user explicitly asked for light. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    /* --color-primary sozinho já não tem override aqui, e o tom claro
+     * (indigo-800) cai pra ~2.3:1 sobre --color-surface: abaixo do piso AA de
+     * 3:1 pra texto grande, nem de longe os 4.5:1 de texto normal. O tom mais
+     * claro abaixo (#60A5FA) dá ~7.5:1 sobre o surface escuro.
+     * --color-primary-fg tem de andar junto: quem usa bg-primary
+     * text-primary-fg (Button, Badge sólido, Pagination, Steps done,
+     * Checkbox, Toggle) troca de cor de fundo, e o texto branco original
+     * ficaria ~2.9:1 sobre o azul mais claro. Virando --color-surface, o par
+     * dá o mesmo ~7.5:1 na direção inversa — são as duas mesmas cores, só
+     * trocando quem é o texto e quem é o fundo.
+     */
+    --color-primary: 96 165 250;
+    --color-primary-fg: 10 15 26;
     --color-surface: 10 15 26;
     --color-fg: 237 240 244;
     --color-muted: 148 163 184;
@@ -57,6 +70,8 @@
 
 /* An explicit choice wins over the OS in both directions. */
 :root[data-theme="dark"] {
+  --color-primary: 96 165 250;
+  --color-primary-fg: 10 15 26;
   --color-surface: 10 15 26;
   --color-fg: 237 240 244;
   --color-muted: 148 163 184;
