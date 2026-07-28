@@ -35,14 +35,19 @@ func TestFooterIsALandmark(t *testing.T) {
 }
 
 // Link externo sem rel=noopener deixa a pagina aberta alcancar a origem via
-// window.opener. O Link do sistema ja resolve isso; o Footer precisa de fato
-// delegar para ele em vez de escrever <a> na mao.
+// window.opener. O Link do sistema ja resolve isso, mas so checar rel/target
+// nao prova que o Footer de fato delega a ele: um <a> escrito na mao com os
+// mesmos dois atributos passaria igual. A prova que so a delegacao satisfaz e
+// o saneamento de href: templ.URL rejeita esquemas fora de
+// http/https/mailto/tel/ftp/ftps e devolve FailedSanitizationURL. Um href cru
+// nao passaria por isso.
 func TestFooterExternalLinksAreSafe(t *testing.T) {
 	html := renderToString(t, components.Footer(components.FooterProps{
 		Columns: []components.FooterColumn{{
 			Title: "Código",
 			Links: []components.FooterLink{
 				{Label: "GitHub", Href: "https://github.com/darkanum/vapulab", External: true},
+				{Label: "Malicioso", Href: "javascript:alert(1)"},
 			},
 		}},
 	}))
@@ -52,5 +57,11 @@ func TestFooterExternalLinksAreSafe(t *testing.T) {
 	}
 	if !strings.Contains(html, `target="_blank"`) {
 		t.Error("external footer link does not open in a new tab")
+	}
+	if strings.Contains(html, "javascript:alert(1)") {
+		t.Error("javascript: href leaked into the output — link was not sanitised, possible XSS")
+	}
+	if !strings.Contains(html, "about:invalid#TemplFailedSanitizationURL") {
+		t.Error("expected templ's sanitised placeholder for an unsafe scheme — Footer is not delegating to Link")
 	}
 }
