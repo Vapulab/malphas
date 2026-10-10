@@ -194,6 +194,16 @@ function listboxNav() {
   };
 }
 
+// afterShow runs fn once an x-show panel is really visible. From its second
+// toggle on, Alpine's x-show reveals the element inside requestAnimationFrame,
+// while $nextTick is a timer — and nothing orders a timer before a frame.
+// Chrome happens to run the frame first; Firefox usually does not. Focusing
+// into a still-hidden panel silently does nothing, and measuring it returns a
+// 0x0 box. Waiting for a frame after the tick queues fn behind Alpine's own.
+function afterShow(component, fn) {
+  component.$nextTick(() => requestAnimationFrame(fn));
+}
+
 // --- Non-modal floating panels ----------------------------------------------
 //
 // floatingPanel is the non-modal half of the overlay pair, for a trigger that
@@ -212,9 +222,9 @@ function floatingPanel() {
     show() {
       if (this.open) return;
       this.open = true;
-      this.$nextTick(() => {
+      afterShow(this, () => {
         const panel = this.$refs.panel;
-        if (!panel) return;
+        if (!panel || !this.open) return;
         (panel.querySelector(FOCUSABLE) || panel).focus();
       });
     },
@@ -708,7 +718,8 @@ document.addEventListener("alpine:init", () => {
       this.x = x;
       this.y = y;
       this.open = true;
-      this.$nextTick(() => {
+      afterShow(this, () => {
+        if (!this.open) return;
         const menu = this.$refs.menu;
         const { width, height } = menu.getBoundingClientRect();
         const margin = 4;
@@ -789,8 +800,9 @@ document.addEventListener("alpine:init", () => {
       i = this._wrap(i);
       this.openMenu = i;
       this.activeTop = i;
-      // x-show has to apply before an item inside can take focus.
-      this.$nextTick(() => {
+      // The menu has to be visible before an item inside can take focus.
+      afterShow(this, () => {
+        if (this.openMenu !== i) return;
         const items = this._items(i);
         (which === "last" ? items[items.length - 1] : items[0])?.focus();
       });
