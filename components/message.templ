@@ -42,6 +42,7 @@ func (p MessageProps) label() string {
 // message by message always hears who and when.
 templ Message(props MessageProps) {
 	<article
+		data-message
 		aria-label={ props.label() }
 		class={ "flex w-full items-end gap-2", templ.KV("flex-row-reverse", props.end()), templ.KV("mt-3", props.showHeader()) }
 		{ props.Attrs... }

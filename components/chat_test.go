@@ -49,7 +49,9 @@ func TestBubbleReactionsAreLabelled(t *testing.T) {
 	html := renderWithChildren(t, components.Bubble(components.BubbleProps{
 		Reactions: []components.BubbleReaction{{Emoji: "👍", Label: "Curtir", Count: 3}},
 	}), templ.Raw("x"))
-	for _, want := range []string{`aria-label="Reações"`, `aria-label="Curtir: 3"`, `aria-hidden="true">👍`} {
+	// The meaning is real text (sr-only), not an aria-label on a list item,
+	// which NVDA and JAWS do not reliably read in browse mode.
+	for _, want := range []string{`aria-label="Reações"`, `<span class="sr-only">Curtir: 3</span>`, `aria-hidden="true">👍`} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)
 		}
@@ -99,7 +101,7 @@ func TestMessageHeaderOnlyOnFirst(t *testing.T) {
 // who sent it and when.
 func TestMessageKeepsAuthorAndTimeForScreenReaders(t *testing.T) {
 	middle := renderWithChildren(t, components.Message(messageFixture("middle")), templ.Raw("tudo bem?"))
-	if !strings.Contains(middle, `<article aria-label="Ana Lima, 14:02"`) {
+	if !strings.Contains(middle, `aria-label="Ana Lima, 14:02"`) || !strings.Contains(middle, "<article") {
 		t.Errorf("every message keeps its author and time: %s", middle)
 	}
 }
@@ -131,5 +133,17 @@ func TestMessageScrollerIsALog(t *testing.T) {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)
 		}
+	}
+}
+
+// Messages carry a hook the scroller counts by; markers and other rows do not.
+func TestMessageHasAMessageHook(t *testing.T) {
+	html := renderWithChildren(t, components.Message(messageFixture("single")), templ.Raw("oi"))
+	if !strings.Contains(html, "data-message") {
+		t.Errorf("expected data-message on the article: %s", html)
+	}
+	marker := renderWithChildren(t, components.Marker(components.MarkerProps{}), templ.Raw("x"))
+	if strings.Contains(marker, "data-message") {
+		t.Errorf("a marker is not a message: %s", marker)
 	}
 }

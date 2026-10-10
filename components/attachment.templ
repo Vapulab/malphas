@@ -63,13 +63,16 @@ templ Attachment(props AttachmentProps) {
 			switch props.state() {
 				case "uploading":
 					@Progress(ProgressProps{Value: clampInt(props.Progress, 0, 100), Attrs: templ.Attributes{"aria-label": "Envio de " + props.Name}})
-					<p role="status" class="text-xs text-muted">{ props.statusText() }</p>
 				case "processing":
 					@Progress(ProgressProps{Indeterminate: true, Attrs: templ.Attributes{"aria-label": "Processamento de " + props.Name}})
-					<p role="status" class="text-xs text-muted">{ props.statusText() }</p>
 				case "error":
 					<p role="alert" class="text-xs text-danger">{ or(props.Error, "Não foi possível enviar.") }</p>
 			}
+			// Present in every state, empty when there is nothing to say: a live
+			// region born together with its text is often not announced, so the
+			// region must already exist when the text changes. Callers updating
+			// a card in place should swap its contents, not the whole card.
+			<p role="status" class="text-xs text-muted empty:hidden">{ props.statusText() }</p>
 		</div>
 		if props.Actions != nil {
 			<div class="flex shrink-0 items-center gap-1">

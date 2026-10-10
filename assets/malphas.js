@@ -1240,29 +1240,38 @@ document.addEventListener("alpine:init", () => {
   }));
 
   // A chat transcript that follows new messages only while the reader is at
-  // the end. Everything is driven by observing the content, so it works with
-  // whatever brings messages in. The observer callback runs as a microtask,
-  // after the DOM changed and before the browser paints, so each correction
-  // lands in the same frame as the change it corrects.
+  // the end, and otherwise keeps them exactly where they were.
+  //
+  // "Where they were" is an anchor: the first row visible in the viewport and
+  // its offset. After any change — rows added above or below, a sentinel
+  // replacing itself, an image above finishing loading — the view is shifted
+  // by however far the anchor moved. Comparing total heights instead would
+  // break the moment one batch both prepends and appends, or the old first
+  // row is removed (the usual htmx "load older" sentinel).
+  //
+  // The observer callback runs as a microtask, after the DOM changed and
+  // before the browser paints, so each correction lands in the same frame.
   Alpine.data("messageScroller", () => ({
     atBottom: true,
     unread: 0,
-    _height: 0,
-    _first: null,
+    // Set by toEnd(): the reader asked for the end, so the end keeps being
+    // followed through a smooth scroll until they move away themselves.
+    _following: false,
+    _quiet: false,
+    _counted: new WeakSet(),
 
     init() {
       const vp = this.$refs.viewport;
       vp.scrollTop = vp.scrollHeight;
-      this._remember();
-      this._observer = new MutationObserver((records) => this._onMutate(records));
+      this._capture();
+      this._observer = new MutationObserver((records) => this._reconcile(records));
       this._observer.observe(this.$refs.content, { childList: true, subtree: true, characterData: true });
-      // Growth without a mutation (an image finishing loading) must not
-      // strand a reader who was at the end either.
-      this._resize = new ResizeObserver(() => {
-        if (this.atBottom) vp.scrollTop = vp.scrollHeight;
-        this._remember();
-      });
+      // Growth without a mutation (an image or font finishing loading).
+      this._resize = new ResizeObserver(() => this._reconcile([]));
       this._resize.observe(this.$refs.content);
+      for (const ev of ["wheel", "touchmove", "keydown"]) {
+        vp.addEventListener(ev, () => (this._following = false), { passive: true });
+      }
     },
 
     destroy() {
@@ -1270,45 +1279,98 @@ document.addEventListener("alpine:init", () => {
       this._resize?.disconnect();
     },
 
-    _remember() {
-      this._height = this.$refs.viewport.scrollHeight;
-      this._first = this.$refs.content.firstElementChild;
+    _geometryAtBottom(height) {
+      const vp = this.$refs.viewport;
+      return height - vp.scrollTop - vp.clientHeight <= 24;
     },
 
-    _isAtBottom() {
+    // The anchor is the first row still visible at the top of the viewport,
+    // plus its successor in case the anchor itself is the row that goes.
+    _capture() {
       const vp = this.$refs.viewport;
-      return vp.scrollHeight - vp.scrollTop - vp.clientHeight <= 24;
+      const rows = this.$refs.content.children;
+      this._anchor = null;
+      for (const el of rows) {
+        if (el.offsetTop + el.offsetHeight > vp.scrollTop) {
+          this._anchor = el;
+          break;
+        }
+      }
+      this._anchorTop = this._anchor ? this._anchor.offsetTop : 0;
+      this._backup = this._anchor?.nextElementSibling || null;
+      this._backupTop = this._backup ? this._backup.offsetTop : 0;
+      this._height = vp.scrollHeight;
+    },
+
+    _reconcile(records) {
+      const vp = this.$refs.viewport;
+      const wasAtBottom = this._following || this._geometryAtBottom(this._height);
+
+      if (wasAtBottom) {
+        vp.scrollTop = vp.scrollHeight;
+      } else if (this._anchor?.isConnected) {
+        vp.scrollTop += this._anchor.offsetTop - this._anchorTop;
+      } else if (this._backup?.isConnected) {
+        vp.scrollTop += this._backup.offsetTop - this._backupTop;
+      }
+
+      for (const r of records) {
+        if (r.target !== this.$refs.content) continue;
+        for (const n of r.removedNodes) {
+          if (this._counted.has(n)) {
+            this._counted.delete(n);
+            this.unread = Math.max(0, this.unread - 1);
+          }
+        }
+        if (wasAtBottom) continue;
+        for (const n of r.addedNodes) {
+          // Only messages are news; a marker ("Gerando resposta…") or a
+          // sentinel is not. Rows landing above the anchor are history.
+          if (n.nodeType !== Node.ELEMENT_NODE || !n.matches("[data-message]")) continue;
+          const anchor = this._anchor?.isConnected ? this._anchor : this._backup;
+          if (anchor && !(anchor.compareDocumentPosition(n) & Node.DOCUMENT_POSITION_FOLLOWING)) continue;
+          this._counted.add(n);
+          this.unread++;
+        }
+      }
+
+      this.atBottom = this._geometryAtBottom(vp.scrollHeight);
+      this._capture();
     },
 
     onScroll() {
-      this.atBottom = this._isAtBottom();
-      if (this.atBottom) this.unread = 0;
+      const vp = this.$refs.viewport;
+      this.atBottom = this._geometryAtBottom(vp.scrollHeight);
+      if (this.atBottom) {
+        this.unread = 0;
+        this._following = false;
+      }
+      this._capture();
     },
 
-    _onMutate(records) {
-      const vp = this.$refs.viewport;
-      const content = this.$refs.content;
-      const grew = vp.scrollHeight - this._height;
-      const old = this._first;
-      // Something went in before the message that used to be first: older
-      // history. Shift by exactly what was added, so the reader's view stays
-      // on the same pixel.
-      if (old && old.isConnected && content.firstElementChild !== old) {
-        vp.scrollTop += grew;
-      } else if (this.atBottom) {
-        vp.scrollTop = vp.scrollHeight;
-      } else {
-        for (const r of records) {
-          if (r.target !== content) continue;
-          for (const n of r.addedNodes) if (n.nodeType === Node.ELEMENT_NODE) this.unread++;
-        }
-      }
-      this._remember();
+    // History loads (any htmx request from an element marked data-history
+    // into this transcript) are not news: the log goes quiet for them, or a
+    // screen reader would read old messages as if they had just arrived.
+    _isHistory(e) {
+      return e.detail?.target === this.$refs.content && !!e.detail?.elt?.closest?.("[data-history]");
+    },
+
+    onHistoryStart(e) {
+      if (!this._isHistory(e)) return;
+      this._quiet = true;
+      this.$refs.viewport.setAttribute("aria-live", "off");
+    },
+
+    onHistoryEnd(e) {
+      if (!this._quiet || e.detail?.target !== this.$refs.content) return;
+      this._quiet = false;
+      requestAnimationFrame(() => this.$refs.viewport.setAttribute("aria-live", "polite"));
     },
 
     toEnd() {
       const vp = this.$refs.viewport;
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      this._following = true;
       vp.scrollTo({ top: vp.scrollHeight, behavior: reduce ? "auto" : "smooth" });
       this.unread = 0;
       // The button disappears at the end; keep focus in the conversation.

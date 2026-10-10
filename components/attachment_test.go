@@ -71,3 +71,14 @@ func TestAttachmentGroupScrollsHorizontally(t *testing.T) {
 		t.Errorf("expected two items: %s", html)
 	}
 }
+
+// The live region exists in every state, so a change of state is announced
+// as a change; a region born together with its text is often not read.
+func TestAttachmentStatusRegionAlwaysPresent(t *testing.T) {
+	for _, state := range []string{"idle", "uploading", "processing", "done"} {
+		html := renderToString(t, components.Attachment(attachment(state)))
+		if !strings.Contains(html, `role="status"`) {
+			t.Errorf("%s: expected a status region: %s", state, html)
+		}
+	}
+}

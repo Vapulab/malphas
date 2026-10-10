@@ -29,7 +29,12 @@ func (p MessageScrollerProps) contentID() string { return p.ID + "-content" }
 // element, SSE, or plain DOM calls — because messageScroller() observes the
 // content itself (MutationObserver). The browser's own scroll anchoring is
 // switched off ([overflow-anchor:none]) so the two never correct the same
-// shift twice.
+// shift twice. Only elements marked data-message (Message adds it) count as
+// new.
+//
+// For screen readers: mark history loaders with data-history (the log goes
+// quiet while they load), and set aria-busy="true" on a message while its
+// text streams in, so it is announced once, complete.
 //
 // The viewport is role="log", which is polite by nature: new messages are
 // read out without interrupting.
@@ -54,7 +59,7 @@ func MessageScroller(props MessageScrollerProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"relative flex h-full min-h-0 flex-col\" x-data=\"messageScroller\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"relative flex h-full min-h-0 flex-col\" x-data=\"messageScroller\" x-on:htmx:before-request.window=\"onHistoryStart($event)\" x-on:htmx:after-settle.window=\"onHistoryEnd($event)\" x-on:htmx:response-error.window=\"onHistoryEnd($event)\" x-on:htmx:send-error.window=\"onHistoryEnd($event)\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -74,7 +79,7 @@ func MessageScroller(props MessageScrollerProps) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/messagescroller.templ`, Line: 35, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/messagescroller.templ`, Line: 48, Col: 28}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 			if templ_7745c5c3_Err != nil {
@@ -92,13 +97,13 @@ func MessageScroller(props MessageScrollerProps) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.contentID())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/messagescroller.templ`, Line: 41, Col: 30}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/messagescroller.templ`, Line: 56, Col: 30}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" x-ref=\"content\" class=\"flex flex-col gap-1 p-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" x-ref=\"content\" class=\"relative flex flex-col gap-1 p-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
