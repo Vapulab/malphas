@@ -18,7 +18,8 @@ type MenubarProps struct {
 // The whole bar is one Tab stop. ← → move between the top items, and once a
 // menu is open they carry the open menu along; ↓ Enter Space open; inside a
 // menu ↑ ↓ move, Escape goes back to the top item, and Tab closes everything
-// and lets focus continue down the page. menubar() in malphas.js owns this —
+// and lets focus continue down the page (Shift+Tab lands on the bar's own
+// tab stop, the item that was active). menubar() in malphas.js owns this —
 // two levels of arrow keys do not fit rovingList.
 templ Menubar(props MenubarProps) {
 	<div

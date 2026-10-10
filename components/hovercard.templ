@@ -33,8 +33,8 @@ templ HoverCard(props HoverCardProps) {
 			href={ templ.URL(props.Href) }
 			x-on:mouseenter="enter()"
 			x-on:mouseleave="leave()"
-			x-on:focusin="enter()"
-			x-on:focusout="leave()"
+			x-on:focusin="enter('focus')"
+			x-on:focusout="leave('focus')"
 			class="font-medium text-primary underline-offset-2 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 		>{ props.Label }</a>
 		// A span, not a div: the card lives inside running text, and a <div>

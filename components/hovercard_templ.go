@@ -72,7 +72,7 @@ func HoverCard(props HoverCardProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" x-on:mouseenter=\"enter()\" x-on:mouseleave=\"leave()\" x-on:focusin=\"enter()\" x-on:focusout=\"leave()\" class=\"font-medium text-primary underline-offset-2 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" x-on:mouseenter=\"enter()\" x-on:mouseleave=\"leave()\" x-on:focusin=\"enter('focus')\" x-on:focusout=\"leave('focus')\" class=\"font-medium text-primary underline-offset-2 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

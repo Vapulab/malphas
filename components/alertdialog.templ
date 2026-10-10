@@ -40,7 +40,9 @@ func (p AlertDialogProps) confirmAttrs() templ.Attributes {
 //
 // Closing is delegated to the footer (data-alert-close) instead of an
 // x-on:click on each button, so ConfirmAttrs can carry its own x-on:click or
-// hx-* without colliding with ours.
+// hx-* without colliding with ours. With hx-*, always set hx-target: the
+// dialog leaves the DOM as it closes, and htmx's default target — the button
+// itself — would be gone by the time the response arrives.
 templ AlertDialog(props AlertDialogProps) {
 	<div
 		x-data="alertDialog"

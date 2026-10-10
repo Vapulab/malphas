@@ -485,23 +485,29 @@ document.addEventListener("alpine:init", () => {
   Alpine.data("popover", () => ({ ...floatingPanel() }));
 
   // Timers rather than CSS :hover, because the card must survive the gap
-  // between link and card, and open on keyboard focus too. One pending timer
-  // at a time: entering cancels a pending close and vice versa.
+  // between link and card, and open on keyboard focus too. Pointer and focus
+  // each hold it open on their own — moving the mouse away must not close a
+  // card the keyboard is still on — and it closes when neither does. One
+  // pending timer at a time: entering cancels a pending close and vice versa.
   Alpine.data("hoverCard", (openDelay = 400, closeDelay = 200) => ({
     open: false,
     _timer: null,
+    _holds: { pointer: false, focus: false },
 
     _schedule(fn, ms) {
       clearTimeout(this._timer);
       this._timer = setTimeout(fn, ms);
     },
 
-    enter() {
+    enter(source = "pointer") {
+      this._holds[source] = true;
       if (this.open) clearTimeout(this._timer);
       else this._schedule(() => (this.open = true), openDelay);
     },
 
-    leave() {
+    leave(source = "pointer") {
+      this._holds[source] = false;
+      if (this._holds.pointer || this._holds.focus) return;
       this._schedule(() => (this.open = false), closeDelay);
     },
 
@@ -893,9 +899,8 @@ document.addEventListener("alpine:init", () => {
       }[e.key];
       if (!handled) return;
       e.preventDefault();
-      // The submenu is inside the bar's own keydown path; without this the
-      // bar would see the same key again, and a Modal around it would close
-      // on Escape.
+      // A Modal or Drawer around the bar closes on Escape at window; the key
+      // that closes this menu must stop here.
       e.stopPropagation();
       handled();
     },
