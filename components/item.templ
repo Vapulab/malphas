@@ -1,0 +1,86 @@
+package components
+
+type ItemProps struct {
+	Title       string
+	Description string
+	Href        string          // makes the whole item clickable
+	Media       templ.Component // icon, Avatar or image
+	Actions     templ.Component // buttons; stay independently clickable
+	Variant     string          // default | outline | muted
+	Size        string          // md | sm (default md)
+	Attrs       templ.Attributes
+}
+
+func (p ItemProps) classes() string {
+	variant := map[string]string{
+		"default": "",
+		"outline": "border border-border",
+		"muted":   "bg-muted/5",
+	}[or(p.Variant, "default")]
+	size := map[string]string{
+		"md": "gap-4 p-4",
+		"sm": "gap-3 px-3 py-2",
+	}[or(p.Size, "md")]
+	return "relative flex items-center rounded " + variant + " " + size
+}
+
+// Item is a row of media, text and actions.
+//
+// With Href it uses the stretched-link pattern: the title is the only <a>, and
+// its ::after covers the whole item, so the row is clickable while the actions
+// stay outside the link (relative z-10 lifts them above the overlay). Wrapping
+// the row in an <a> instead would nest buttons in a link — invalid HTML, and
+// every action click would also navigate.
+templ Item(props ItemProps) {
+	<div
+		class={ props.classes(),
+			templ.KV("transition-colors hover:bg-muted/10 focus-within:ring-2 focus-within:ring-primary/50", props.Href != "") }
+		{ props.Attrs... }
+	>
+		if props.Media != nil {
+			<div class="flex shrink-0 items-center">
+				@props.Media
+			</div>
+		}
+		<div class="flex min-w-0 flex-1 flex-col gap-0.5">
+			if props.Href != "" {
+				<a href={ templ.URL(props.Href) } class="truncate text-sm font-medium text-fg after:absolute after:inset-0 focus:outline-none">{ props.Title }</a>
+			} else {
+				<p class="truncate text-sm font-medium text-fg">{ props.Title }</p>
+			}
+			if props.Description != "" {
+				<p class="line-clamp-2 text-sm text-muted">{ props.Description }</p>
+			}
+		</div>
+		if props.Actions != nil {
+			<div class="relative z-10 flex shrink-0 items-center gap-2">
+				@props.Actions
+			</div>
+		}
+	</div>
+}
+
+type ItemGroupProps struct {
+	Label string // accessible name for the list
+	Items []ItemProps
+	Attrs templ.Attributes
+}
+
+// ItemGroup takes the items as data, so it can own the <ul>/<li> structure:
+// list semantics cannot be split between a parent and children rendered by
+// someone else.
+templ ItemGroup(props ItemGroupProps) {
+	<ul
+		if props.Label != "" {
+			aria-label={ props.Label }
+		}
+		class="flex flex-col divide-y divide-border rounded border border-border"
+		{ props.Attrs... }
+	>
+		for _, it := range props.Items {
+			<li>
+				@Item(it)
+			</li>
+		}
+	</ul>
+}
