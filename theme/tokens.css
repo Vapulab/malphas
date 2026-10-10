@@ -61,6 +61,11 @@
      */
     --color-primary: 96 165 250;
     --color-primary-fg: 10 15 26;
+    /* Mesma armadilha, mesmo par: red-600 dá ~3.9:1 como texto sobre o
+     * surface escuro (o erro do Field), e red-400 com texto escuro dá ~6.9:1
+     * nas duas direções. */
+    --color-danger: 248 113 113;
+    --color-danger-fg: 10 15 26;
     --color-surface: 10 15 26;
     --color-fg: 237 240 244;
     --color-muted: 148 163 184;
@@ -72,6 +77,8 @@
 :root[data-theme="dark"] {
   --color-primary: 96 165 250;
   --color-primary-fg: 10 15 26;
+  --color-danger: 248 113 113;
+  --color-danger-fg: 10 15 26;
   --color-surface: 10 15 26;
   --color-fg: 237 240 244;
   --color-muted: 148 163 184;
