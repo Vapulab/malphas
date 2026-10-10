@@ -1,0 +1,90 @@
+package components
+
+type MenubarMenu struct {
+	Label   string
+	Entries []MenuEntry
+}
+
+type MenubarProps struct {
+	Label string // accessible name for the bar
+	Menus []MenubarMenu
+	Attrs templ.Attributes
+}
+
+// Menubar is the desktop-application menu bar: File, Edit, View. Reach for it
+// only when the page really is an application with many commands; for site
+// navigation use Navbar, for a single list of actions use Dropdown.
+//
+// The whole bar is one Tab stop. ← → move between the top items, and once a
+// menu is open they carry the open menu along; ↓ Enter Space open; inside a
+// menu ↑ ↓ move, Escape goes back to the top item, and Tab closes everything
+// and lets focus continue down the page. menubar() in malphas.js owns this —
+// two levels of arrow keys do not fit rovingList.
+templ Menubar(props MenubarProps) {
+	<div
+		role="menubar"
+		if props.Label != "" {
+			aria-label={ props.Label }
+		}
+		class="inline-flex items-center gap-1 rounded border border-border bg-surface p-1"
+		x-data={ "menubar(" + intJS(len(props.Menus)) + ")" }
+		x-on:click.outside="closeAll({ restoreFocus: false })"
+		{ props.Attrs... }
+	>
+		for m, menu := range props.Menus {
+			<div class="relative">
+				<button
+					type="button"
+					role="menuitem"
+					aria-haspopup="menu"
+					aria-expanded="false"
+					x-bind:aria-expanded={ "openMenu === " + intJS(m) + " ? 'true' : 'false'" }
+					data-menubar-top={ intJS(m) }
+					tabindex={ rovingTabindex(m, 0) }
+					x-bind:tabindex={ "topTabindex(" + intJS(m) + ")" }
+					x-on:click={ "onTopClick(" + intJS(m) + ")" }
+					x-on:mouseenter={ "onTopHover(" + intJS(m) + ")" }
+					x-on:keydown={ "onTopKeydown($event, " + intJS(m) + ")" }
+					class="rounded px-3 py-1.5 text-sm font-medium text-fg hover:bg-muted/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 aria-expanded:bg-muted/10"
+				>{ menu.Label }</button>
+				<div
+					role="menu"
+					aria-label={ menu.Label }
+					data-menubar-menu={ intJS(m) }
+					x-show={ "openMenu === " + intJS(m) }
+					style="display:none"
+					x-on:keydown={ "onMenuKeydown($event, " + intJS(m) + ")" }
+					class="absolute left-0 top-full z-40 mt-1 min-w-48 rounded border border-border bg-surface py-1 shadow-lg"
+				>
+					for _, e := range menu.Entries {
+						if e.isDivider() {
+							<div role="separator" class="my-1 h-px bg-border"></div>
+						} else {
+							@menubarItem(e)
+						}
+					}
+				</div>
+			</div>
+		}
+	</div>
+}
+
+templ menubarItem(e MenuEntry) {
+	if e.Href != "" {
+		<a
+			role="menuitem"
+			href={ templ.URL(e.Href) }
+			tabindex="-1"
+			class={ "block px-4 py-2 text-sm focus:outline-none focus:bg-muted/10", dropdownItemClasses(e) }
+		>{ e.Label }</a>
+	} else {
+		<button
+			type="button"
+			role="menuitem"
+			tabindex="-1"
+			disabled?={ e.Disabled }
+			x-on:click={ e.OnClick + "; closeAll()" }
+			class={ "block w-full px-4 py-2 text-left text-sm focus:outline-none focus:bg-muted/10", dropdownItemClasses(e) }
+		>{ e.Label }</button>
+	}
+}

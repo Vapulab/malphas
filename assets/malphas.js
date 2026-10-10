@@ -754,6 +754,106 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 
+  // Two levels of arrow keys: ← → across the bar, ↑ ↓ within the open menu.
+  // openMenu is -1 when every menu is closed; once one is open, moving across
+  // the bar (keys or hover) carries the open state along, as desktop menu
+  // bars do.
+  Alpine.data("menubar", (count = 0) => ({
+    openMenu: -1,
+    activeTop: 0,
+
+    topTabindex(i) {
+      return this.activeTop === i ? 0 : -1;
+    },
+
+    _wrap(i) {
+      return (i + count) % count;
+    },
+
+    _top(i) {
+      return this.$root.querySelector(`[data-menubar-top="${i}"]`);
+    },
+
+    _items(m) {
+      return Array.from(
+        this.$root.querySelectorAll(`[data-menubar-menu="${m}"] [role="menuitem"]:not([disabled])`),
+      );
+    },
+
+    focusTop(i) {
+      this.activeTop = this._wrap(i);
+      this._top(this.activeTop)?.focus();
+    },
+
+    openAt(i, which = "first") {
+      i = this._wrap(i);
+      this.openMenu = i;
+      this.activeTop = i;
+      // x-show has to apply before an item inside can take focus.
+      this.$nextTick(() => {
+        const items = this._items(i);
+        (which === "last" ? items[items.length - 1] : items[0])?.focus();
+      });
+    },
+
+    closeAll({ restoreFocus = true } = {}) {
+      const was = this.openMenu;
+      this.openMenu = -1;
+      if (restoreFocus && was >= 0) this.focusTop(was);
+    },
+
+    onTopClick(i) {
+      this.openMenu === i ? this.closeAll() : this.openAt(i);
+    },
+
+    // Hover only switches menus once one is open, as on the desktop.
+    onTopHover(i) {
+      if (this.openMenu >= 0 && this.openMenu !== i) this.openAt(i);
+    },
+
+    onTopKeydown(e, i) {
+      const handled = {
+        ArrowRight: () => (this.openMenu >= 0 ? this.openAt(i + 1) : this.focusTop(i + 1)),
+        ArrowLeft: () => (this.openMenu >= 0 ? this.openAt(i - 1) : this.focusTop(i - 1)),
+        ArrowDown: () => this.openAt(i),
+        ArrowUp: () => this.openAt(i, "last"),
+        Enter: () => this.openAt(i),
+        " ": () => this.openAt(i),
+        Home: () => this.focusTop(0),
+        End: () => this.focusTop(count - 1),
+      }[e.key];
+      if (!handled) return;
+      e.preventDefault();
+      handled();
+    },
+
+    onMenuKeydown(e, m) {
+      if (e.key === "Tab") {
+        this.closeAll({ restoreFocus: false });
+        return;
+      }
+      const items = this._items(m);
+      const at = items.indexOf(document.activeElement);
+      const go = (j) => items[(j + items.length) % items.length]?.focus();
+      const handled = {
+        ArrowDown: () => go(at + 1),
+        ArrowUp: () => go(at - 1),
+        Home: () => go(0),
+        End: () => go(items.length - 1),
+        ArrowRight: () => this.openAt(m + 1),
+        ArrowLeft: () => this.openAt(m - 1),
+        Escape: () => this.closeAll(),
+      }[e.key];
+      if (!handled) return;
+      e.preventDefault();
+      // The submenu is inside the bar's own keydown path; without this the
+      // bar would see the same key again, and a Modal around it would close
+      // on Escape.
+      e.stopPropagation();
+      handled();
+    },
+  }));
+
   // Reads the theme the inline script already applied, so the toggle's initial
   // state matches what is on screen. "" means "follow the OS".
   Alpine.data("themeToggle", () => ({
