@@ -402,6 +402,27 @@ document.addEventListener("alpine:init", () => {
 
   Alpine.data("toggleButton", (pressed = false) => ({ pressed }));
 
+  // Arrows move focus only, not the pressed state: unlike a radio group, a
+  // toolbar of toggles must not change formatting just because focus passed
+  // over it. So onRovingSelect is deliberately not defined.
+  Alpine.data("toggleGroup", (pressed = [], multiple = false, active = 0) => ({
+    ...rovingList({ orientation: "both", active }),
+    pressed,
+
+    isPressed(i) {
+      return !!this.pressed[i];
+    },
+
+    // Single mode can still end with nothing pressed: pressing the pressed
+    // item releases it.
+    press(i) {
+      const next = !this.pressed[i];
+      if (!multiple) this.pressed = this.pressed.map(() => false);
+      this.pressed[i] = next;
+      this.active = i;
+    },
+  }));
+
   Alpine.data("checkbox", (checked = false, indeterminate = false) => ({
     checked,
     indeterminate,

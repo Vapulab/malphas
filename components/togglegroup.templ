@@ -1,0 +1,95 @@
+package components
+
+import (
+	"slices"
+	"strings"
+)
+
+type ToggleGroupItem struct {
+	Label    string
+	Value    string
+	Disabled bool
+}
+
+type ToggleGroupProps struct {
+	Name  string // with a Name, each pressed value is submitted
+	Label string // accessible name for the group
+	Type  string // single | multiple (default single)
+	Items []ToggleGroupItem
+	Value []string // values pressed initially
+	Attrs templ.Attributes
+}
+
+func (p ToggleGroupProps) multiple() bool { return p.Type == "multiple" }
+
+func (p ToggleGroupProps) isPressed(item ToggleGroupItem) bool {
+	return slices.Contains(p.Value, item.Value)
+}
+
+// pressedJS renders the initial state as a JS array literal for x-data.
+func (p ToggleGroupProps) pressedJS() string {
+	parts := make([]string, len(p.Items))
+	for i, it := range p.Items {
+		parts[i] = boolJS(p.isPressed(it))
+	}
+	return "[" + strings.Join(parts, ",") + "]"
+}
+
+// activeIndex is the item holding the tab stop: the first pressed enabled
+// item, else the first enabled one. Falling back past disabled items matters:
+// a disabled tab stop would leave the group unreachable by keyboard.
+func (p ToggleGroupProps) activeIndex() int {
+	for i, it := range p.Items {
+		if !it.Disabled && p.isPressed(it) {
+			return i
+		}
+	}
+	for i, it := range p.Items {
+		if !it.Disabled {
+			return i
+		}
+	}
+	return 0
+}
+
+// ToggleGroup is a set of ToggleButtons sharing one tab stop. Single mode
+// presses at most one item, and pressing the pressed one releases it, as in
+// the Radix original; multiple mode toggles each independently.
+templ ToggleGroup(props ToggleGroupProps) {
+	<div
+		role="group"
+		if props.Label != "" {
+			aria-label={ props.Label }
+		}
+		class="inline-flex flex-wrap gap-1 rounded border border-border p-1"
+		x-data={ "toggleGroup(" + props.pressedJS() + ", " + boolJS(props.multiple()) + ", " + intJS(props.activeIndex()) + ")" }
+		x-on:keydown="onKeydown($event)"
+		{ props.Attrs... }
+	>
+		for i, it := range props.Items {
+			<button
+				type="button"
+				aria-pressed={ ariaBool(props.isPressed(it)) }
+				x-bind:aria-pressed={ "isPressed(" + intJS(i) + ") ? 'true' : 'false'" }
+				data-roving-item={ intJS(i) }
+				if it.Disabled {
+					data-roving-disabled
+					disabled
+				}
+				tabindex={ rovingTabindex(i, props.activeIndex()) }
+				x-bind:tabindex={ "tabindex(" + intJS(i) + ")" }
+				x-on:click={ "press(" + intJS(i) + ")" }
+				class={ toggleItemClasses() }
+			>{ it.Label }</button>
+			if props.Name != "" {
+				<input
+					type="hidden"
+					name={ props.Name }
+					value={ it.Value }
+					disabled?={ !props.isPressed(it) || it.Disabled }
+					x-bind:disabled={ "!isPressed(" + intJS(i) + ") || " + boolJS(it.Disabled) }
+				/>
+			}
+		}
+	</div>
+}
