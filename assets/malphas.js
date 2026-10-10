@@ -713,6 +713,22 @@ document.addEventListener("alpine:init", () => {
     y: 0,
     _returnFocusTo: null,
 
+    // The component wraps the caller's content, so everything is scoped to
+    // the menu: a Tabs or ToggleGroup inside the area has roving items too,
+    // and they are not this menu's.
+    _rovingItems() {
+      return Array.from(this.$refs.menu.querySelectorAll("[data-roving-item]")).filter(
+        (el) => !el.hasAttribute("data-roving-disabled"),
+      );
+    },
+
+    // pointerdown, not click.outside on the root: the root contains the whole
+    // target area, so a click there would not count as outside, and a
+    // right-click elsewhere fires no click at all.
+    onWindowPointerDown(e) {
+      if (this.open && !this.$refs.menu.contains(e.target)) this.close({ restoreFocus: false });
+    },
+
     openAt(x, y) {
       this._returnFocusTo = document.activeElement;
       this.x = x;

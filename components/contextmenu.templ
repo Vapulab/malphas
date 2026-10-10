@@ -26,8 +26,7 @@ func (p ContextMenuProps) hintID() string { return p.ID + "-hint" }
 templ ContextMenu(props ContextMenuProps) {
 	<div
 		x-data="contextMenu"
-		x-on:keydown="onMenuKeydown($event)"
-		x-on:click.outside="close({ restoreFocus: false })"
+		x-on:pointerdown.window="onWindowPointerDown($event)"
 		{ props.Attrs... }
 	>
 		<div
@@ -46,6 +45,7 @@ templ ContextMenu(props ContextMenuProps) {
 			role="menu"
 			aria-label={ props.Label }
 			x-ref="menu"
+			x-on:keydown="onMenuKeydown($event)"
 			x-show="open"
 			style="display:none"
 			x-bind:style="{ left: x + 'px', top: y + 'px' }"

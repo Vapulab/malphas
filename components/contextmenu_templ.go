@@ -52,7 +52,7 @@ func ContextMenu(props ContextMenuProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div x-data=\"contextMenu\" x-on:keydown=\"onMenuKeydown($event)\" x-on:click.outside=\"close({ restoreFocus: false })\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div x-data=\"contextMenu\" x-on:pointerdown.window=\"onWindowPointerDown($event)\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -67,7 +67,7 @@ func ContextMenu(props ContextMenuProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.hintID())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/contextmenu.templ`, Line: 36, Col: 36}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/contextmenu.templ`, Line: 35, Col: 36}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -88,7 +88,7 @@ func ContextMenu(props ContextMenuProps) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.hintID())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/contextmenu.templ`, Line: 43, Col: 27}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/contextmenu.templ`, Line: 42, Col: 27}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
@@ -101,7 +101,7 @@ func ContextMenu(props ContextMenuProps) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.menuID())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/contextmenu.templ`, Line: 45, Col: 22}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/contextmenu.templ`, Line: 44, Col: 22}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 		if templ_7745c5c3_Err != nil {
@@ -114,13 +114,13 @@ func ContextMenu(props ContextMenuProps) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/contextmenu.templ`, Line: 47, Col: 27}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/contextmenu.templ`, Line: 46, Col: 27}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" x-ref=\"menu\" x-show=\"open\" style=\"display:none\" x-bind:style=\"{ left: x + 'px', top: y + 'px' }\" class=\"fixed z-50 min-w-48 rounded border border-border bg-surface py-1 shadow-lg\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" x-ref=\"menu\" x-on:keydown=\"onMenuKeydown($event)\" x-show=\"open\" style=\"display:none\" x-bind:style=\"{ left: x + 'px', top: y + 'px' }\" class=\"fixed z-50 min-w-48 rounded border border-border bg-surface py-1 shadow-lg\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
