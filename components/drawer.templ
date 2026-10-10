@@ -5,18 +5,24 @@ import "strconv"
 type DrawerProps struct {
 	ID    string
 	Title string
-	Side  string // left | right (default left)
+	Side  string // left | right | bottom (default left)
 	Attrs templ.Attributes
 }
 
 func (p DrawerProps) titleID() string { return p.ID + "-title" }
 
+// bottom is a sheet rising from the bottom edge, the shadcn "Drawer": full
+// width and height capped, so the page above stays visible as context.
 func (p DrawerProps) panelClasses() string {
-	base := "relative z-10 flex h-full w-80 max-w-[85vw] flex-col overflow-y-auto border-border bg-surface p-6 shadow-lg focus:outline-none"
-	if or(p.Side, "left") == "right" {
-		return base + " ml-auto border-l"
+	base := "relative z-10 flex flex-col overflow-y-auto border-border bg-surface p-6 shadow-lg focus:outline-none"
+	switch or(p.Side, "left") {
+	case "right":
+		return base + " h-full w-80 max-w-[85vw] ml-auto border-l"
+	case "bottom":
+		return base + " mt-auto w-full max-h-[85vh] rounded-t-lg border-t"
+	default:
+		return base + " h-full w-80 max-w-[85vw] mr-auto border-r"
 	}
-	return base + " mr-auto border-r"
 }
 
 // Drawer is a modal side panel. Open it from anywhere inside an Alpine scope

@@ -13,18 +13,24 @@ import "strconv"
 type DrawerProps struct {
 	ID    string
 	Title string
-	Side  string // left | right (default left)
+	Side  string // left | right | bottom (default left)
 	Attrs templ.Attributes
 }
 
 func (p DrawerProps) titleID() string { return p.ID + "-title" }
 
+// bottom is a sheet rising from the bottom edge, the shadcn "Drawer": full
+// width and height capped, so the page above stays visible as context.
 func (p DrawerProps) panelClasses() string {
-	base := "relative z-10 flex h-full w-80 max-w-[85vw] flex-col overflow-y-auto border-border bg-surface p-6 shadow-lg focus:outline-none"
-	if or(p.Side, "left") == "right" {
-		return base + " ml-auto border-l"
+	base := "relative z-10 flex flex-col overflow-y-auto border-border bg-surface p-6 shadow-lg focus:outline-none"
+	switch or(p.Side, "left") {
+	case "right":
+		return base + " h-full w-80 max-w-[85vw] ml-auto border-l"
+	case "bottom":
+		return base + " mt-auto w-full max-h-[85vh] rounded-t-lg border-t"
+	default:
+		return base + " h-full w-80 max-w-[85vw] mr-auto border-r"
 	}
-	return base + " mr-auto border-r"
 }
 
 // Drawer is a modal side panel. Open it from anywhere inside an Alpine scope
@@ -62,7 +68,7 @@ func Drawer(props DrawerProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue("if ($event.detail === " + strconv.Quote(props.ID) + ") openOverlay()")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/drawer.templ`, Line: 32, Col: 98}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/drawer.templ`, Line: 38, Col: 98}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -92,7 +98,7 @@ func Drawer(props DrawerProps) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.titleID())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/drawer.templ`, Line: 43, Col: 38}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/drawer.templ`, Line: 49, Col: 38}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 		if templ_7745c5c3_Err != nil {
@@ -118,7 +124,7 @@ func Drawer(props DrawerProps) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.titleID())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/drawer.templ`, Line: 49, Col: 30}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/drawer.templ`, Line: 55, Col: 30}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 		if templ_7745c5c3_Err != nil {
@@ -131,7 +137,7 @@ func Drawer(props DrawerProps) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(props.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/drawer.templ`, Line: 49, Col: 84}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/drawer.templ`, Line: 55, Col: 84}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {

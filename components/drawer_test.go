@@ -54,3 +54,18 @@ func TestDrawerDefaultsToLeft(t *testing.T) {
 		t.Error("an empty Side should render the same as left")
 	}
 }
+
+// Side bottom is a sheet rising from the bottom edge: full width, capped
+// height, no side-panel width.
+func TestDrawerBottom(t *testing.T) {
+	html := renderWithChildren(t,
+		components.Drawer(components.DrawerProps{ID: "d", Title: "Filtros", Side: "bottom"}), templ.Raw("x"))
+	for _, want := range []string{"mt-auto", "w-full", "max-h-[85vh]", "border-t", "rounded-t-lg"} {
+		if !strings.Contains(html, want) {
+			t.Errorf("missing %s in: %s", want, html)
+		}
+	}
+	if strings.Contains(html, "w-80") || strings.Contains(html, "h-full") {
+		t.Errorf("a bottom sheet must not keep the side panel's size, got: %s", html)
+	}
+}
