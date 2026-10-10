@@ -1,0 +1,15 @@
+package components
+
+type ProseProps struct {
+	Attrs templ.Attributes
+}
+
+// Prose styles long-form content whose markup comes from elsewhere — rendered
+// Markdown, help pages, legal text — and so cannot carry utility classes. The
+// rules live in theme/tokens.css as .prose-malphas, usable without this
+// wrapper too.
+templ Prose(props ProseProps) {
+	<div class="prose-malphas" { props.Attrs... }>
+		{ children... }
+	</div>
+}

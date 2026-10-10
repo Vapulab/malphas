@@ -56,3 +56,10 @@ func TestItemGroupIsAList(t *testing.T) {
 		t.Errorf("expected a labelled list of 2, got: %s", html)
 	}
 }
+
+func TestProseAppliesTheClass(t *testing.T) {
+	html := renderWithChildren(t, components.Prose(components.ProseProps{}), templ.Raw("<h2>Título</h2>"))
+	if !strings.Contains(html, `class="prose-malphas"`) {
+		t.Errorf("expected the prose class, got: %s", html)
+	}
+}
