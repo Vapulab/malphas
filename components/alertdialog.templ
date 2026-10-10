@@ -45,7 +45,7 @@ templ AlertDialog(props AlertDialogProps) {
 	<div
 		x-data="alertDialog"
 		x-on:open-alert-dialog.window={ "if ($event.detail === " + strconv.Quote(props.ID) + ") openOverlay()" }
-		x-on:keydown.escape.window="closeOverlay()"
+		x-on:keydown.escape.window="onEscape()"
 		{ props.Attrs... }
 	>
 		<template x-if="open">

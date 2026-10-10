@@ -36,7 +36,7 @@ templ Drawer(props DrawerProps) {
 	<div
 		x-data="drawer"
 		x-on:open-drawer.window={ "if ($event.detail === " + strconv.Quote(props.ID) + ") openOverlay()" }
-		x-on:keydown.escape.window="closeOverlay()"
+		x-on:keydown.escape.window="onEscape()"
 		{ props.Attrs... }
 	>
 		<template x-if="open">

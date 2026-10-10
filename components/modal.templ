@@ -21,7 +21,7 @@ templ Modal(props ModalProps) {
 	<div
 		x-data="modal"
 		x-on:open-modal.window={ "if ($event.detail === " + strconv.Quote(props.ID) + ") openOverlay()" }
-		x-on:keydown.escape.window="closeOverlay()"
+		x-on:keydown.escape.window="onEscape()"
 		{ props.Attrs... }
 	>
 		<template x-if="open">

@@ -307,11 +307,22 @@ function unlockBodyScroll() {
   root.style.scrollBehavior = savedScrollBehavior;
 }
 
+// Open modal overlays, bottom to top. Every one of them listens for Escape at
+// window, and they stack — a confirmation over an edit form, a palette over a
+// dialog — so only the top one may act on it. Without this, cancelling a
+// confirmation also closed the form underneath.
+//
+// The stack holds ids, not components: Alpine hands methods a reactive proxy
+// as `this`, and two calls do not reliably get the same object to compare.
+const overlayStack = [];
+let overlaySeq = 0;
+
 // modalOverlay is spread into a component that owns an `open` flag and a panel
 // marked with x-ref="panel".
 function modalOverlay() {
   return {
     open: false,
+    _overlayId: ++overlaySeq,
     _returnFocusTo: null,
     _inerted: [],
 
@@ -320,6 +331,7 @@ function modalOverlay() {
       // Remember who opened us before the DOM changes under our feet.
       this._returnFocusTo = document.activeElement;
       this.open = true;
+      overlayStack.push(this._overlayId);
       // The panel lives inside x-if, so it does not exist until Alpine has
       // rendered this tick.
       this.$nextTick(() => {
@@ -334,6 +346,8 @@ function modalOverlay() {
     closeOverlay() {
       if (!this.open) return;
       this.open = false;
+      const at = overlayStack.lastIndexOf(this._overlayId);
+      if (at !== -1) overlayStack.splice(at, 1);
       unlockBodyScroll();
       this._releaseInert();
       // Returning focus is what keeps a keyboard user from being dumped at the
@@ -342,6 +356,11 @@ function modalOverlay() {
         this._returnFocusTo.focus();
       }
       this._returnFocusTo = null;
+    },
+
+    // Bound to keydown.escape.window: only the overlay on top closes.
+    onEscape() {
+      if (overlayStack[overlayStack.length - 1] === this._overlayId) this.closeOverlay();
     },
 
     // Everything that is not an ancestor of the panel becomes unreachable —
