@@ -1,0 +1,54 @@
+package components
+
+type ToggleButtonProps struct {
+	ID       string
+	Name     string // with a Name, the value is submitted while pressed
+	Value    string // default "on", like a checkbox
+	Label    string // aria-label, for icon-only content
+	Pressed  bool
+	Disabled bool
+	Attrs    templ.Attributes
+}
+
+// toggleItemClasses is shared with ToggleGroup. The pressed look comes from
+// the aria-pressed: variant, not x-bind:class: a bound class would coexist
+// with the static one and stylesheet order would pick the winner (see
+// rendering_test.go in the app's e2e suite).
+func toggleItemClasses() string {
+	return "inline-flex h-9 min-w-9 items-center justify-center gap-2 rounded px-3 text-sm font-medium text-muted transition-colors hover:bg-muted/10 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50 aria-pressed:bg-primary/10 aria-pressed:text-primary"
+}
+
+// ToggleButton is a two-state button, aria-pressed: the "bold" button of an
+// editor. It is not Toggle, which is an on/off switch for a setting.
+templ ToggleButton(props ToggleButtonProps) {
+	<span class="inline-flex" x-data={ "toggleButton(" + boolJS(props.Pressed) + ")" } { props.Attrs... }>
+		<button
+			type="button"
+			if props.ID != "" {
+				id={ props.ID }
+			}
+			if props.Label != "" {
+				aria-label={ props.Label }
+			}
+			aria-pressed={ ariaBool(props.Pressed) }
+			x-bind:aria-pressed="pressed ? 'true' : 'false'"
+			x-on:click="pressed = !pressed"
+			disabled?={ props.Disabled }
+			class={ toggleItemClasses() }
+		>
+			{ children... }
+		</button>
+		if props.Name != "" {
+			// A disabled input is left out of the submission, so the value
+			// travels only while pressed — the way an unchecked checkbox sends
+			// nothing. A disabled button never sends, pressed or not.
+			<input
+				type="hidden"
+				name={ props.Name }
+				value={ or(props.Value, "on") }
+				disabled?={ !props.Pressed || props.Disabled }
+				x-bind:disabled={ "!pressed || " + boolJS(props.Disabled) }
+			/>
+		}
+	</span>
+}
