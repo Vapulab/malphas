@@ -854,6 +854,61 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 
+  // A modal (modalOverlay) with a search field (listboxNav). The query resets
+  // on every open: a palette that reopens on yesterday's half-typed search is
+  // a trap.
+  Alpine.data("command", () => ({
+    ...modalOverlay(),
+    ...listboxNav(),
+    query: "",
+
+    openPalette() {
+      this.query = "";
+      this.active = -1;
+      this.openOverlay();
+      // The options live inside x-if: they exist only after this tick.
+      this.$nextTick(() => this._highlight(this._navigable()[0]));
+    },
+
+    hotkey(e) {
+      if (!(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== "k") return;
+      e.preventDefault();
+      this.open ? this.closeOverlay() : this.openPalette();
+    },
+
+    groupHasMatches(g) {
+      return Array.from(
+        this.$root.querySelectorAll(`[data-command-group="${g}"] [role="option"]`),
+      ).some((el) => this.matches(el.dataset.label));
+    },
+
+    onInput() {
+      this._highlight(this._navigable()[0]);
+    },
+
+    onKeydown(e) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        this._move(e.key === "ArrowDown" ? 1 : -1);
+      } else if (e.key === "Enter") {
+        // With nothing highlighted (no results), Enter does nothing at all.
+        e.preventDefault();
+        if (this.active >= 0) this.choose(this.active);
+      }
+    },
+
+    // The action runs before closing: closing removes the options (x-if),
+    // and with them the listener that holds the OnClick expression.
+    choose(i) {
+      const el = this._options()[i];
+      if (!el || el.getAttribute("aria-disabled") === "true") return;
+      const href = el.dataset.href;
+      if (!href) el.dispatchEvent(new CustomEvent("command-run"));
+      this.closeOverlay();
+      if (href) window.location.assign(href);
+    },
+  }));
+
   // Reads the theme the inline script already applied, so the toggle's initial
   // state matches what is on screen. "" means "follow the OS".
   Alpine.data("themeToggle", () => ({

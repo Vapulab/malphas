@@ -1,0 +1,154 @@
+package components
+
+import "strconv"
+
+type CommandItem struct {
+	Label    string
+	Href     string // navigates when chosen
+	OnClick  string // Alpine expression run when chosen (when there is no Href)
+	Shortcut string // shown, not bound: e.g. "Ctrl T"
+	Disabled bool
+}
+
+type CommandGroup struct {
+	Heading string
+	Items   []CommandItem
+}
+
+type CommandProps struct {
+	ID          string
+	Placeholder string
+	Empty       string // shown when nothing matches (default "Nenhum resultado")
+	Groups      []CommandGroup
+	Hotkey      bool // open and close with Ctrl+K / ⌘K
+	Attrs       templ.Attributes
+}
+
+// commandEntry carries an item's position in the one index space shared by
+// every group, so ↑ ↓ walk straight across group boundaries.
+type commandEntry struct {
+	CommandItem
+	index int
+}
+
+func (p CommandProps) indexed() [][]commandEntry {
+	groups := make([][]commandEntry, len(p.Groups))
+	n := 0
+	for g, group := range p.Groups {
+		for _, it := range group.Items {
+			groups[g] = append(groups[g], commandEntry{it, n})
+			n++
+		}
+	}
+	return groups
+}
+
+func (p CommandProps) listboxID() string { return p.ID + "-listbox" }
+
+func (p CommandProps) groupID(g int) string { return p.ID + "-group-" + intJS(g) }
+
+func (p CommandProps) optionID(i int) string { return p.ID + "-opt-" + intJS(i) }
+
+// Command is a command palette: a modal with a search field over a grouped
+// list of actions and destinations. Open it with
+// $dispatch('open-command', 'ID'), or with Ctrl+K / ⌘K when Hotkey is set.
+//
+// It combines two existing pieces: modalOverlay() for the dialog (trap, inert,
+// scroll lock, focus returned) and listboxNav() for the search — the same
+// aria-activedescendant navigation as Combobox, so focus never leaves the
+// field while the arrows move through the results.
+//
+// An item's OnClick runs from a custom event on the option itself, so the
+// expression keeps the Alpine scope it was written for and Enter and click
+// share one path. Filtering is client-side; for server search, put hx-get on
+// the field through Attrs and swap the listbox.
+templ Command(props CommandProps) {
+	<div
+		x-data="command"
+		x-on:open-command.window={ "if ($event.detail === " + strconv.Quote(props.ID) + ") openPalette()" }
+		x-on:keydown.escape.window="closeOverlay()"
+		if props.Hotkey {
+			x-on:keydown.window="hotkey($event)"
+		}
+		{ props.Attrs... }
+	>
+		<template x-if="open">
+			<div class="fixed inset-0 z-50 flex items-start justify-center p-4 pt-[15vh]">
+				<div class="absolute inset-0 bg-black/50" x-on:click="closeOverlay()"></div>
+				<div
+					x-ref="panel"
+					role="dialog"
+					aria-modal="true"
+					aria-label="Paleta de comandos"
+					tabindex="-1"
+					x-on:keydown.tab="onTab($event)"
+					class="relative z-10 w-full max-w-lg overflow-hidden rounded border border-border bg-surface shadow-lg focus:outline-none"
+				>
+					<input
+						type="text"
+						role="combobox"
+						aria-expanded="true"
+						aria-autocomplete="list"
+						aria-controls={ props.listboxID() }
+						x-bind:aria-activedescendant="activeId()"
+						autocomplete="off"
+						placeholder={ props.Placeholder }
+						x-model="query"
+						x-on:input="onInput()"
+						x-on:keydown="onKeydown($event)"
+						class="h-12 w-full border-b border-border bg-transparent px-4 text-sm text-fg placeholder:text-muted focus:outline-none"
+					/>
+					<div
+						id={ props.listboxID() }
+						role="listbox"
+						aria-label="Comandos"
+						x-show="hasMatches()"
+						class="max-h-80 overflow-y-auto p-2"
+					>
+						for g, group := range props.indexed() {
+							<div
+								role="group"
+								aria-labelledby={ props.groupID(g) }
+								data-command-group={ intJS(g) }
+								x-show={ "groupHasMatches(" + intJS(g) + ")" }
+							>
+								<div id={ props.groupID(g) } class="px-2 pb-1 pt-2 text-xs font-medium text-muted">{ props.Groups[g].Heading }</div>
+								for _, it := range group {
+									<div
+										id={ props.optionID(it.index) }
+										role="option"
+										data-option-index={ intJS(it.index) }
+										data-label={ it.Label }
+										if it.Href != "" {
+											data-href={ it.Href }
+										}
+										aria-selected="false"
+										x-bind:aria-selected={ "active === " + intJS(it.index) + " ? 'true' : 'false'" }
+										if it.Disabled {
+											aria-disabled="true"
+										}
+										if it.OnClick != "" {
+											x-on:command-run={ it.OnClick }
+										}
+										x-show={ "matches(" + strJS(it.Label) + ")" }
+										x-on:mousedown.prevent
+										x-on:click={ "choose(" + intJS(it.index) + ")" }
+										class="flex cursor-pointer items-center justify-between gap-4 rounded px-2 py-2 text-sm text-fg aria-selected:bg-muted/10 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+									>
+										<span>{ it.Label }</span>
+										if it.Shortcut != "" {
+											<kbd class="rounded border border-border px-1.5 font-sans text-xs text-muted">{ it.Shortcut }</kbd>
+										}
+									</div>
+								}
+							</div>
+						}
+					</div>
+					<p x-show="!hasMatches()" class="px-4 py-8 text-center text-sm text-muted" aria-live="polite">
+						{ or(props.Empty, "Nenhum resultado") }
+					</p>
+				</div>
+			</div>
+		</template>
+	</div>
+}
