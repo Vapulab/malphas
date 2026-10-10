@@ -966,6 +966,126 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 
+  // The APG date grid over a server-rendered month. Dates travel as ISO
+  // strings (YYYY-MM-DD), which compare correctly as plain strings and never
+  // pick up a time zone. When a key lands outside the rendered month, the
+  // next month is fetched (htmx) with foco=, and the grid that comes back
+  // focuses that day itself (data-autofocus, see init).
+  Alpine.data("calendar", (mode = "single", navURL = "") => ({
+    mode,
+    value: "",
+    start: "",
+    end: "",
+
+    init() {
+      const read = (k) => this.$root.querySelector(`[data-cal="${k}"]`)?.value || "";
+      this.value = read("value");
+      this.start = read("start");
+      this.end = read("end");
+      this.$root.querySelector("[data-autofocus]")?.focus();
+    },
+
+    isSelected(d) {
+      if (this.mode !== "range") return this.value === d;
+      if (!this.start) return false;
+      if (!this.end) return d === this.start;
+      return d >= this.start && d <= this.end;
+    },
+
+    rangeState(d) {
+      if (this.mode !== "range" || !this.start || !this.end) return false;
+      if (d === this.start || d === this.end) return "edge";
+      return d > this.start && d < this.end ? "middle" : false;
+    },
+
+    _write(kind, v) {
+      const input = this.$root.querySelector(`[data-cal="${kind}"]`);
+      if (!input || input.value === v) return;
+      input.value = v;
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    },
+
+    // In range mode the first pick starts a period, the second ends it — in
+    // either order, since a period that ends before it starts is never what
+    // anyone meant — and a third starts over.
+    choose(el) {
+      if (el.getAttribute("aria-disabled") === "true") return;
+      const d = el.dataset.date;
+      this._rove(el);
+      if (this.mode !== "range") {
+        this.value = d;
+        this._write("value", d);
+        return;
+      }
+      if (!this.start || this.end) {
+        this.start = d;
+        this.end = "";
+      } else if (d < this.start) {
+        this.end = this.start;
+        this.start = d;
+      } else {
+        this.end = d;
+      }
+      this._write("start", this.start);
+      this._write("end", this.end);
+    },
+
+    _rove(el) {
+      for (const b of this.$root.querySelectorAll("button[data-date]")) b.tabIndex = -1;
+      el.tabIndex = 0;
+    },
+
+    _go(iso) {
+      const el = this.$root.querySelector(`button[data-date="${iso}"]`);
+      if (el) {
+        this._rove(el);
+        el.focus();
+        return;
+      }
+      const values = {};
+      for (const input of this.$root.querySelectorAll('input[type="hidden"]')) {
+        values[input.name] = input.value;
+      }
+      const sep = navURL.includes("?") ? "&" : "?";
+      htmx.ajax("GET", `${navURL}${sep}mes=${iso.slice(0, 7)}&foco=${iso}`, {
+        target: "#" + this.$root.id,
+        select: "#" + this.$root.id,
+        swap: "outerHTML",
+        values,
+      });
+    },
+
+    onKeydown(e) {
+      const el = e.target.closest?.("button[data-date]");
+      if (!el) return;
+      const [y, m, d] = el.dataset.date.split("-").map(Number);
+      const date = new Date(Date.UTC(y, m - 1, d));
+      const weekday = date.getUTCDay();
+      // Month and year steps keep the day, clamped to the target month's
+      // length: 31 Jan + 1 month is 28/29 Feb, not 3 March.
+      const addMonths = (n) => {
+        const target = new Date(Date.UTC(y, m - 1 + n, 1));
+        const last = new Date(Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0)).getUTCDate();
+        target.setUTCDate(Math.min(d, last));
+        return target;
+      };
+      const addDays = (n) => new Date(Date.UTC(y, m - 1, d + n));
+      const target = {
+        ArrowLeft: () => addDays(-1),
+        ArrowRight: () => addDays(1),
+        ArrowUp: () => addDays(-7),
+        ArrowDown: () => addDays(7),
+        Home: () => addDays(-weekday),
+        End: () => addDays(6 - weekday),
+        PageUp: () => addMonths(e.shiftKey ? -12 : -1),
+        PageDown: () => addMonths(e.shiftKey ? 12 : 1),
+      }[e.key];
+      if (!target) return;
+      e.preventDefault();
+      this._go(target().toISOString().slice(0, 10));
+    },
+  }));
+
   // Reads the theme the inline script already applied, so the toggle's initial
   // state matches what is on screen. "" means "follow the OS".
   Alpine.data("themeToggle", () => ({

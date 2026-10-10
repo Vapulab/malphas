@@ -1,0 +1,200 @@
+package components
+
+import "time"
+
+type CalendarProps struct {
+	ID    string
+	Month time.Time // any day in the month to show (default: Today's month)
+	Mode  string    // single | range (default single)
+
+	Name      string    // single: the hidden input carrying the picked day
+	Selected  time.Time // single
+	StartName string    // range
+	EndName   string    // range
+	Start     time.Time // range
+	End       time.Time // range
+
+	Min      time.Time   // days before are disabled
+	Max      time.Time   // days after are disabled
+	Disabled []time.Time // individual days that cannot be picked
+	Today    time.Time   // default time.Now()
+	Focus    time.Time   // the day that takes focus when the grid loads
+
+	// NavURL receives "mes=YYYY-MM" (and "foco=YYYY-MM-DD" when the keyboard
+	// crosses into another month). The response must contain an element with
+	// this calendar's ID: it is swapped in place with hx-select.
+	NavURL string
+	Attrs  templ.Attributes
+}
+
+func (p CalendarProps) today() time.Time {
+	if p.Today.IsZero() {
+		return dayOf(time.Now())
+	}
+	return dayOf(p.Today)
+}
+
+func (p CalendarProps) month() time.Time {
+	m := p.Month
+	if m.IsZero() {
+		m = p.today()
+	}
+	return time.Date(m.Year(), m.Month(), 1, 0, 0, 0, 0, time.UTC)
+}
+
+func (p CalendarProps) isRange() bool { return p.Mode == "range" }
+
+func (p CalendarProps) isDisabled(d time.Time) bool {
+	if !p.Min.IsZero() && d.Before(dayOf(p.Min)) {
+		return true
+	}
+	if !p.Max.IsZero() && d.After(dayOf(p.Max)) {
+		return true
+	}
+	for _, x := range p.Disabled {
+		if dayOf(x).Equal(d) {
+			return true
+		}
+	}
+	return false
+}
+
+func (p CalendarProps) isSelected(d time.Time) bool {
+	if !p.isRange() {
+		return !p.Selected.IsZero() && dayOf(p.Selected).Equal(d)
+	}
+	if p.Start.IsZero() {
+		return false
+	}
+	start := dayOf(p.Start)
+	if p.End.IsZero() {
+		return start.Equal(d)
+	}
+	return !d.Before(start) && !d.After(dayOf(p.End))
+}
+
+// tabStop is the one day reachable with Tab: an explicit Focus, else the
+// selection, else today, else the 1st — whichever falls in this month.
+func (p CalendarProps) tabStop() time.Time {
+	m := p.month()
+	for _, c := range []time.Time{p.Focus, p.Selected, p.Start, p.today()} {
+		if !c.IsZero() && dayOf(c).Year() == m.Year() && dayOf(c).Month() == m.Month() {
+			return dayOf(c)
+		}
+	}
+	return m
+}
+
+func (p CalendarProps) navHref(month time.Time) string {
+	return withQuery(p.NavURL, "mes="+isoMonth(month))
+}
+
+func (p CalendarProps) includeSelector() string {
+	return "#" + p.ID + " input[type=hidden]"
+}
+
+// Calendar is a month grid for picking a day, or a period with Mode "range".
+// Use it where the calendar stays on the page; for a form field, DatePicker's
+// native input is better.
+//
+// The month is rendered by the server. Changing month — the arrows in the
+// header, PageUp/PageDown, or an arrow key that walks off the edge of the
+// month — fetches NavURL and swaps this calendar in place, carrying the
+// selection along in its hidden inputs. The keyboard follows the APG date
+// grid: arrows move by day and week, Home/End to the week's ends, PageUp/
+// PageDown by month (with Shift, by year), Enter or Space picks.
+//
+// The header links are real links, so without JavaScript the month still
+// changes — as a page load.
+templ Calendar(props CalendarProps) {
+	<div
+		id={ props.ID }
+		class="inline-block rounded border border-border bg-surface p-3"
+		x-data={ "calendar(" + strJS(or(props.Mode, "single")) + ", " + strJS(props.NavURL) + ")" }
+		x-on:keydown="onKeydown($event)"
+		{ props.Attrs... }
+	>
+		<div class="mb-2 flex items-center justify-between gap-2">
+			@calendarNav(props, props.ID+"-prev", props.month().AddDate(0, -1, 0), "Mês anterior", "‹")
+			<div id={ props.ID + "-title" } aria-live="polite" class="text-sm font-semibold text-fg">{ monthLabel(props.month()) }</div>
+			@calendarNav(props, props.ID+"-next", props.month().AddDate(0, 1, 0), "Próximo mês", "›")
+		</div>
+		<table role="grid" aria-labelledby={ props.ID + "-title" } class="border-collapse">
+			<thead>
+				<tr>
+					for i, wd := range weekdayShort {
+						<th scope="col" abbr={ weekdayLong[i] } class="h-8 w-9 text-center text-xs font-medium text-muted">{ wd }</th>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				for _, week := range calendarWeeks(props.month()) {
+					<tr>
+						for _, d := range week {
+							if d.IsZero() {
+								<td role="gridcell" class="h-9 w-9"></td>
+							} else {
+								@calendarDay(props, d)
+							}
+						}
+					</tr>
+				}
+			</tbody>
+		</table>
+		if props.isRange() {
+			<input type="hidden" name={ props.StartName } value={ isoDate(props.Start) } data-cal="start"/>
+			<input type="hidden" name={ props.EndName } value={ isoDate(props.End) } data-cal="end"/>
+		} else if props.Name != "" {
+			<input type="hidden" name={ props.Name } value={ isoDate(props.Selected) } data-cal="value"/>
+		}
+	</div>
+}
+
+templ calendarNav(props CalendarProps, id string, month time.Time, label, glyph string) {
+	<a
+		id={ id }
+		href={ templ.URL(props.navHref(month)) }
+		hx-get={ props.navHref(month) }
+		hx-target={ "#" + props.ID }
+		hx-select={ "#" + props.ID }
+		hx-swap="outerHTML"
+		hx-include={ props.includeSelector() }
+		aria-label={ label }
+		class="flex size-8 items-center justify-center rounded text-lg text-muted hover:bg-muted/10 hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+	>{ glyph }</a>
+}
+
+// The selected look hangs off the cell's aria-selected (group-aria-selected:)
+// and the range middle off data-range, both bound by Alpine: attribute
+// variants, never x-bind:class against a static class.
+templ calendarDay(props CalendarProps, d time.Time) {
+	<td
+		role="gridcell"
+		class="group h-9 w-9 p-0 text-center data-[range=middle]:bg-primary/10"
+		aria-selected={ ariaBool(props.isSelected(d)) }
+		x-bind:aria-selected={ "isSelected(" + strJS(isoDate(d)) + ") ? 'true' : 'false'" }
+		x-bind:data-range={ "rangeState(" + strJS(isoDate(d)) + ")" }
+	>
+		<button
+			type="button"
+			data-date={ isoDate(d) }
+			aria-label={ dayLabel(d) }
+			if d.Equal(props.tabStop()) {
+				tabindex="0"
+				if !props.Focus.IsZero() {
+					data-autofocus
+				}
+			} else {
+				tabindex="-1"
+			}
+			if d.Equal(props.today()) {
+				aria-current="date"
+			}
+			if props.isDisabled(d) {
+				aria-disabled="true"
+			}
+			x-on:click="choose($el)"
+			class="size-9 rounded text-sm text-fg hover:bg-muted/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 aria-[current=date]:font-bold aria-[current=date]:underline aria-disabled:cursor-not-allowed aria-disabled:text-muted/50 aria-disabled:hover:bg-transparent group-aria-selected:bg-primary group-aria-selected:text-primary-fg group-aria-selected:hover:bg-primary/90 group-data-[range=middle]:bg-transparent group-data-[range=middle]:text-fg"
+		>{ intJS(d.Day()) }</button>
+	</td>
+}
