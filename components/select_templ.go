@@ -33,7 +33,7 @@ type SelectProps struct {
 // contract and form submission, and on mobile it would trade the platform
 // picker for a menu that scrolls behind the virtual keyboard. What it buys —
 // styled options, icons — is not worth that. Callers who need rich options
-// should reach for Dropdown.
+// should reach for Dropdown, and lists too long to scroll for Combobox.
 func Select(props SelectProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context

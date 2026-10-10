@@ -101,6 +101,12 @@ function rovingList({ orientation = "horizontal", loop = true, active = 0 } = {}
   };
 }
 
+// foldText makes filtering case- and accent-insensitive, so "sao" finds
+// "São Paulo" — in Portuguese, users routinely skip the accents when typing.
+function foldText(s) {
+  return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+}
+
 // --- Modal overlays ---------------------------------------------------------
 //
 // Making an overlay modal takes three things, and the last two are the ones
@@ -359,6 +365,224 @@ document.addEventListener("alpine:init", () => {
         return;
       }
       this.onKeydown(e);
+    },
+  }));
+
+  // The combobox pattern with a list-autocomplete listbox. Unlike the dropdown,
+  // focus never moves into the list: the text field keeps it, and the
+  // highlighted option is only pointed at via aria-activedescendant. That is
+  // what lets the user keep typing while arrowing.
+  //
+  // value/label are the committed selection; query is what the field shows.
+  // They only diverge while the user is typing, and commit() reconciles them.
+  //
+  // filtering is set by typing and cleared by any commit. It, not a comparison
+  // of query against label, decides whether the list is filtered: retyping the
+  // current label is still a search, and must not reset the list and move the
+  // highlight to the first option.
+  Alpine.data("combobox", (value = "", label = "") => ({
+    open: false,
+    active: -1,
+    filtering: false,
+    value,
+    label,
+    query: label,
+    // Folding normalises Unicode, and matches() runs for every option on every
+    // keystroke. Labels never change, so each is folded once; the query is
+    // folded once per distinct value.
+    _folded: new Map(),
+    _foldedQuery: { raw: null, folded: "" },
+
+    _fold(text) {
+      let folded = this._folded.get(text);
+      if (folded === undefined) {
+        folded = foldText(text);
+        this._folded.set(text, folded);
+      }
+      return folded;
+    },
+
+    _query() {
+      if (this._foldedQuery.raw !== this.query) {
+        this._foldedQuery = { raw: this.query, folded: foldText(this.query.trim()) };
+      }
+      return this._foldedQuery.folded;
+    },
+
+    _options() {
+      return Array.from(this.$root.querySelectorAll('[role="option"]'));
+    },
+
+    // Options the arrows can land on: visible under the filter and enabled.
+    _navigable() {
+      return this._options().filter(
+        (el) =>
+          el.getAttribute("aria-disabled") !== "true" && this.matches(el.dataset.label),
+      );
+    },
+
+    // Until the user types, the whole list is offered — opening a filled
+    // combobox should not show a single option.
+    matches(optionLabel) {
+      if (!this.filtering) return true;
+      const q = this._query();
+      return !q || this._fold(optionLabel).includes(q);
+    },
+
+    hasMatches() {
+      return this._options().some((el) => this.matches(el.dataset.label));
+    },
+
+    isSelected(v) {
+      return this.value !== "" && this.value === v;
+    },
+
+    activeId() {
+      // null, not "": Alpine drops the attribute for null, and an empty
+      // aria-activedescendant is an invalid reference.
+      return this.active >= 0 ? this._options()[this.active]?.id ?? null : null;
+    },
+
+    _highlight(el) {
+      this.active = el ? Number(el.dataset.comboboxIndex) : -1;
+      // The list may have just been shown; scrolling a display:none element
+      // does nothing.
+      if (el) this.$nextTick(() => el.scrollIntoView({ block: "nearest" }));
+    },
+
+    // Opening lands on the current selection, so ↓ from a filled field
+    // continues from where the user already is.
+    _openAt(fallback) {
+      this.open = true;
+      const items = this._navigable();
+      const selected = items.find((el) => el.dataset.value === this.value);
+      this._highlight(selected || (fallback === "last" ? items[items.length - 1] : items[0]));
+    },
+
+    _move(delta) {
+      const items = this._navigable();
+      if (!items.length) return;
+      const current = items.findIndex(
+        (el) => Number(el.dataset.comboboxIndex) === this.active,
+      );
+      const next =
+        current === -1
+          ? delta > 0 ? 0 : items.length - 1
+          : (current + delta + items.length) % items.length;
+      this._highlight(items[next]);
+    },
+
+    close() {
+      this.open = false;
+      this.active = -1;
+    },
+
+    toggle() {
+      if (this.open) this.close();
+      else this._openAt("first");
+      this.$root.querySelector('[role="combobox"]').focus();
+    },
+
+    // Typing highlights the first match, so Enter picks the top result.
+    onInput() {
+      this.filtering = true;
+      this.open = true;
+      this._highlight(this._navigable()[0]);
+    },
+
+    // Written to the element directly as well as to query: x-model applies
+    // its update a tick later, and an Enter-triggered submit validates
+    // `required` against the field before then.
+    _show(text) {
+      this.query = text;
+      this.filtering = false;
+      this.$root.querySelector('[role="combobox"]').value = text;
+    },
+
+    // The hidden input is what the form submits, and what hx-trigger="change"
+    // listens to — the text field never fires a change worth acting on.
+    _set(value, label) {
+      const changed = value !== this.value;
+      this.value = value;
+      this.label = label;
+      this._show(label);
+      this.$refs.hidden.value = value;
+      if (changed) {
+        this.$refs.hidden.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    },
+
+    choose(i) {
+      const el = this._options()[i];
+      if (!el || el.getAttribute("aria-disabled") === "true") return;
+      this._set(el.dataset.value, el.dataset.label);
+      this.close();
+    },
+
+    // On blur. Free text is never kept: an exact label match is accepted
+    // (typing the whole name should not require picking it), an empty field
+    // clears, and anything else reverts to the last real selection.
+    commit() {
+      this.close();
+      const q = this._query();
+      if (!q) {
+        this._set("", "");
+        return;
+      }
+      const exact = this._options().find(
+        (el) =>
+          el.getAttribute("aria-disabled") !== "true" && this._fold(el.dataset.label) === q,
+      );
+      if (exact) this._set(exact.dataset.value, exact.dataset.label);
+      else this._show(this.label);
+    },
+
+    onKeydown(e) {
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          // Alt+↓ only opens, per the pattern; plain ↓ opens and highlights.
+          if (!this.open) {
+            if (e.altKey) this.open = true;
+            else this._openAt("first");
+          } else this._move(1);
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          if (!this.open) this._openAt("last");
+          else this._move(-1);
+          break;
+        case "Enter":
+          if (this.open && this.active >= 0) {
+            e.preventDefault();
+            this.choose(this.active);
+          } else {
+            // Without a highlight, Enter submits the form — and it does so
+            // before blur, so the text is reconciled here first. Otherwise the
+            // field would show one thing while the form sent another.
+            this.commit();
+          }
+          break;
+        case "Tab":
+          // Leaving after arrowing to an option takes it, as Enter would.
+          // No preventDefault: Tab still moves on.
+          if (this.open && this.active >= 0) this.choose(this.active);
+          break;
+        case "Escape":
+          // First Escape closes; a second one clears, as the pattern asks.
+          // stopPropagation because Modal and Drawer close on Escape at
+          // window: closing the list must not close the dialog around it.
+          if (this.open) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.close();
+          } else if (this.query) {
+            e.preventDefault();
+            e.stopPropagation();
+            this._set("", "");
+          }
+          break;
+      }
     },
   }));
 

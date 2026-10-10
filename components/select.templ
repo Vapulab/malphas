@@ -25,7 +25,7 @@ type SelectProps struct {
 // contract and form submission, and on mobile it would trade the platform
 // picker for a menu that scrolls behind the virtual keyboard. What it buys —
 // styled options, icons — is not worth that. Callers who need rich options
-// should reach for Dropdown.
+// should reach for Dropdown, and lists too long to scroll for Combobox.
 templ Select(props SelectProps) {
 	<div class="flex flex-col gap-1" { props.Attrs... }>
 		if props.Label != "" {
