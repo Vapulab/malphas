@@ -1,0 +1,64 @@
+package components
+
+import "strings"
+
+type FieldProps struct {
+	ID          string // the control's id; Field derives the others from it
+	Label       string
+	Description string
+	Error       string // from the server, after validation
+	Required    bool
+	Attrs       templ.Attributes
+}
+
+func (p FieldProps) descriptionID() string { return p.ID + "-description" }
+
+func (p FieldProps) errorID() string { return p.ID + "-error" }
+
+// ControlAttrs are what the control inside the Field must carry. Field cannot
+// reach into its children, so the caller spreads these onto the control:
+//
+//	@components.Input(components.InputProps{ID: f.ID, Attrs: f.ControlAttrs()})
+//
+// It works with every control whose Attrs land on the control itself: Input,
+// Textarea, InputGroup. Only ids that are actually rendered are referenced —
+// a describedby pointing at a missing element is an error to validators and
+// silently ignored by some readers.
+func (p FieldProps) ControlAttrs() templ.Attributes {
+	attrs := templ.Attributes{}
+	var ids []string
+	if p.Description != "" {
+		ids = append(ids, p.descriptionID())
+	}
+	if p.Error != "" {
+		ids = append(ids, p.errorID())
+		attrs["aria-invalid"] = "true"
+	}
+	if len(ids) > 0 {
+		attrs["aria-describedby"] = strings.Join(ids, " ")
+	}
+	if p.Required {
+		attrs["required"] = true
+	}
+	return attrs
+}
+
+// Field lays out a label, a control, a description and a server-side error,
+// and owns the ids that tie them together. See ControlAttrs for the half of
+// the wiring that has to live on the control.
+templ Field(props FieldProps) {
+	<div class="flex flex-col gap-1" { props.Attrs... }>
+		if props.Label != "" {
+			@Label(LabelProps{For: props.ID, Required: props.Required}) {
+				{ props.Label }
+			}
+		}
+		{ children... }
+		if props.Description != "" {
+			<p id={ props.descriptionID() } class="text-sm text-muted">{ props.Description }</p>
+		}
+		if props.Error != "" {
+			<p id={ props.errorID() } class="text-sm text-danger">{ props.Error }</p>
+		}
+	</div>
+}

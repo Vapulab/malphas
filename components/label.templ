@@ -1,0 +1,25 @@
+package components
+
+type LabelProps struct {
+	For      string
+	Required bool
+	Attrs    templ.Attributes
+}
+
+// Label is the one place the required marker is drawn. The asterisk is
+// aria-hidden: the control's own required attribute is what assistive tech
+// announces, and reading the asterisk on top would say it twice.
+templ Label(props LabelProps) {
+	<label
+		if props.For != "" {
+			for={ props.For }
+		}
+		class="text-sm font-medium text-fg"
+		{ props.Attrs... }
+	>
+		{ children... }
+		if props.Required {
+			<span aria-hidden="true" class="ml-0.5 text-danger">*</span>
+		}
+	</label>
+}
