@@ -63,3 +63,16 @@ func TestCommandWithoutHotkeyRegistersNoShortcut(t *testing.T) {
 		t.Errorf("Hotkey false must not listen for Ctrl+K, got: %s", html)
 	}
 }
+
+// data-href ends up in location.assign, so it must go through templ's URL
+// sanitizer like every <a href> in the design system: a javascript: URL from
+// data would otherwise run when the item is chosen.
+func TestCommandSanitizesHref(t *testing.T) {
+	props := components.CommandProps{ID: "c", Groups: []components.CommandGroup{{Heading: "x", Items: []components.CommandItem{
+		{Label: "Mau", Href: "javascript:alert(1)"},
+	}}}}
+	html := renderToString(t, components.Command(props))
+	if strings.Contains(html, "javascript:") {
+		t.Errorf("a javascript: URL reached the markup: %s", html)
+	}
+}

@@ -905,7 +905,12 @@ document.addEventListener("alpine:init", () => {
       const href = el.dataset.href;
       if (!href) el.dispatchEvent(new CustomEvent("command-run"));
       this.closeOverlay();
-      if (href) window.location.assign(href);
+      // The server already sanitised it; this is the second lock, so only
+      // http(s) navigation can ever come out of a palette item.
+      if (href) {
+        const url = new URL(href, window.location.href);
+        if (url.protocol === "http:" || url.protocol === "https:") window.location.assign(url.href);
+      }
     },
   }));
 

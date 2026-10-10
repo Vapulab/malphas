@@ -114,13 +114,16 @@ templ Command(props CommandProps) {
 							>
 								<div id={ props.groupID(g) } class="px-2 pb-1 pt-2 text-xs font-medium text-muted">{ props.Groups[g].Heading }</div>
 								for _, it := range group {
+									// data-href goes through templ's URL sanitizer, like
+									// every <a href> here: it ends up in location.assign,
+									// and a javascript: URL would run.
 									<div
 										id={ props.optionID(it.index) }
 										role="option"
 										data-option-index={ intJS(it.index) }
 										data-label={ it.Label }
 										if it.Href != "" {
-											data-href={ it.Href }
+											data-href={ string(templ.URL(it.Href)) }
 										}
 										aria-selected="false"
 										x-bind:aria-selected={ "active === " + intJS(it.index) + " ? 'true' : 'false'" }
