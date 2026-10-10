@@ -397,6 +397,9 @@ document.addEventListener("alpine:init", () => {
     on: checked,
   }));
 
+  // The server paints the starting count; this only keeps it current.
+  Alpine.data("charCounter", (count = 0) => ({ count }));
+
   Alpine.data("checkbox", (checked = false, indeterminate = false) => ({
     checked,
     indeterminate,

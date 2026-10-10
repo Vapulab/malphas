@@ -1,0 +1,69 @@
+package components
+
+import "unicode/utf16"
+
+type TextareaProps struct {
+	ID          string
+	Name        string
+	Label       string
+	Placeholder string
+	Value       string
+	Rows        int // default 4
+	MaxLength   int // > 0 adds maxlength and a character counter
+	Required    bool
+	Disabled    bool
+	Attrs       templ.Attributes // on the textarea, so Field.ControlAttrs() fits
+}
+
+func (p TextareaProps) rows() int {
+	if p.Rows > 0 {
+		return p.Rows
+	}
+	return 4
+}
+
+// valueLength counts UTF-16 code units, because that is what maxlength and the
+// JS counter count: an emoji is 2, not 1. Counting runes would make the
+// server-rendered counter disagree with the first keystroke.
+func (p TextareaProps) valueLength() int {
+	return len(utf16.Encode([]rune(p.Value)))
+}
+
+templ Textarea(props TextareaProps) {
+	<div
+		class="flex flex-col gap-1"
+		if props.MaxLength > 0 {
+			x-data={ "charCounter(" + intJS(props.valueLength()) + ")" }
+		}
+	>
+		if props.Label != "" {
+			@Label(LabelProps{For: props.ID, Required: props.Required}) {
+				{ props.Label }
+			}
+		}
+		// The leading "\n" is swallowed by the HTML parser, which drops one
+		// newline right after <textarea>. Without it, a value that itself
+		// starts with a newline would lose it on every round trip.
+		<textarea
+			id={ props.ID }
+			name={ props.Name }
+			rows={ intJS(props.rows()) }
+			placeholder={ props.Placeholder }
+			if props.MaxLength > 0 {
+				maxlength={ intJS(props.MaxLength) }
+				x-on:input="count = $el.value.length"
+			}
+			required?={ props.Required }
+			disabled?={ props.Disabled }
+			class="w-full rounded border border-border bg-surface px-3 py-2 text-sm text-fg focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
+			{ props.Attrs... }
+		>{ "\n" + props.Value }</textarea>
+		if props.MaxLength > 0 {
+			// aria-hidden: maxlength is already exposed to assistive tech, and a
+			// counter re-read on every keystroke would be noise.
+			<p aria-hidden="true" class="self-end text-xs tabular-nums text-muted">
+				<span x-text="count">{ intJS(props.valueLength()) }</span>/{ intJS(props.MaxLength) }
+			</p>
+		}
+	</div>
+}
