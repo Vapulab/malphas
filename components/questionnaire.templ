@@ -1,0 +1,211 @@
+package components
+
+import (
+	"slices"
+	"sort"
+	"strconv"
+)
+
+type QuestionnaireOption struct {
+	Label string
+	Value string
+}
+
+type QuestionnaireQuestion struct {
+	Key         string // the answer is submitted as "a.<Key>"
+	Title       string
+	Description string
+	Kind        string // single | multiple | text
+	Options     []QuestionnaireOption
+	Required    bool     // required questions have no Skip
+	Value       []string // the current answer, when coming back to it
+}
+
+type QuestionnaireProps struct {
+	ID     string
+	Action string // POST target; answers the next step
+	Step   int    // 1-based position of this question
+	Total  int
+	Question QuestionnaireQuestion
+	// Answers so far, sent back on every step as hidden fields: the server
+	// can stay stateless, and going back never loses anything.
+	Answers map[string][]string
+	Error   string // from the server's validation of this step
+	// FocusTitle moves focus to the question when it arrives as a response,
+	// so a screen reader reads the new question instead of nothing.
+	FocusTitle bool
+	Attrs      templ.Attributes
+}
+
+type questionnaireHidden struct{ Name, Value string }
+
+// hidden lists the earlier answers in a stable order, leaving out the
+// current question: its own inputs carry that answer.
+func (p QuestionnaireProps) hidden() []questionnaireHidden {
+	keys := make([]string, 0, len(p.Answers))
+	for k := range p.Answers {
+		if k != p.Question.Key {
+			keys = append(keys, k)
+		}
+	}
+	sort.Strings(keys)
+	var out []questionnaireHidden
+	for _, k := range keys {
+		for _, v := range p.Answers[k] {
+			out = append(out, questionnaireHidden{"a." + k, v})
+		}
+	}
+	return out
+}
+
+func (p QuestionnaireProps) inputName() string { return "a." + p.Question.Key }
+
+func (p QuestionnaireProps) errorID() string { return p.ID + "-error" }
+
+func (p QuestionnaireProps) titleID() string { return p.ID + "-title" }
+
+func (p QuestionnaireProps) checked(v string) bool { return slices.Contains(p.Question.Value, v) }
+
+func (p QuestionnaireProps) textValue() string {
+	if len(p.Question.Value) == 0 {
+		return ""
+	}
+	return p.Question.Value[0]
+}
+
+func (p QuestionnaireProps) isLast() bool { return p.Step >= p.Total }
+
+// Questionnaire renders one question of a multi-step form. Each step posts to
+// Action, and the server decides what comes next — validation, conditional
+// questions and resuming all live there; the response is the next step (or
+// the same one with Error), swapped in place of this form.
+//
+// Next is the first submit button in the DOM, because Enter in a form submits
+// with the first one; Back and Skip come after it in the markup and are moved
+// to the left visually. Both carry formnovalidate: going back never validates.
+// Number keys 1–9 pick an option, except while typing in a text answer.
+//
+// Without JavaScript the form is an ordinary POST and the handler answers
+// with the whole page.
+templ Questionnaire(props QuestionnaireProps) {
+	<form
+		id={ props.ID }
+		method="post"
+		action={ templ.SafeURL(props.Action) }
+		hx-post={ props.Action }
+		hx-target="this"
+		hx-swap="outerHTML"
+		x-data="questionnaire"
+		x-on:keydown="onKeydown($event)"
+		class="flex max-w-lg flex-col gap-5 rounded border border-border bg-surface p-6"
+		{ props.Attrs... }
+	>
+		<div class="flex flex-col gap-2">
+			<p class="text-xs font-medium text-muted">{ "Pergunta " + strconv.Itoa(props.Step) + " de " + strconv.Itoa(props.Total) }</p>
+			@Progress(ProgressProps{Value: props.Step, Max: props.Total, Attrs: templ.Attributes{"aria-label": "Progresso do questionário"}})
+		</div>
+		for _, h := range props.hidden() {
+			<input type="hidden" name={ h.Name } value={ h.Value }/>
+		}
+		<input type="hidden" name="atual" value={ props.Question.Key }/>
+		if props.Question.Kind == "text" {
+			<div class="flex flex-col gap-2">
+				<label
+					id={ props.titleID() }
+					for={ props.ID + "-text" }
+					tabindex="-1"
+					if props.FocusTitle {
+						data-autofocus
+					}
+					class="text-lg font-semibold text-fg focus:outline-none"
+				>{ props.Question.Title }</label>
+				if props.Question.Description != "" {
+					<p class="text-sm text-muted">{ props.Question.Description }</p>
+				}
+				<input
+					type="text"
+					id={ props.ID + "-text" }
+					name={ props.inputName() }
+					value={ props.textValue() }
+					if props.Question.Required {
+						aria-required="true"
+					}
+					if props.Error != "" {
+						aria-invalid="true"
+						aria-describedby={ props.errorID() }
+					}
+					class="h-10 w-full rounded border border-border bg-surface px-3 text-sm text-fg focus:outline-none focus:ring-2 focus:ring-primary/50"
+				/>
+			</div>
+		} else {
+			<fieldset
+				if props.Question.Kind == "single" {
+					role="radiogroup"
+				}
+				if props.Question.Required {
+					aria-required="true"
+				}
+				if props.Error != "" {
+					aria-describedby={ props.errorID() }
+				}
+				class="flex flex-col gap-2"
+			>
+				<legend
+					id={ props.titleID() }
+					tabindex="-1"
+					if props.FocusTitle {
+						data-autofocus
+					}
+					class="mb-2 text-lg font-semibold text-fg focus:outline-none"
+				>{ props.Question.Title }</legend>
+				if props.Question.Description != "" {
+					<p class="-mt-1 mb-1 text-sm text-muted">{ props.Question.Description }</p>
+				}
+				for i, o := range props.Question.Options {
+					<label class="flex cursor-pointer items-center gap-3 rounded border border-border px-3 py-2 text-sm text-fg hover:bg-muted/10 has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50">
+						<input
+							if props.Question.Kind == "multiple" {
+								type="checkbox"
+							} else {
+								type="radio"
+							}
+							name={ props.inputName() }
+							value={ o.Value }
+							checked?={ props.checked(o.Value) }
+							data-option-number={ strconv.Itoa(i + 1) }
+							class="size-4 accent-[rgb(var(--color-primary))] focus:outline-none"
+						/>
+						<span class="flex-1">{ o.Label }</span>
+						if i < 9 {
+							<kbd aria-hidden="true" class="rounded border border-border px-1.5 font-sans text-xs text-muted">{ strconv.Itoa(i + 1) }</kbd>
+						}
+					</label>
+				}
+			</fieldset>
+		}
+		if props.Error != "" {
+			<p id={ props.errorID() } role="alert" class="text-sm text-danger">{ props.Error }</p>
+		}
+		<div class="flex flex-row-reverse flex-wrap items-center justify-between gap-2">
+			@Button(ButtonProps{Type: "submit", Attrs: templ.Attributes{"name": "nav", "value": "next"}}) {
+				if props.isLast() {
+					Concluir
+				} else {
+					Próxima
+				}
+			}
+			<div class="flex gap-2">
+				if props.Step > 1 {
+					@Button(ButtonProps{Type: "submit", Variant: "secondary", Attrs: templ.Attributes{"name": "nav", "value": "back", "formnovalidate": true}}) {
+						Voltar
+					}
+				}
+				if !props.Question.Required {
+					@Button(ButtonProps{Type: "submit", Variant: "secondary", Attrs: templ.Attributes{"name": "nav", "value": "skip", "formnovalidate": true}}) {
+						Pular
+					}
+				}
+			</div>
+		</div>
+	</form>
+}

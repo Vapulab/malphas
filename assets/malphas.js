@@ -1099,6 +1099,27 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 
+  // Number keys pick an option — but never while typing an answer, where
+  // "2 semanas" must stay "2 semanas". A question that arrives as a response
+  // takes focus on its title (data-autofocus), so it is read out; on first
+  // page load nothing is focused for the user.
+  Alpine.data("questionnaire", () => ({
+    init() {
+      this.$root.querySelector("[data-autofocus]")?.focus();
+    },
+
+    onKeydown(e) {
+      if (!/^[1-9]$/.test(e.key) || e.ctrlKey || e.metaKey || e.altKey) return;
+      const t = e.target;
+      if (t.matches?.('input[type="text"], textarea, [contenteditable]')) return;
+      const option = this.$root.querySelector(`[data-option-number="${e.key}"]`);
+      if (!option) return;
+      e.preventDefault();
+      option.click();
+      option.focus();
+    },
+  }));
+
   // Reads the theme the inline script already applied, so the toggle's initial
   // state matches what is on screen. "" means "follow the OS".
   Alpine.data("themeToggle", () => ({
