@@ -1140,6 +1140,73 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 
+  // The APG window splitter over two flex panels. size is the first panel's
+  // share in %, always kept inside [min, max]. Dragging uses pointer capture,
+  // so the drag keeps going when the pointer races past the component and
+  // ends on pointerup wherever that lands. A remembered size that is not a
+  // number in range (corrupt or hand-edited storage) is ignored.
+  Alpine.data("resizable", (id = "", size = 50, min = 10, max = 90, vertical = false) => ({
+    size,
+    dragging: false,
+    _key: id ? "malphas-resizable:" + id : "",
+
+    init() {
+      if (!this._key) return;
+      try {
+        const saved = Number(localStorage.getItem(this._key));
+        if (localStorage.getItem(this._key) !== null && Number.isFinite(saved) && saved >= min && saved <= max) {
+          this.size = saved;
+        }
+      } catch (e) {}
+    },
+
+    _set(v) {
+      this.size = Math.round(Math.min(max, Math.max(min, v)));
+      if (!this._key) return;
+      try {
+        localStorage.setItem(this._key, String(this.size));
+      } catch (e) {}
+    },
+
+    onKeydown(e) {
+      const step = e.shiftKey ? 1 : 5;
+      const back = vertical ? "ArrowUp" : "ArrowLeft";
+      const fwd = vertical ? "ArrowDown" : "ArrowRight";
+      const target = {
+        [back]: () => this.size - step,
+        [fwd]: () => this.size + step,
+        Home: () => min,
+        End: () => max,
+      }[e.key];
+      if (!target) return;
+      e.preventDefault();
+      this._set(target());
+    },
+
+    onPointerDown(e) {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      e.currentTarget.setPointerCapture(e.pointerId);
+      e.currentTarget.focus();
+      this.dragging = true;
+    },
+
+    onPointerMove(e) {
+      if (!this.dragging) return;
+      const r = this.$root.getBoundingClientRect();
+      const share = vertical ? (e.clientY - r.top) / r.height : (e.clientX - r.left) / r.width;
+      this._set(share * 100);
+    },
+
+    onPointerUp(e) {
+      if (!this.dragging) return;
+      this.dragging = false;
+      if (e.currentTarget.hasPointerCapture?.(e.pointerId)) {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      }
+    },
+  }));
+
   // Reads the theme the inline script already applied, so the toggle's initial
   // state matches what is on screen. "" means "follow the OS".
   Alpine.data("themeToggle", () => ({

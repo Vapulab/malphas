@@ -1,0 +1,108 @@
+package components
+
+type ResizableProps struct {
+	ID          string // also the localStorage key that remembers the size
+	Label       string // accessible name of the divider
+	Vertical    bool   // stack the panels; the divider runs across
+	DefaultSize int    // first panel, % of the whole (default 50)
+	Min         int    // % (default 10)
+	Max         int    // % (default 90)
+	First       templ.Component
+	Second      templ.Component
+	Attrs       templ.Attributes
+}
+
+func (p ResizableProps) bounds() (min, max int) {
+	min, max = p.Min, p.Max
+	if min <= 0 {
+		min = 10
+	}
+	if max <= 0 || max > 100 {
+		max = 90
+	}
+	if min > max {
+		min, max = max, min
+	}
+	return min, max
+}
+
+func (p ResizableProps) size() int {
+	min, max := p.bounds()
+	s := p.DefaultSize
+	if s <= 0 {
+		s = 50
+	}
+	return clampInt(s, min, max)
+}
+
+func clampInt(v, lo, hi int) int {
+	if v < lo {
+		return lo
+	}
+	if v > hi {
+		return hi
+	}
+	return v
+}
+
+// orientation is the divider's own: side-by-side panels have an upright bar.
+func (p ResizableProps) orientation() string {
+	if p.Vertical {
+		return "horizontal"
+	}
+	return "vertical"
+}
+
+func (p ResizableProps) firstID() string { return p.ID + "-first" }
+
+// Resizable lays two panels side by side (or stacked, with Vertical) with a
+// divider between them that the pointer drags and the keyboard moves: arrows
+// by 5% (Shift for 1%), Home and End to the limits. It is the APG window
+// splitter: role="separator", focusable, with its value as the first panel's
+// share.
+//
+// The size is the first panel's flex-basis, rendered by the server so the
+// layout is right before any script runs; with an ID, the user's last size is
+// remembered in localStorage and restored over it.
+templ Resizable(props ResizableProps) {
+	{{ min, max := props.bounds() }}
+	<div
+		class={ "flex h-full w-full overflow-hidden", templ.KV("flex-col", props.Vertical) }
+		x-data={ "resizable(" + strJS(props.ID) + ", " + intJS(props.size()) + ", " + intJS(min) + ", " + intJS(max) + ", " + boolJS(props.Vertical) + ")" }
+		{ props.Attrs... }
+	>
+		<div
+			id={ props.firstID() }
+			class="min-h-0 min-w-0 shrink-0 overflow-auto"
+			style={ "flex-basis: " + intJS(props.size()) + "%" }
+			x-bind:style="{ flexBasis: size + '%' }"
+		>
+			@props.First
+		</div>
+		<div
+			role="separator"
+			tabindex="0"
+			aria-orientation={ props.orientation() }
+			aria-valuenow={ intJS(props.size()) }
+			x-bind:aria-valuenow="size"
+			aria-valuemin={ intJS(min) }
+			aria-valuemax={ intJS(max) }
+			aria-controls={ props.firstID() }
+			if props.Label != "" {
+				aria-label={ props.Label }
+			}
+			x-on:keydown="onKeydown($event)"
+			x-on:pointerdown="onPointerDown($event)"
+			x-on:pointermove="onPointerMove($event)"
+			x-on:pointerup="onPointerUp($event)"
+			x-on:pointercancel="onPointerUp($event)"
+			class={ "relative shrink-0 touch-none bg-border transition-colors hover:bg-primary/40 focus:outline-none focus-visible:bg-primary data-[dragging=true]:bg-primary",
+				templ.KV("h-full w-1 cursor-col-resize", !props.Vertical),
+				templ.KV("h-1 w-full cursor-row-resize", props.Vertical) }
+			x-bind:data-dragging="dragging ? 'true' : 'false'"
+		></div>
+		<div class="min-h-0 min-w-0 flex-1 overflow-auto">
+			@props.Second
+		</div>
+	</div>
+}
