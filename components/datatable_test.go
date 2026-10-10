@@ -75,3 +75,23 @@ func TestDataTableEmpty(t *testing.T) {
 		t.Errorf("no pages, no pagination: %s", html)
 	}
 }
+
+// Without JavaScript, Enter in the search field must still search: the field
+// sits in a GET form to URL, carrying sort and dir along. With JavaScript the
+// form never submits (the field's own hx-get does the work).
+func TestDataTableSearchWorksAsAPlainForm(t *testing.T) {
+	html := renderWithChildren(t, components.DataTable(dataTableFixture()), templ.Raw("<tr><td>x</td></tr>"))
+	form := strings.Index(html, `<form role="search" method="get" action="/protocolos"`)
+	field := strings.Index(html, `type="search"`)
+	end := strings.Index(html, `</form>`)
+	if form < 0 || !(form < field && field < end) {
+		t.Fatalf("the search field must sit in a GET form to the table URL: %s", html)
+	}
+	state := strings.Index(html, `name="sort"`)
+	if !(form < state && state < end) {
+		t.Errorf("sort and dir must travel with the form: %s", html)
+	}
+	if !strings.Contains(html, `x-on:submit.prevent`) {
+		t.Errorf("with JavaScript the form must not also navigate: %s", html)
+	}
+}

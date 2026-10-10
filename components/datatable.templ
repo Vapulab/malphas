@@ -128,27 +128,31 @@ func resultsLabel(n int) string {
 templ DataTable(props DataTableProps) {
 	<div class="flex flex-col gap-3" x-data="dataTable" x-on:htmx:after-settle="onSettle()" { props.Attrs... }>
 		if props.Searchable {
-			<input
-				type="search"
-				name="q"
-				value={ props.Query }
-				aria-label={ or(props.SearchLabel, "Buscar") }
-				aria-controls={ props.regionID() }
-				placeholder={ props.SearchPlaceholder }
-				hx-get={ props.URL }
-				hx-trigger="input changed delay:300ms, search"
-				hx-target={ "#" + props.regionID() }
-				hx-select={ "#" + props.regionID() }
-				hx-select-oob={ "#" + props.stateID() }
-				hx-swap="outerHTML"
-				hx-push-url="true"
-				hx-include={ "#" + props.stateID() }
-				class="h-10 w-full max-w-sm rounded border border-border bg-surface px-3 text-sm text-fg focus:outline-none focus:ring-2 focus:ring-primary/50"
-			/>
-			<div id={ props.stateID() } hidden>
-				<input type="hidden" name="sort" value={ props.Sort }/>
-				<input type="hidden" name="dir" value={ props.Dir }/>
-			</div>
+			// A real GET form, so Enter searches without JavaScript too; with
+			// it, the field's own hx-get does the work and the form stays put.
+			<form role="search" method="get" action={ templ.SafeURL(props.URL) } x-on:submit.prevent class="contents">
+				<input
+					type="search"
+					name="q"
+					value={ props.Query }
+					aria-label={ or(props.SearchLabel, "Buscar") }
+					aria-controls={ props.regionID() }
+					placeholder={ props.SearchPlaceholder }
+					hx-get={ props.URL }
+					hx-trigger="input changed delay:300ms, search"
+					hx-target={ "#" + props.regionID() }
+					hx-select={ "#" + props.regionID() }
+					hx-select-oob={ "#" + props.stateID() }
+					hx-swap="outerHTML"
+					hx-push-url="true"
+					hx-include={ "#" + props.stateID() }
+					class="h-10 w-full max-w-sm rounded border border-border bg-surface px-3 text-sm text-fg focus:outline-none focus:ring-2 focus:ring-primary/50"
+				/>
+				<div id={ props.stateID() } hidden>
+					<input type="hidden" name="sort" value={ props.Sort }/>
+					<input type="hidden" name="dir" value={ props.Dir }/>
+				</div>
+			</form>
 		}
 		<div
 			id={ props.regionID() }
