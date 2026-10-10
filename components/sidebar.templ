@@ -1,0 +1,119 @@
+package components
+
+type SidebarItem struct {
+	Label   string
+	Href    string
+	Icon    string // a short glyph, shown alone when collapsed; decorative
+	Current bool
+	Badge   string // a count or short tag; hidden when collapsed
+}
+
+type SidebarGroup struct {
+	Label string
+	Items []SidebarItem
+}
+
+type SidebarProps struct {
+	ID          string
+	Label       string // accessible name of the navigation
+	Groups      []SidebarGroup
+	Collapsible bool // offers an icons-only state, remembered per ID
+	Attrs       templ.Attributes
+}
+
+func (p SidebarProps) asideID() string { return p.ID + "-aside" }
+
+func (p SidebarProps) drawerID() string { return p.ID + "-drawer" }
+
+// Sidebar is the application frame: a side navigation and the page content
+// (children) beside it.
+//
+// On wide screens the navigation is an <aside> that can collapse to icons
+// only; the choice is remembered in localStorage. Collapsing hides the labels
+// visually but not from assistive tech (sr-only, never removed), and each link
+// keeps a title for the pointer. On a phone the aside gives way to a Menu
+// button that opens the same navigation in a Drawer — modal, with its focus
+// trap — instead of squeezing a column next to the content.
+//
+// The collapsed look hangs off the aside's data-collapsed through a named
+// group (group/sidebar), so it reaches only the aside's own navigation and
+// never the copy inside the Drawer.
+templ Sidebar(props SidebarProps) {
+	<div class="flex min-h-[20rem] flex-col md:flex-row" x-data={ "sidebar(" + strJS(props.ID) + ")" } { props.Attrs... }>
+		<aside
+			id={ props.asideID() }
+			data-collapsed="false"
+			x-bind:data-collapsed="collapsed ? 'true' : 'false'"
+			class="group/sidebar hidden w-60 shrink-0 flex-col border-r border-border bg-surface transition-[width] duration-200 data-[collapsed=true]:w-16 md:flex"
+		>
+			<div class="flex-1 overflow-y-auto p-3">
+				@sidebarNav(props)
+			</div>
+			if props.Collapsible {
+				<div class="border-t border-border p-2">
+					<button
+						type="button"
+						aria-controls={ props.asideID() }
+						aria-expanded="true"
+						x-bind:aria-expanded="collapsed ? 'false' : 'true'"
+						aria-label="Recolher menu"
+						x-bind:aria-label="collapsed ? 'Expandir menu' : 'Recolher menu'"
+						x-on:click="toggle()"
+						class="flex w-full items-center justify-center rounded px-2 py-1.5 text-sm text-muted hover:bg-muted/10 hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+					>
+						<span aria-hidden="true" class="transition-transform group-data-[collapsed=true]/sidebar:rotate-180">&laquo;</span>
+					</button>
+				</div>
+			}
+		</aside>
+		<div class="border-b border-border p-2 md:hidden">
+			@Button(ButtonProps{Variant: "secondary", Size: "sm", Attrs: templ.Attributes{
+				"x-on:click":    "$dispatch('open-drawer', '" + props.drawerID() + "')",
+				"aria-haspopup": "dialog",
+			}}) {
+				<span aria-hidden="true">&#9776;</span>
+				<span class="ml-2">Menu</span>
+			}
+		</div>
+		@Drawer(DrawerProps{ID: props.drawerID(), Title: or(props.Label, "Menu")}) {
+			@sidebarNav(props)
+		}
+		<main class="min-w-0 flex-1">
+			{ children... }
+		</main>
+	</div>
+}
+
+templ sidebarNav(props SidebarProps) {
+	<nav aria-label={ or(props.Label, "Menu") } class="flex flex-col gap-4">
+		for _, g := range props.Groups {
+			<div class="flex flex-col gap-1">
+				if g.Label != "" {
+					<p class="px-2 text-xs font-medium uppercase tracking-wide text-muted group-data-[collapsed=true]/sidebar:sr-only">{ g.Label }</p>
+				}
+				<ul class="flex flex-col gap-0.5">
+					for _, it := range g.Items {
+						<li>
+							<a
+								href={ templ.URL(it.Href) }
+								title={ it.Label }
+								if it.Current {
+									aria-current="page"
+								}
+								class="flex items-center gap-3 rounded px-2 py-2 text-sm text-fg hover:bg-muted/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 aria-[current=page]:bg-primary/10 aria-[current=page]:font-medium aria-[current=page]:text-primary group-data-[collapsed=true]/sidebar:justify-center"
+							>
+								if it.Icon != "" {
+									<span aria-hidden="true" class="w-5 shrink-0 text-center">{ it.Icon }</span>
+								}
+								<span class="flex-1 truncate group-data-[collapsed=true]/sidebar:sr-only">{ it.Label }</span>
+								if it.Badge != "" {
+									<span class="rounded-full bg-muted/15 px-2 text-xs text-muted group-data-[collapsed=true]/sidebar:sr-only">{ it.Badge }</span>
+								}
+							</a>
+						</li>
+					}
+				</ul>
+			</div>
+		}
+	</nav>
+}

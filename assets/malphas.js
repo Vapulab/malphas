@@ -1120,6 +1120,26 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 
+  // Collapsed or not, remembered per sidebar. localStorage can throw (private
+  // mode, blocked storage) — then the sidebar simply starts expanded.
+  Alpine.data("sidebar", (id = "") => ({
+    collapsed: false,
+    _key: "malphas-sidebar:" + id,
+
+    init() {
+      try {
+        this.collapsed = localStorage.getItem(this._key) === "1";
+      } catch (e) {}
+    },
+
+    toggle() {
+      this.collapsed = !this.collapsed;
+      try {
+        localStorage.setItem(this._key, this.collapsed ? "1" : "0");
+      } catch (e) {}
+    },
+  }));
+
   // Reads the theme the inline script already applied, so the toggle's initial
   // state matches what is on screen. "" means "follow the OS".
   Alpine.data("themeToggle", () => ({
