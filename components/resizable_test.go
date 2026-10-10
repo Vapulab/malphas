@@ -49,3 +49,30 @@ func TestResizableDefaultsAndClamp(t *testing.T) {
 		t.Errorf("stacked panels: horizontal bar, column layout: %s", html)
 	}
 }
+
+// Without an ID there is no id to point at: two ID-less instances would both
+// claim "-first" and aria-controls would cross over.
+func TestResizableWithoutIDHasNoDuplicateID(t *testing.T) {
+	html := renderToString(t, components.Resizable(components.ResizableProps{First: templ.Raw(""), Second: templ.Raw("")}))
+	if strings.Contains(html, `id="-first"`) || strings.Contains(html, "aria-controls") {
+		t.Errorf("no ID, no id or aria-controls: %s", html)
+	}
+}
+
+// A 4px bar is too small to grab on a phone; a pseudo-element widens the hit
+// area to 24px without changing the look.
+func TestResizableHasATouchSizedHitArea(t *testing.T) {
+	html := renderToString(t, components.Resizable(components.ResizableProps{ID: "r", First: templ.Raw(""), Second: templ.Raw("")}))
+	if !strings.Contains(html, "after:-inset-x-2.5") {
+		t.Errorf("expected a widened hit area on the upright bar: %s", html)
+	}
+}
+
+// Bounds stay inside the component: Max 100 would push the bar out of reach,
+// and Min above 100 is nonsense.
+func TestResizableBoundsStayReachable(t *testing.T) {
+	html := renderToString(t, components.Resizable(components.ResizableProps{ID: "r", Min: 150, Max: 100, DefaultSize: 120, First: templ.Raw(""), Second: templ.Raw("")}))
+	if !strings.Contains(html, `aria-valuemax="95"`) || !strings.Contains(html, `aria-valuenow="95"`) {
+		t.Errorf("bounds should clamp to at most 95: %s", html)
+	}
+}

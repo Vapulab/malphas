@@ -104,7 +104,7 @@ function rovingList({ orientation = "horizontal", loop = true, active = 0 } = {}
 // foldText makes filtering case- and accent-insensitive, so "sao" finds
 // "São Paulo" — in Portuguese, users routinely skip the accents when typing.
 function foldText(s) {
-  return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
 // listboxNav is the aria-activedescendant pattern shared by Combobox and
@@ -364,13 +364,23 @@ function modalOverlay() {
     },
 
     // Everything that is not an ancestor of the panel becomes unreachable —
-    // to Tab, to the pointer, and to assistive tech.
+    // to Tab, to the pointer, and to assistive tech. The walk goes up level by
+    // level from the overlay to <body>, inerting the siblings at each step:
+    // inerting only body's children would skip the whole branch that holds
+    // the overlay, and an overlay nested deep in the page (a Sidebar's
+    // drawer) would leave its neighbours reachable. It starts at the overlay's
+    // container, not the panel, so the backdrop stays clickable.
     _applyInert(panel) {
       this._inerted = [];
-      for (const el of Array.from(document.body.children)) {
-        if (el.contains(panel) || el.hasAttribute("inert")) continue;
-        el.setAttribute("inert", "");
-        this._inerted.push(el);
+      let node = panel.parentElement;
+      while (node && node !== document.body && node.parentElement) {
+        for (const sibling of Array.from(node.parentElement.children)) {
+          if (sibling === node || sibling.hasAttribute("inert")) continue;
+          if (sibling.tagName === "SCRIPT" || sibling.tagName === "TEMPLATE") continue;
+          sibling.setAttribute("inert", "");
+          this._inerted.push(sibling);
+        }
+        node = node.parentElement;
       }
     },
 
@@ -1126,10 +1136,15 @@ document.addEventListener("alpine:init", () => {
     collapsed: false,
     _key: "malphas-sidebar:" + id,
 
+    // The inline script in the markup already applied the stored state before
+    // first paint; this only takes over from it. The width transition is
+    // switched on (data-ready) a frame later, so the restore never animates.
     init() {
       try {
         this.collapsed = localStorage.getItem(this._key) === "1";
       } catch (e) {}
+      const aside = this.$root.querySelector("aside");
+      this.$nextTick(() => requestAnimationFrame(() => aside && (aside.dataset.ready = "true")));
     },
 
     toggle() {
@@ -1162,16 +1177,28 @@ document.addEventListener("alpine:init", () => {
 
     _set(v) {
       this.size = Math.round(Math.min(max, Math.max(min, v)));
+    },
+
+    // Written once per gesture — each key press, or a drag when it ends —
+    // not on every pointermove.
+    _save() {
       if (!this._key) return;
       try {
         localStorage.setItem(this._key, String(this.size));
       } catch (e) {}
     },
 
+    // In a right-to-left page the first panel sits on the right, so the
+    // horizontal drag and arrows mirror.
+    _rtl() {
+      return !vertical && getComputedStyle(this.$root).direction === "rtl";
+    },
+
     onKeydown(e) {
       const step = e.shiftKey ? 1 : 5;
-      const back = vertical ? "ArrowUp" : "ArrowLeft";
-      const fwd = vertical ? "ArrowDown" : "ArrowRight";
+      const rtl = this._rtl();
+      const back = vertical ? "ArrowUp" : rtl ? "ArrowRight" : "ArrowLeft";
+      const fwd = vertical ? "ArrowDown" : rtl ? "ArrowLeft" : "ArrowRight";
       const target = {
         [back]: () => this.size - step,
         [fwd]: () => this.size + step,
@@ -1181,6 +1208,7 @@ document.addEventListener("alpine:init", () => {
       if (!target) return;
       e.preventDefault();
       this._set(target());
+      this._save();
     },
 
     onPointerDown(e) {
@@ -1194,16 +1222,20 @@ document.addEventListener("alpine:init", () => {
     onPointerMove(e) {
       if (!this.dragging) return;
       const r = this.$root.getBoundingClientRect();
-      const share = vertical ? (e.clientY - r.top) / r.height : (e.clientX - r.left) / r.width;
+      let share = vertical ? (e.clientY - r.top) / r.height : (e.clientX - r.left) / r.width;
+      if (this._rtl()) share = 1 - share;
       this._set(share * 100);
     },
 
+    // Also bound to lostpointercapture: if capture goes away some other way
+    // (the bar re-rendered, hidden), the drag must not stay stuck on.
     onPointerUp(e) {
       if (!this.dragging) return;
       this.dragging = false;
       if (e.currentTarget.hasPointerCapture?.(e.pointerId)) {
         e.currentTarget.releasePointerCapture(e.pointerId);
       }
+      this._save();
     },
   }));
 

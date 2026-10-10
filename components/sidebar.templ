@@ -1,5 +1,7 @@
 package components
 
+import "strings"
+
 type SidebarItem struct {
 	Label   string
 	Href    string
@@ -25,15 +27,47 @@ func (p SidebarProps) asideID() string { return p.ID + "-aside" }
 
 func (p SidebarProps) drawerID() string { return p.ID + "-drawer" }
 
+func (p SidebarProps) storageKey() string { return "malphas-sidebar:" + p.ID }
+
+// scriptString is a JS string literal that is also safe inside an inline
+// <script>: strJS escapes quotes, and "<" becomes the JS escape u003c (with
+// its backslash) so no value can close the element.
+func scriptString(s string) string {
+	return strings.ReplaceAll(strJS(s), "<", lessThanEscape)
+}
+
+// lessThanEscape is the six characters backslash-u-0-0-3-c. The backslash is
+// built from its code point because editing tools have turned the literal
+// escape back into "<" before — which silently reopened the hole.
+var lessThanEscape = string(rune(92)) + "u003c"
+
+// restoreScript applies the remembered state before first paint. Without it
+// the aside renders expanded and visibly shrinks once Alpine starts.
+func (p SidebarProps) restoreScript() string {
+	return `<script>try{if(localStorage.getItem(` + scriptString(p.storageKey()) + `)==="1")document.getElementById(` +
+		scriptString(p.asideID()) + `).dataset.collapsed="true"}catch(e){}</script>`
+}
+
+// initial is the collapsed-mode stand-in for an item without an Icon, so a
+// collapsed link never becomes an empty focus stop.
+func (it SidebarItem) initial() string {
+	for _, r := range it.Label {
+		return strings.ToUpper(string(r))
+	}
+	return ""
+}
+
 // Sidebar is the application frame: a side navigation and the page content
-// (children) beside it.
+// (children) beside it. The content wrapper is a plain element: the page
+// layout owns <main>, and a second one nested inside it would be invalid.
 //
 // On wide screens the navigation is an <aside> that can collapse to icons
-// only; the choice is remembered in localStorage. Collapsing hides the labels
-// visually but not from assistive tech (sr-only, never removed), and each link
-// keeps a title for the pointer. On a phone the aside gives way to a Menu
-// button that opens the same navigation in a Drawer — modal, with its focus
-// trap — instead of squeezing a column next to the content.
+// only; the choice is remembered in localStorage and restored by an inline
+// script before first paint, and the width only animates once that is done.
+// Collapsing hides the labels visually but not from assistive tech (sr-only,
+// never removed), and each link keeps a title for the pointer. On a phone the
+// aside gives way to a Menu button that opens the same navigation in a
+// Drawer — modal, with its focus trap — and following a link closes it.
 //
 // The collapsed look hangs off the aside's data-collapsed through a named
 // group (group/sidebar), so it reaches only the aside's own navigation and
@@ -44,10 +78,10 @@ templ Sidebar(props SidebarProps) {
 			id={ props.asideID() }
 			data-collapsed="false"
 			x-bind:data-collapsed="collapsed ? 'true' : 'false'"
-			class="group/sidebar hidden w-60 shrink-0 flex-col border-r border-border bg-surface transition-[width] duration-200 data-[collapsed=true]:w-16 md:flex"
+			class="group/sidebar hidden w-60 shrink-0 flex-col border-r border-border bg-surface duration-200 data-[ready=true]:transition-[width] data-[collapsed=true]:w-16 md:flex"
 		>
 			<div class="flex-1 overflow-y-auto p-3">
-				@sidebarNav(props)
+				@sidebarNav(props, false)
 			</div>
 			if props.Collapsible {
 				<div class="border-t border-border p-2">
@@ -56,8 +90,7 @@ templ Sidebar(props SidebarProps) {
 						aria-controls={ props.asideID() }
 						aria-expanded="true"
 						x-bind:aria-expanded="collapsed ? 'false' : 'true'"
-						aria-label="Recolher menu"
-						x-bind:aria-label="collapsed ? 'Expandir menu' : 'Recolher menu'"
+						aria-label="Menu lateral"
 						x-on:click="toggle()"
 						class="flex w-full items-center justify-center rounded px-2 py-1.5 text-sm text-muted hover:bg-muted/10 hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 					>
@@ -66,6 +99,9 @@ templ Sidebar(props SidebarProps) {
 				</div>
 			}
 		</aside>
+		if props.Collapsible {
+			@templ.Raw(props.restoreScript())
+		}
 		<div class="border-b border-border p-2 md:hidden">
 			@Button(ButtonProps{Variant: "secondary", Size: "sm", Attrs: templ.Attributes{
 				"x-on:click":    "$dispatch('open-drawer', '" + props.drawerID() + "')",
@@ -76,15 +112,15 @@ templ Sidebar(props SidebarProps) {
 			}
 		</div>
 		@Drawer(DrawerProps{ID: props.drawerID(), Title: or(props.Label, "Menu")}) {
-			@sidebarNav(props)
+			@sidebarNav(props, true)
 		}
-		<main class="min-w-0 flex-1">
+		<div class="min-w-0 flex-1">
 			{ children... }
-		</main>
+		</div>
 	</div>
 }
 
-templ sidebarNav(props SidebarProps) {
+templ sidebarNav(props SidebarProps, inDrawer bool) {
 	<nav aria-label={ or(props.Label, "Menu") } class="flex flex-col gap-4">
 		for _, g := range props.Groups {
 			<div class="flex flex-col gap-1">
@@ -100,10 +136,15 @@ templ sidebarNav(props SidebarProps) {
 								if it.Current {
 									aria-current="page"
 								}
+								if inDrawer {
+									x-on:click="closeOverlay()"
+								}
 								class="flex items-center gap-3 rounded px-2 py-2 text-sm text-fg hover:bg-muted/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 aria-[current=page]:bg-primary/10 aria-[current=page]:font-medium aria-[current=page]:text-primary group-data-[collapsed=true]/sidebar:justify-center"
 							>
 								if it.Icon != "" {
 									<span aria-hidden="true" class="w-5 shrink-0 text-center">{ it.Icon }</span>
+								} else {
+									<span aria-hidden="true" class="hidden w-5 shrink-0 text-center font-medium group-data-[collapsed=true]/sidebar:inline">{ it.initial() }</span>
 								}
 								<span class="flex-1 truncate group-data-[collapsed=true]/sidebar:sr-only">{ it.Label }</span>
 								if it.Badge != "" {

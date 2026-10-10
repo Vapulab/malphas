@@ -12,14 +12,17 @@ type ResizableProps struct {
 	Attrs       templ.Attributes
 }
 
+// bounds keeps both limits within [5, 95]: at 100 the bar would be pushed
+// out of the component, beyond the pointer's reach.
 func (p ResizableProps) bounds() (min, max int) {
 	min, max = p.Min, p.Max
 	if min <= 0 {
 		min = 10
 	}
-	if max <= 0 || max > 100 {
+	if max <= 0 {
 		max = 90
 	}
+	min, max = clampInt(min, 5, 95), clampInt(max, 5, 95)
 	if min > max {
 		min, max = max, min
 	}
@@ -61,6 +64,9 @@ func (p ResizableProps) firstID() string { return p.ID + "-first" }
 // splitter: role="separator", focusable, with its value as the first panel's
 // share.
 //
+// The bar is 4px to look at but 24px to grab (an ::after hit area), the WCAG
+// minimum target on touch screens.
+//
 // The size is the first panel's flex-basis, rendered by the server so the
 // layout is right before any script runs; with an ID, the user's last size is
 // remembered in localStorage and restored over it.
@@ -72,7 +78,9 @@ templ Resizable(props ResizableProps) {
 		{ props.Attrs... }
 	>
 		<div
-			id={ props.firstID() }
+			if props.ID != "" {
+				id={ props.firstID() }
+			}
 			class="min-h-0 min-w-0 shrink-0 overflow-auto"
 			style={ "flex-basis: " + intJS(props.size()) + "%" }
 			x-bind:style="{ flexBasis: size + '%' }"
@@ -87,7 +95,9 @@ templ Resizable(props ResizableProps) {
 			x-bind:aria-valuenow="size"
 			aria-valuemin={ intJS(min) }
 			aria-valuemax={ intJS(max) }
-			aria-controls={ props.firstID() }
+			if props.ID != "" {
+				aria-controls={ props.firstID() }
+			}
 			if props.Label != "" {
 				aria-label={ props.Label }
 			}
@@ -96,9 +106,10 @@ templ Resizable(props ResizableProps) {
 			x-on:pointermove="onPointerMove($event)"
 			x-on:pointerup="onPointerUp($event)"
 			x-on:pointercancel="onPointerUp($event)"
+			x-on:lostpointercapture="onPointerUp($event)"
 			class={ "relative shrink-0 touch-none bg-border transition-colors hover:bg-primary/40 focus:outline-none focus-visible:bg-primary data-[dragging=true]:bg-primary",
-				templ.KV("h-full w-1 cursor-col-resize", !props.Vertical),
-				templ.KV("h-1 w-full cursor-row-resize", props.Vertical) }
+				templ.KV("h-full w-1 cursor-col-resize after:absolute after:-inset-x-2.5 after:inset-y-0 after:content-['']", !props.Vertical),
+				templ.KV("h-1 w-full cursor-row-resize after:absolute after:inset-x-0 after:-inset-y-2.5 after:content-['']", props.Vertical) }
 			x-bind:data-dragging="dragging ? 'true' : 'false'"
 		></div>
 		<div class="min-h-0 min-w-0 flex-1 overflow-auto">
