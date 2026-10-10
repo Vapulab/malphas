@@ -15,13 +15,16 @@ type ToggleButtonProps struct {
 // with the static one and stylesheet order would pick the winner (see
 // rendering_test.go in the app's e2e suite).
 func toggleItemClasses() string {
-	return "inline-flex h-9 min-w-9 items-center justify-center gap-2 rounded px-3 text-sm font-medium text-muted transition-colors hover:bg-muted/10 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50 aria-pressed:bg-primary/10 aria-pressed:text-primary"
+	return "inline-flex h-9 min-w-9 items-center justify-center gap-2 rounded px-3 text-sm font-medium text-muted transition-colors enabled:hover:bg-muted/10 enabled:hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50 aria-pressed:bg-primary/10 aria-pressed:text-primary"
 }
 
 // ToggleButton is a two-state button, aria-pressed: the "bold" button of an
 // editor. It is not Toggle, which is an on/off switch for a setting.
+//
+// Attrs go on the button, as Textarea and InputGroup put them on the control:
+// hx-*, aria-describedby and data-* belong to what is clicked and focused.
 templ ToggleButton(props ToggleButtonProps) {
-	<span class="inline-flex" x-data={ "toggleButton(" + boolJS(props.Pressed) + ")" } { props.Attrs... }>
+	<span class="inline-flex" x-data={ "toggleButton(" + boolJS(props.Pressed) + ")" }>
 		<button
 			type="button"
 			if props.ID != "" {
@@ -35,6 +38,7 @@ templ ToggleButton(props ToggleButtonProps) {
 			x-on:click="pressed = !pressed"
 			disabled?={ props.Disabled }
 			class={ toggleItemClasses() }
+			{ props.Attrs... }
 		>
 			{ children... }
 		</button>

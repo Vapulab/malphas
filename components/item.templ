@@ -24,6 +24,10 @@ func (p ItemProps) classes() string {
 	return "relative flex items-center rounded " + variant + " " + size
 }
 
+// isLink needs a Title as well as an Href: the title is the link's only text,
+// and a link with no text has no accessible name.
+func (p ItemProps) isLink() bool { return p.Href != "" && p.Title != "" }
+
 // Item is a row of media, text and actions.
 //
 // With Href it uses the stretched-link pattern: the title is the only <a>, and
@@ -34,7 +38,7 @@ func (p ItemProps) classes() string {
 templ Item(props ItemProps) {
 	<div
 		class={ props.classes(),
-			templ.KV("transition-colors hover:bg-muted/10 focus-within:ring-2 focus-within:ring-primary/50", props.Href != "") }
+			templ.KV("transition-colors hover:bg-muted/10 focus-within:ring-2 focus-within:ring-primary/50", props.isLink()) }
 		{ props.Attrs... }
 	>
 		if props.Media != nil {
@@ -43,7 +47,7 @@ templ Item(props ItemProps) {
 			</div>
 		}
 		<div class="flex min-w-0 flex-1 flex-col gap-0.5">
-			if props.Href != "" {
+			if props.isLink() {
 				<a href={ templ.URL(props.Href) } class="truncate text-sm font-medium text-fg after:absolute after:inset-0 focus:outline-none">{ props.Title }</a>
 			} else {
 				<p class="truncate text-sm font-medium text-fg">{ props.Title }</p>

@@ -13,12 +13,16 @@ type ScrollAreaProps struct {
 //
 // tabindex="0" is what lets a keyboard user scroll it at all: arrows and
 // PageDown act on the focused element. A focusable element needs a name, hence
-// role="region" with the required Label.
+// role="region" with the required Label. Without one, it claims no region and
+// takes no tabindex: a focusable unnamed region is announced as just "region",
+// and browsers already make a plain scroll container keyboard-scrollable.
 templ ScrollArea(props ScrollAreaProps) {
 	<div
-		role="region"
-		aria-label={ props.Label }
-		tabindex="0"
+		if props.Label != "" {
+			role="region"
+			aria-label={ props.Label }
+			tabindex="0"
+		}
 		class={ "rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 [scrollbar-color:rgb(var(--color-muted)/0.5)_transparent] [scrollbar-width:thin]",
 			templ.KV("overflow-y-auto overflow-x-hidden", !props.Horizontal),
 			templ.KV("overflow-x-auto overflow-y-hidden", props.Horizontal),

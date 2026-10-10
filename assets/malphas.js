@@ -397,8 +397,22 @@ document.addEventListener("alpine:init", () => {
     on: checked,
   }));
 
-  // The server paints the starting count; this only keeps it current.
-  Alpine.data("charCounter", (count = 0) => ({ count }));
+  // The server paints the starting count; this only keeps it current. Typing
+  // fires input, but a form reset and a bfcache or autofill restore change the
+  // value silently, so those are synced here too.
+  Alpine.data("charCounter", (count = 0) => ({
+    count,
+
+    init() {
+      const field = this.$root.querySelector("textarea");
+      if (!field) return;
+      const sync = () => (this.count = field.value.length);
+      sync();
+      window.addEventListener("pageshow", sync);
+      // reset fires before the browser restores the defaults; read after.
+      field.form?.addEventListener("reset", () => setTimeout(sync));
+    },
+  }));
 
   Alpine.data("toggleButton", (pressed = false) => ({ pressed }));
 

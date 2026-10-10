@@ -45,3 +45,28 @@ func TestToggleButtonDisabledSubmitsNothing(t *testing.T) {
 		t.Errorf("Alpine must not re-enable it, got: %s", html)
 	}
 }
+
+// Attrs land on the button, like Textarea and InputGroup put them on the
+// control: hx-*, aria-describedby and data-* belong to the element that is
+// clicked and focused, not to a layout wrapper.
+func TestToggleButtonAttrsLandOnTheButton(t *testing.T) {
+	html := renderWithChildren(t,
+		components.ToggleButton(components.ToggleButtonProps{Attrs: templ.Attributes{"hx-post": "/fav"}}), templ.Raw("★"))
+	button := html[strings.Index(html, "<button"):]
+	button = button[:strings.Index(button, ">")]
+	if !strings.Contains(button, `hx-post="/fav"`) {
+		t.Errorf("expected Attrs on the <button>, got: %s", html)
+	}
+}
+
+// A disabled item must not react to hover: it would look clickable.
+func TestToggleItemsDoNotHoverWhenDisabled(t *testing.T) {
+	html := renderWithChildren(t,
+		components.ToggleButton(components.ToggleButtonProps{Disabled: true}), templ.Raw("x"))
+	if strings.Contains(html, " hover:") {
+		t.Errorf("hover styles must be gated on enabled:, got: %s", html)
+	}
+	if !strings.Contains(html, "enabled:hover:bg-muted/10") {
+		t.Errorf("expected enabled:hover: styles, got: %s", html)
+	}
+}

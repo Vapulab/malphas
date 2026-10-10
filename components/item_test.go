@@ -63,3 +63,12 @@ func TestProseAppliesTheClass(t *testing.T) {
 		t.Errorf("expected the prose class, got: %s", html)
 	}
 }
+
+// A link with no text has no accessible name. Without a Title there is
+// nothing to put in the link, so the item is not a link.
+func TestItemWithHrefButNoTitleIsNotALink(t *testing.T) {
+	html := renderToString(t, components.Item(components.ItemProps{Href: "/x", Description: "só descrição"}))
+	if strings.Contains(html, "<a") {
+		t.Errorf("an empty link would have no name, got: %s", html)
+	}
+}

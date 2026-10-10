@@ -45,3 +45,15 @@ func TestScrollAreaHorizontal(t *testing.T) {
 		t.Errorf("expected horizontal scrolling only, got: %s", html)
 	}
 }
+
+// Without a Label there is nothing to name the region with, and a focusable
+// unnamed region is announced as just "region". It falls back to a plain
+// scroll container, which browsers already make keyboard-scrollable.
+func TestScrollAreaWithoutLabelClaimsNoRegion(t *testing.T) {
+	html := renderWithChildren(t, components.ScrollArea(components.ScrollAreaProps{}), templ.Raw("x"))
+	for _, unwanted := range []string{`role="region"`, `aria-label`, `tabindex`} {
+		if strings.Contains(html, unwanted) {
+			t.Errorf("no Label, so no %s; got: %s", unwanted, html)
+		}
+	}
+}
