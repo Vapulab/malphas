@@ -1,0 +1,201 @@
+package components
+
+import (
+	"net/url"
+	"strconv"
+)
+
+type DataTableColumn struct {
+	Key      string // the sort key sent to the server
+	Label    string
+	Sortable bool
+	Align    string // start | end (default start); end for numbers
+}
+
+type DataTableProps struct {
+	ID         string
+	Columns    []DataTableColumn
+	Sort       string // current sort key
+	Dir        string // asc | desc
+	Query      string // current search text
+	Page       int
+	TotalPages int
+	Total      int // rows matching the search, for the results line
+
+	// URL is where every action goes: sorting, searching and paging all
+	// GET it with sort, dir, q and page. The response must contain this
+	// table's region (ID + "-region"); it is swapped in place with hx-select,
+	// so a full page works as well as a fragment.
+	URL string
+
+	Searchable        bool
+	SearchLabel       string // accessible name for the search field (default "Buscar")
+	SearchPlaceholder string
+	Empty             string // shown when Total is 0 (default "Nenhum resultado")
+	Attrs             templ.Attributes
+}
+
+func (p DataTableProps) regionID() string { return p.ID + "-region" }
+
+func (p DataTableProps) stateID() string { return p.ID + "-state" }
+
+func (p DataTableProps) values(sort, dir, q string) url.Values {
+	v := url.Values{}
+	if sort != "" {
+		v.Set("sort", sort)
+	}
+	if dir != "" {
+		v.Set("dir", dir)
+	}
+	if q != "" {
+		v.Set("q", q)
+	}
+	return v
+}
+
+// Href is the URL for a given state. Page 1 (or less) is left out, so the
+// first page has one canonical address.
+func (p DataTableProps) Href(sort, dir, q string, page int) string {
+	href := withQuery(p.URL, p.values(sort, dir, q).Encode())
+	if page > 1 {
+		href += "&page=" + strconv.Itoa(page)
+	}
+	return href
+}
+
+func (p DataTableProps) pageBase() string {
+	return withQuery(p.URL, p.values(p.Sort, p.Dir, p.Query).Encode()) + "&page="
+}
+
+// sortHref flips the direction on the active column and starts any other
+// column ascending. Sorting returns to page 1: the old page number means
+// nothing in a new order.
+func (p DataTableProps) sortHref(col DataTableColumn) string {
+	dir := "asc"
+	if col.Key == p.Sort && p.Dir != "desc" {
+		dir = "desc"
+	}
+	return p.Href(col.Key, dir, p.Query, 1)
+}
+
+func (p DataTableProps) ariaSort(col DataTableColumn) string {
+	if col.Key != p.Sort {
+		return "none"
+	}
+	if p.Dir == "desc" {
+		return "descending"
+	}
+	return "ascending"
+}
+
+func (p DataTableProps) sortGlyph(col DataTableColumn) string {
+	switch p.ariaSort(col) {
+	case "ascending":
+		return "▲"
+	case "descending":
+		return "▼"
+	}
+	return "↕"
+}
+
+func dataTableAlign(col DataTableColumn) string {
+	if col.Align == "end" {
+		return "text-right"
+	}
+	return "text-left"
+}
+
+func resultsLabel(n int) string {
+	if n == 1 {
+		return "1 resultado"
+	}
+	return strconv.Itoa(n) + " resultados"
+}
+
+// DataTable is a table whose sorting, search and paging happen on the server.
+// The component renders the controls and their HTMX wiring; the caller's
+// handler runs the query and renders the rows (children, as <tr>s).
+//
+// Everything is a real link or a GET form field, so the table works as plain
+// page loads without JavaScript; with it, hx-boost turns the links into
+// in-place swaps of the region, and hx-push-url keeps the state in the
+// address bar, shareable and back-button safe.
+//
+// The search field lives outside the swapped region, so typing is never
+// interrupted by a response replacing the field. sort and dir ride along in
+// hidden inputs next to it, refreshed out of band (hx-select-oob) by every
+// response.
+templ DataTable(props DataTableProps) {
+	<div class="flex flex-col gap-3" x-data="dataTable" x-on:htmx:after-settle="onSettle()" { props.Attrs... }>
+		if props.Searchable {
+			<input
+				type="search"
+				name="q"
+				value={ props.Query }
+				aria-label={ or(props.SearchLabel, "Buscar") }
+				aria-controls={ props.regionID() }
+				placeholder={ props.SearchPlaceholder }
+				hx-get={ props.URL }
+				hx-trigger="input changed delay:300ms, search"
+				hx-target={ "#" + props.regionID() }
+				hx-select={ "#" + props.regionID() }
+				hx-select-oob={ "#" + props.stateID() }
+				hx-swap="outerHTML"
+				hx-push-url="true"
+				hx-include={ "#" + props.stateID() }
+				class="h-10 w-full max-w-sm rounded border border-border bg-surface px-3 text-sm text-fg focus:outline-none focus:ring-2 focus:ring-primary/50"
+			/>
+			<div id={ props.stateID() } hidden>
+				<input type="hidden" name="sort" value={ props.Sort }/>
+				<input type="hidden" name="dir" value={ props.Dir }/>
+			</div>
+		}
+		<div
+			id={ props.regionID() }
+			hx-boost="true"
+			hx-target={ "#" + props.regionID() }
+			hx-select={ "#" + props.regionID() }
+			hx-select-oob={ "#" + props.stateID() }
+			hx-swap="outerHTML"
+			class="flex flex-col gap-3"
+		>
+			<p id={ props.ID + "-status" } tabindex="-1" class="text-sm text-muted focus:outline-none">{ resultsLabel(props.Total) }</p>
+			@Table(TableProps{}) {
+				@THead() {
+					<tr>
+						for _, col := range props.Columns {
+							if col.Sortable {
+								@TH(THProps{Class: dataTableAlign(col), Attrs: templ.Attributes{"aria-sort": props.ariaSort(col)}}) {
+									<a
+										id={ props.ID + "-sort-" + col.Key }
+										href={ templ.URL(props.sortHref(col)) }
+										class="inline-flex items-center gap-1 rounded hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+									>
+										{ col.Label }
+										<span aria-hidden="true" class="text-[0.65rem]">{ props.sortGlyph(col) }</span>
+									</a>
+								}
+							} else {
+								@TH(THProps{Class: dataTableAlign(col)}) {
+									{ col.Label }
+								}
+							}
+						}
+					</tr>
+				}
+				@TBody() {
+					if props.Total == 0 {
+						<tr>
+							<td colspan={ strconv.Itoa(len(props.Columns)) } class="py-10 text-center text-sm text-muted">{ or(props.Empty, "Nenhum resultado") }</td>
+						</tr>
+					} else {
+						{ children... }
+					}
+				}
+			}
+			if props.TotalPages > 1 {
+				@Pagination(PaginationProps{Current: props.Page, Total: props.TotalPages, BaseHref: props.pageBase()})
+			}
+		</div>
+	</div>
+}

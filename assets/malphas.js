@@ -1086,6 +1086,19 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 
+  // A swap replaces the region, and with it whatever link was focused. htmx
+  // restores focus to an element with the same id (the sort headers have
+  // one); when nothing matched, focus would fall to <body> and a keyboard
+  // user would start over from the top of the page. Land them on the results
+  // line instead — just above where they were.
+  Alpine.data("dataTable", () => ({
+    onSettle() {
+      const active = document.activeElement;
+      if (active && active !== document.body && document.contains(active)) return;
+      this.$root.querySelector('[id$="-status"]')?.focus();
+    },
+  }));
+
   // Reads the theme the inline script already applied, so the toggle's initial
   // state matches what is on screen. "" means "follow the OS".
   Alpine.data("themeToggle", () => ({
