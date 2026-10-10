@@ -91,7 +91,7 @@ templ Questionnaire(props QuestionnaireProps) {
 	<form
 		id={ props.ID }
 		method="post"
-		action={ templ.SafeURL(props.Action) }
+		action={ templ.URL(props.Action) }
 		hx-post={ props.Action }
 		hx-target="this"
 		hx-swap="outerHTML"
@@ -138,14 +138,17 @@ templ Questionnaire(props QuestionnaireProps) {
 				/>
 			</div>
 		} else {
+			// aria-required is honoured on a radiogroup, not on a plain group
+			// of checkboxes, so it is only claimed there.
 			<fieldset
 				if props.Question.Kind == "single" {
 					role="radiogroup"
 				}
-				if props.Question.Required {
+				if props.Question.Required && props.Question.Kind == "single" {
 					aria-required="true"
 				}
 				if props.Error != "" {
+					aria-invalid="true"
 					aria-describedby={ props.errorID() }
 				}
 				class="flex flex-col gap-2"

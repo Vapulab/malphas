@@ -95,3 +95,36 @@ func TestDataTableSearchWorksAsAPlainForm(t *testing.T) {
 		t.Errorf("with JavaScript the form must not also navigate: %s", html)
 	}
 }
+
+// Caller URLs go through templ's sanitizer like every link in Malphas
+// (see link.templ): a javascript: URL must never reach an action.
+func TestDataTableSanitizesItsURL(t *testing.T) {
+	p := dataTableFixture()
+	p.URL = "javascript:alert(1)"
+	html := renderWithChildren(t, components.DataTable(p), templ.Raw(""))
+	if strings.Contains(html, `action="javascript:`) || strings.Contains(html, `href="javascript:`) {
+		t.Errorf("a javascript: URL reached the markup: %s", html)
+	}
+}
+
+// Each debounced keystroke replaces the history entry instead of pushing a
+// new one, so Back does not walk through "p", "pc", "pcr".
+func TestDataTableSearchReplacesHistory(t *testing.T) {
+	html := renderWithChildren(t, components.DataTable(dataTableFixture()), templ.Raw(""))
+	field := html[strings.Index(html, `type="search"`):]
+	field = field[:strings.Index(field, ">")]
+	if !strings.Contains(field, `hx-replace-url="true"`) || strings.Contains(field, "hx-push-url") {
+		t.Errorf("search should replace, not push, the URL: %s", field)
+	}
+}
+
+// Without a search there is no state block, and the region must not point
+// hx-select-oob at an element that does not exist.
+func TestDataTableWithoutSearchHasNoStateOOB(t *testing.T) {
+	p := dataTableFixture()
+	p.Searchable = false
+	html := renderWithChildren(t, components.DataTable(p), templ.Raw(""))
+	if strings.Contains(html, "hx-select-oob") {
+		t.Errorf("no search, no state to refresh: %s", html)
+	}
+}

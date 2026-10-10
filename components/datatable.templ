@@ -119,7 +119,9 @@ func resultsLabel(n int) string {
 // Everything is a real link or a GET form field, so the table works as plain
 // page loads without JavaScript; with it, hx-boost turns the links into
 // in-place swaps of the region, and hx-push-url keeps the state in the
-// address bar, shareable and back-button safe.
+// address bar, shareable and back-button safe. The search field replaces the
+// URL instead of pushing it: one history entry per debounced keystroke would
+// make Back walk through "p", "pc", "pcr".
 //
 // The search field lives outside the swapped region, so typing is never
 // interrupted by a response replacing the field. sort and dir ride along in
@@ -130,7 +132,7 @@ templ DataTable(props DataTableProps) {
 		if props.Searchable {
 			// A real GET form, so Enter searches without JavaScript too; with
 			// it, the field's own hx-get does the work and the form stays put.
-			<form role="search" method="get" action={ templ.SafeURL(props.URL) } x-on:submit.prevent class="contents">
+			<form role="search" method="get" action={ templ.URL(props.URL) } x-on:submit.prevent class="contents">
 				<input
 					type="search"
 					name="q"
@@ -144,7 +146,7 @@ templ DataTable(props DataTableProps) {
 					hx-select={ "#" + props.regionID() }
 					hx-select-oob={ "#" + props.stateID() }
 					hx-swap="outerHTML"
-					hx-push-url="true"
+					hx-replace-url="true"
 					hx-include={ "#" + props.stateID() }
 					class="h-10 w-full max-w-sm rounded border border-border bg-surface px-3 text-sm text-fg focus:outline-none focus:ring-2 focus:ring-primary/50"
 				/>
@@ -159,7 +161,9 @@ templ DataTable(props DataTableProps) {
 			hx-boost="true"
 			hx-target={ "#" + props.regionID() }
 			hx-select={ "#" + props.regionID() }
-			hx-select-oob={ "#" + props.stateID() }
+			if props.Searchable {
+				hx-select-oob={ "#" + props.stateID() }
+			}
 			hx-swap="outerHTML"
 			class="flex flex-col gap-3"
 		>

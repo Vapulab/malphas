@@ -99,3 +99,52 @@ func TestCalendarRangeMarksTheSpan(t *testing.T) {
 		}
 	}
 }
+
+// An inverted pair from a caller or the URL is reordered by the server too,
+// not only by the client: the hidden inputs must never submit end < start.
+func TestCalendarNormalisesAnInvertedRange(t *testing.T) {
+	props := components.CalendarProps{
+		ID: "p", Month: day(2026, 10, 1), Mode: "range", StartName: "inicio", EndName: "fim",
+		Start: day(2026, 10, 20), End: day(2026, 10, 10), NavURL: "/x",
+	}
+	html := renderToString(t, components.Calendar(props))
+	if !strings.Contains(html, `name="inicio" value="2026-10-10"`) || !strings.Contains(html, `name="fim" value="2026-10-20"`) {
+		t.Errorf("the period should be reordered: %s", html)
+	}
+	if n := strings.Count(html, `aria-selected="true"`); n != 11 {
+		t.Errorf("10 to 20 is 11 selected days, got %d", n)
+	}
+}
+
+// A selection the user could not have made (before Min) is not shown as one.
+func TestCalendarIgnoresADisabledSelection(t *testing.T) {
+	props := calendarFixture()
+	props.Selected = day(2026, 10, 1) // before Min (5 Oct)
+	html := renderToString(t, components.Calendar(props))
+	if strings.Contains(html, `aria-selected="true"`) || !strings.Contains(html, `name="entrega" value=""`) {
+		t.Errorf("a disabled day must not render as selected: %s", html)
+	}
+}
+
+// data-autofocus belongs to the requested day only; when that day is not in
+// the rendered month, nothing takes focus on load.
+func TestCalendarAutofocusOnlyOnTheRequestedDay(t *testing.T) {
+	props := calendarFixture()
+	props.Month = day(2026, 11, 1)
+	props.Focus = day(2026, 10, 31)
+	html := renderToString(t, components.Calendar(props))
+	if strings.Contains(html, "data-autofocus") {
+		t.Errorf("focus target is outside November; nothing should autofocus: %s", html)
+	}
+}
+
+// Single mode keeps its selection in a hidden input even without a Name, so
+// a month change does not lose it.
+func TestCalendarSingleWithoutNameKeepsItsValue(t *testing.T) {
+	props := calendarFixture()
+	props.Name = ""
+	html := renderToString(t, components.Calendar(props))
+	if !strings.Contains(html, `data-cal="value"`) || strings.Contains(html, `name=""`) {
+		t.Errorf("expected an unnamed hidden input carrying the value: %s", html)
+	}
+}

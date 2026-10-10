@@ -59,25 +59,57 @@ func (p CalendarProps) isDisabled(d time.Time) bool {
 	return false
 }
 
+// selected is the single-mode pick, ignoring one the user could not have
+// made: a disabled day shown as chosen would also be submitted as chosen.
+func (p CalendarProps) selected() time.Time {
+	if p.Selected.IsZero() || p.isDisabled(dayOf(p.Selected)) {
+		return time.Time{}
+	}
+	return dayOf(p.Selected)
+}
+
+// span is the range-mode period, reordered when the caller (or a URL) hands
+// it over inverted: the client already reorders picks, and the server must
+// not be the one to submit an end before its start.
+func (p CalendarProps) span() (start, end time.Time) {
+	if p.Start.IsZero() {
+		return time.Time{}, time.Time{}
+	}
+	start, end = dayOf(p.Start), time.Time{}
+	if !p.End.IsZero() {
+		end = dayOf(p.End)
+	}
+	if !end.IsZero() && end.Before(start) {
+		start, end = end, start
+	}
+	return start, end
+}
+
 func (p CalendarProps) isSelected(d time.Time) bool {
 	if !p.isRange() {
-		return !p.Selected.IsZero() && dayOf(p.Selected).Equal(d)
+		s := p.selected()
+		return !s.IsZero() && s.Equal(d)
 	}
-	if p.Start.IsZero() {
+	start, end := p.span()
+	if start.IsZero() {
 		return false
 	}
-	start := dayOf(p.Start)
-	if p.End.IsZero() {
+	if end.IsZero() {
 		return start.Equal(d)
 	}
-	return !d.Before(start) && !d.After(dayOf(p.End))
+	return !d.Before(start) && !d.After(end)
+}
+
+func (p CalendarProps) autofocus(d time.Time) bool {
+	return !p.Focus.IsZero() && dayOf(p.Focus).Equal(d)
 }
 
 // tabStop is the one day reachable with Tab: an explicit Focus, else the
 // selection, else today, else the 1st — whichever falls in this month.
 func (p CalendarProps) tabStop() time.Time {
 	m := p.month()
-	for _, c := range []time.Time{p.Focus, p.Selected, p.Start, p.today()} {
+	start, _ := p.span()
+	for _, c := range []time.Time{p.Focus, p.selected(), start, p.today()} {
 		if !c.IsZero() && dayOf(c).Year() == m.Year() && dayOf(c).Month() == m.Month() {
 			return dayOf(c)
 		}
@@ -141,11 +173,22 @@ templ Calendar(props CalendarProps) {
 				}
 			</tbody>
 		</table>
+		// The hidden inputs are also the calendar's own memory across month
+		// changes, so single mode keeps one even without a Name (unnamed, it
+		// is simply not submitted).
 		if props.isRange() {
-			<input type="hidden" name={ props.StartName } value={ isoDate(props.Start) } data-cal="start"/>
-			<input type="hidden" name={ props.EndName } value={ isoDate(props.End) } data-cal="end"/>
-		} else if props.Name != "" {
-			<input type="hidden" name={ props.Name } value={ isoDate(props.Selected) } data-cal="value"/>
+			{{ start, end := props.span() }}
+			<input type="hidden" name={ props.StartName } value={ isoDate(start) } data-cal="start"/>
+			<input type="hidden" name={ props.EndName } value={ isoDate(end) } data-cal="end"/>
+		} else {
+			<input
+				type="hidden"
+				if props.Name != "" {
+					name={ props.Name }
+				}
+				value={ isoDate(props.selected()) }
+				data-cal="value"
+			/>
 		}
 	</div>
 }
@@ -181,7 +224,7 @@ templ calendarDay(props CalendarProps, d time.Time) {
 			aria-label={ dayLabel(d) }
 			if d.Equal(props.tabStop()) {
 				tabindex="0"
-				if !props.Focus.IsZero() {
+				if props.autofocus(d) {
 					data-autofocus
 				}
 			} else {

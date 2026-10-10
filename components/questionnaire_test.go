@@ -87,3 +87,28 @@ func TestQuestionnaireSkippableText(t *testing.T) {
 		}
 	}
 }
+
+func TestQuestionnaireSanitizesItsAction(t *testing.T) {
+	p := questionnaireFixture()
+	p.Action = "javascript:alert(1)"
+	html := renderToString(t, components.Questionnaire(p))
+	if strings.Contains(html, `action="javascript:`) {
+		t.Errorf("a javascript: action reached the markup: %s", html)
+	}
+}
+
+// An error marks the group invalid, and aria-required is only claimed where
+// it is supported (radiogroup), not on a plain group of checkboxes.
+func TestQuestionnaireErrorMarksTheGroupInvalid(t *testing.T) {
+	p := questionnaireFixture() // multiple, required
+	p.Error = "Escolha ao menos uma área."
+	html := renderToString(t, components.Questionnaire(p))
+	fs := html[strings.Index(html, "<fieldset"):]
+	fs = fs[:strings.Index(fs, ">")]
+	if !strings.Contains(fs, `aria-invalid="true"`) {
+		t.Errorf("the fieldset should be aria-invalid: %s", fs)
+	}
+	if strings.Contains(fs, "aria-required") {
+		t.Errorf("aria-required is not supported on a checkbox group: %s", fs)
+	}
+}
