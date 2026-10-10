@@ -1,0 +1,33 @@
+package components
+
+type AspectRatioProps struct {
+	Ratio string // 16/9 | 4/3 | 1/1 | 3/4 | 21/9 (default 16/9)
+	Attrs templ.Attributes
+}
+
+// Literal class names, so Tailwind's scanner sees every one of them.
+var aspectRatioClasses = map[string]string{
+	"16/9": "aspect-video",
+	"4/3":  "aspect-[4/3]",
+	"1/1":  "aspect-square",
+	"3/4":  "aspect-[3/4]",
+	"21/9": "aspect-[21/9]",
+}
+
+// An unknown ratio falls back to the default rather than to no class, which
+// would collapse a box holding only absolutely sized media to zero height.
+func (p AspectRatioProps) classes() string {
+	c, ok := aspectRatioClasses[p.Ratio]
+	if !ok {
+		c = aspectRatioClasses["16/9"]
+	}
+	return "relative w-full overflow-hidden rounded " + c + " [&>*]:h-full [&>*]:w-full [&>img]:object-cover [&>video]:object-cover"
+}
+
+// AspectRatio reserves the box before the media loads, so the page does not
+// jump when an image arrives.
+templ AspectRatio(props AspectRatioProps) {
+	<div class={ props.classes() } { props.Attrs... }>
+		{ children... }
+	</div>
+}

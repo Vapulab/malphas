@@ -1,0 +1,30 @@
+package components
+
+type ScrollAreaProps struct {
+	Label      string // required: names the region for screen readers
+	Class      string // sizing, e.g. "max-h-64" or "h-80"
+	Horizontal bool
+	Attrs      templ.Attributes
+}
+
+// ScrollArea is a native scroll container with a themed scrollbar — no
+// scrollbar emulated in JS, so wheel, touch and momentum behave as the
+// platform does.
+//
+// tabindex="0" is what lets a keyboard user scroll it at all: arrows and
+// PageDown act on the focused element. A focusable element needs a name, hence
+// role="region" with the required Label.
+templ ScrollArea(props ScrollAreaProps) {
+	<div
+		role="region"
+		aria-label={ props.Label }
+		tabindex="0"
+		class={ "rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 [scrollbar-color:rgb(var(--color-muted)/0.5)_transparent] [scrollbar-width:thin]",
+			templ.KV("overflow-y-auto overflow-x-hidden", !props.Horizontal),
+			templ.KV("overflow-x-auto overflow-y-hidden", props.Horizontal),
+			props.Class }
+		{ props.Attrs... }
+	>
+		{ children... }
+	</div>
+}
