@@ -14,14 +14,7 @@ type DropdownProps struct {
 
 func (p DropdownProps) menuID() string { return p.ID + "-menu" }
 
-func (p DropdownProps) menuPosition() string {
-	return map[string]string{
-		"bottom-start": "top-full left-0 mt-1",
-		"bottom-end":   "top-full right-0 mt-1",
-		"top-start":    "bottom-full left-0 mb-1",
-		"top-end":      "bottom-full right-0 mb-1",
-	}[or(p.Position, "bottom-start")]
-}
+func (p DropdownProps) menuPosition() string { return floatingPosition(p.Position) }
 
 // Dropdown is the menu-button pattern: a trigger that opens a list of actions.
 //

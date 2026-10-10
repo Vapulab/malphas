@@ -107,6 +107,93 @@ function foldText(s) {
   return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 }
 
+// listboxNav is the aria-activedescendant pattern shared by Combobox and
+// Command: focus stays in a text field while the arrows move a highlight over
+// [role="option"] elements, each carrying data-option-index and data-label.
+// Implemented once for the same reason as rovingList — and because the
+// Combobox already paid for its edge cases (retyping, Unicode folding).
+//
+// The spreading behavior owns `query`. It may override _filterActive() to
+// show the whole list until the user starts typing.
+function listboxNav() {
+  return {
+    active: -1,
+    // Folding normalises Unicode, and matches() runs for every option on every
+    // keystroke. Labels never change, so each is folded once; the query is
+    // folded once per distinct value.
+    _folded: new Map(),
+    _foldedQuery: { raw: null, folded: "" },
+
+    _fold(text) {
+      let folded = this._folded.get(text);
+      if (folded === undefined) {
+        folded = foldText(text);
+        this._folded.set(text, folded);
+      }
+      return folded;
+    },
+
+    _query() {
+      if (this._foldedQuery.raw !== this.query) {
+        this._foldedQuery = { raw: this.query, folded: foldText(this.query.trim()) };
+      }
+      return this._foldedQuery.folded;
+    },
+
+    _filterActive() {
+      return true;
+    },
+
+    matches(optionLabel) {
+      if (!this._filterActive()) return true;
+      const q = this._query();
+      return !q || this._fold(optionLabel).includes(q);
+    },
+
+    hasMatches() {
+      return this._options().some((el) => this.matches(el.dataset.label));
+    },
+
+    _options() {
+      return Array.from(this.$root.querySelectorAll('[role="option"]'));
+    },
+
+    // Options the arrows can land on: visible under the filter and enabled.
+    _navigable() {
+      return this._options().filter(
+        (el) =>
+          el.getAttribute("aria-disabled") !== "true" && this.matches(el.dataset.label),
+      );
+    },
+
+    activeId() {
+      // null, not "": Alpine drops the attribute for null, and an empty
+      // aria-activedescendant is an invalid reference.
+      return this.active >= 0 ? this._options()[this.active]?.id ?? null : null;
+    },
+
+    _highlight(el) {
+      this.active = el ? Number(el.dataset.optionIndex) : -1;
+      // The list may have just been shown; scrolling a display:none element
+      // does nothing.
+      if (el) this.$nextTick(() => el.scrollIntoView({ block: "nearest" }));
+    },
+
+    _move(delta) {
+      const items = this._navigable();
+      if (!items.length) return;
+      const current = items.findIndex(
+        (el) => Number(el.dataset.optionIndex) === this.active,
+      );
+      const next =
+        current === -1
+          ? delta > 0 ? 0 : items.length - 1
+          : (current + delta + items.length) % items.length;
+      this._highlight(items[next]);
+    },
+  };
+}
+
 // --- Modal overlays ---------------------------------------------------------
 //
 // Making an overlay modal takes three things, and the last two are the ones
@@ -381,73 +468,21 @@ document.addEventListener("alpine:init", () => {
   // current label is still a search, and must not reset the list and move the
   // highlight to the first option.
   Alpine.data("combobox", (value = "", label = "") => ({
+    ...listboxNav(),
     open: false,
-    active: -1,
     filtering: false,
     value,
     label,
     query: label,
-    // Folding normalises Unicode, and matches() runs for every option on every
-    // keystroke. Labels never change, so each is folded once; the query is
-    // folded once per distinct value.
-    _folded: new Map(),
-    _foldedQuery: { raw: null, folded: "" },
-
-    _fold(text) {
-      let folded = this._folded.get(text);
-      if (folded === undefined) {
-        folded = foldText(text);
-        this._folded.set(text, folded);
-      }
-      return folded;
-    },
-
-    _query() {
-      if (this._foldedQuery.raw !== this.query) {
-        this._foldedQuery = { raw: this.query, folded: foldText(this.query.trim()) };
-      }
-      return this._foldedQuery.folded;
-    },
-
-    _options() {
-      return Array.from(this.$root.querySelectorAll('[role="option"]'));
-    },
-
-    // Options the arrows can land on: visible under the filter and enabled.
-    _navigable() {
-      return this._options().filter(
-        (el) =>
-          el.getAttribute("aria-disabled") !== "true" && this.matches(el.dataset.label),
-      );
-    },
 
     // Until the user types, the whole list is offered — opening a filled
     // combobox should not show a single option.
-    matches(optionLabel) {
-      if (!this.filtering) return true;
-      const q = this._query();
-      return !q || this._fold(optionLabel).includes(q);
-    },
-
-    hasMatches() {
-      return this._options().some((el) => this.matches(el.dataset.label));
+    _filterActive() {
+      return this.filtering;
     },
 
     isSelected(v) {
       return this.value !== "" && this.value === v;
-    },
-
-    activeId() {
-      // null, not "": Alpine drops the attribute for null, and an empty
-      // aria-activedescendant is an invalid reference.
-      return this.active >= 0 ? this._options()[this.active]?.id ?? null : null;
-    },
-
-    _highlight(el) {
-      this.active = el ? Number(el.dataset.comboboxIndex) : -1;
-      // The list may have just been shown; scrolling a display:none element
-      // does nothing.
-      if (el) this.$nextTick(() => el.scrollIntoView({ block: "nearest" }));
     },
 
     // Opening lands on the current selection, so ↓ from a filled field
@@ -457,19 +492,6 @@ document.addEventListener("alpine:init", () => {
       const items = this._navigable();
       const selected = items.find((el) => el.dataset.value === this.value);
       this._highlight(selected || (fallback === "last" ? items[items.length - 1] : items[0]));
-    },
-
-    _move(delta) {
-      const items = this._navigable();
-      if (!items.length) return;
-      const current = items.findIndex(
-        (el) => Number(el.dataset.comboboxIndex) === this.active,
-      );
-      const next =
-        current === -1
-          ? delta > 0 ? 0 : items.length - 1
-          : (current + delta + items.length) % items.length;
-      this._highlight(items[next]);
     },
 
     close() {

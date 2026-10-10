@@ -104,3 +104,16 @@ func TestRovingListHelperExists(t *testing.T) {
 		}
 	}
 }
+
+// listboxNav is the single implementation of aria-activedescendant navigation
+// behind Combobox and Command. Two copies would drift, and the Combobox fixes
+// (retyping, Escape propagation) would reach only one of them.
+func TestListboxNavHelperExists(t *testing.T) {
+	js := readUIJS(t)
+	if !strings.Contains(js, "function listboxNav(") {
+		t.Fatal("listboxNav() is missing from malphas.js")
+	}
+	if !strings.Contains(js, "...listboxNav(") {
+		t.Error("no behavior spreads listboxNav(); Combobox should")
+	}
+}

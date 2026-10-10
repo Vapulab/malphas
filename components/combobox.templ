@@ -112,7 +112,7 @@ templ Combobox(props ComboboxProps) {
 					<li
 						id={ props.optionID(i) }
 						role="option"
-						data-combobox-index={ intJS(i) }
+						data-option-index={ intJS(i) }
 						data-value={ o.Value }
 						data-label={ o.Label }
 						aria-selected={ ariaBool(value != "" && o.Value == value) }

@@ -98,3 +98,16 @@ func rovingTabindex(index, active int) string {
 	}
 	return "-1"
 }
+
+// floatingPosition places a panel anchored to its trigger: start|end
+// horizontally, top|bottom vertically, combined as "bottom-start" (default).
+// No viewport measurement — near an edge, the page author picks the side.
+// Shared by every non-modal overlay that hangs off a trigger.
+func floatingPosition(position string) string {
+	return map[string]string{
+		"bottom-start": "top-full left-0 mt-1",
+		"bottom-end":   "top-full right-0 mt-1",
+		"top-start":    "bottom-full left-0 mb-1",
+		"top-end":      "bottom-full right-0 mb-1",
+	}[or(position, "bottom-start")]
+}
