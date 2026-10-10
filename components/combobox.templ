@@ -18,23 +18,18 @@ func (p ComboboxProps) listboxID() string { return p.ID + "-listbox" }
 
 func (p ComboboxProps) optionID(i int) string { return p.ID + "-opt-" + intJS(i) }
 
-// selectedLabel is what the text field shows on first paint. An unknown or
-// disabled Value renders as no selection rather than as text the user could
-// not have picked.
-func (p ComboboxProps) selectedLabel() string {
+// selection is the option the server paints as chosen. An unknown or disabled
+// Value is no selection rather than text the user could not have picked.
+//
+// Computed once per render and passed down: the template needs it for every
+// option, and recomputing it per option would scan the list n times.
+func (p ComboboxProps) selection() (value, label string) {
 	for _, o := range p.Options {
 		if o.Value == p.Value && p.Value != "" && !o.Disabled {
-			return o.Label
+			return o.Value, o.Label
 		}
 	}
-	return ""
-}
-
-func (p ComboboxProps) selectedValue() string {
-	if p.selectedLabel() == "" {
-		return ""
-	}
-	return p.Value
+	return "", ""
 }
 
 // Combobox is Select with a search field: the WAI-ARIA combobox pattern with a
@@ -49,9 +44,10 @@ func (p ComboboxProps) selectedValue() string {
 // is never submitted. On blur, text that is not exactly an option's label is
 // reverted to the current selection, and an empty field clears it.
 templ Combobox(props ComboboxProps) {
+	{{ value, label := props.selection() }}
 	<div
 		class="flex flex-col gap-1"
-		x-data={ "combobox(" + strJS(props.selectedValue()) + ", " + strJS(props.selectedLabel()) + ")" }
+		x-data={ "combobox(" + strJS(value) + ", " + strJS(label) + ")" }
 		{ props.Attrs... }
 	>
 		if props.Label != "" {
@@ -73,12 +69,14 @@ templ Combobox(props ComboboxProps) {
 				x-on:keydown="onKeydown($event)"
 				x-on:blur="commit()"
 				placeholder={ props.Placeholder }
-				value={ props.selectedLabel() }
+				value={ label }
 				disabled?={ props.Disabled }
 				required?={ props.Required }
 				class="h-10 w-full rounded border border-border bg-surface px-3 pr-9 text-sm text-fg focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
 			/>
-			<input type="hidden" name={ props.Name } value={ props.selectedValue() } x-ref="hidden"/>
+			// Disabled with the field: a disabled control is left out of the
+			// submission, and so must the value it stands for.
+			<input type="hidden" name={ props.Name } value={ value } disabled?={ props.Disabled } x-ref="hidden"/>
 			// Out of the tab order, as the pattern asks: the field already opens
 			// with Alt+↓, and a second stop per combobox is noise.
 			<button
@@ -95,6 +93,10 @@ templ Combobox(props ComboboxProps) {
 			</button>
 			// Inline display, as in Collapse: x-show drives el.style.display, so
 			// the closed state renders right before Alpine loads.
+			//
+			// mousedown.prevent sits on the whole list, not just the options: a
+			// mousedown on its scrollbar or padding would otherwise blur the
+			// field and close the list mid-scroll.
 			<ul
 				id={ props.listboxID() }
 				role="listbox"
@@ -102,6 +104,7 @@ templ Combobox(props ComboboxProps) {
 					aria-label={ props.Label }
 				}
 				x-show="open && hasMatches()"
+				x-on:mousedown.prevent
 				style="display:none"
 				class="absolute left-0 top-full z-40 mt-1 max-h-60 w-full overflow-y-auto rounded border border-border bg-surface py-1 shadow-lg"
 			>
@@ -112,13 +115,12 @@ templ Combobox(props ComboboxProps) {
 						data-combobox-index={ intJS(i) }
 						data-value={ o.Value }
 						data-label={ o.Label }
-						aria-selected={ ariaBool(o.Value == props.selectedValue() && props.selectedValue() != "") }
+						aria-selected={ ariaBool(value != "" && o.Value == value) }
 						x-bind:aria-selected={ "isSelected(" + strJS(o.Value) + ") ? 'true' : 'false'" }
 						if o.Disabled {
 							aria-disabled="true"
 						}
 						x-show={ "matches(" + strJS(o.Label) + ")" }
-						x-on:mousedown.prevent
 						x-on:click={ "choose(" + intJS(i) + ")" }
 						x-bind:class={ "active === " + intJS(i) + " && 'bg-muted/10'" }
 						class={ "flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-sm text-fg",
@@ -129,7 +131,7 @@ templ Combobox(props ComboboxProps) {
 							aria-hidden="true"
 							class="text-primary"
 							x-show={ "isSelected(" + strJS(o.Value) + ")" }
-							if o.Value != props.selectedValue() || o.Value == "" {
+							if value == "" || o.Value != value {
 								style="display:none"
 							}
 						>&#10003;</span>

@@ -78,6 +78,17 @@ func TestComboboxIgnoresAnUnpickableValue(t *testing.T) {
 	}
 }
 
+// A disabled native control is left out of the submission; the hidden input
+// has to follow, or a field the user could not edit still sends a value.
+func TestComboboxDisabledSubmitsNothing(t *testing.T) {
+	props := comboboxFixture()
+	props.Disabled = true
+	html := renderToString(t, components.Combobox(props))
+	if !strings.Contains(html, `<input type="hidden" name="cidade" value="sp" disabled`) {
+		t.Errorf("expected the hidden input disabled too, got: %s", html)
+	}
+}
+
 func TestComboboxDisabledOption(t *testing.T) {
 	html := renderToString(t, components.Combobox(comboboxFixture()))
 	if strings.Count(html, `aria-disabled="true"`) != 1 {

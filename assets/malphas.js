@@ -375,12 +375,39 @@ document.addEventListener("alpine:init", () => {
   //
   // value/label are the committed selection; query is what the field shows.
   // They only diverge while the user is typing, and commit() reconciles them.
+  //
+  // filtering is set by typing and cleared by any commit. It, not a comparison
+  // of query against label, decides whether the list is filtered: retyping the
+  // current label is still a search, and must not reset the list and move the
+  // highlight to the first option.
   Alpine.data("combobox", (value = "", label = "") => ({
     open: false,
     active: -1,
+    filtering: false,
     value,
     label,
     query: label,
+    // Folding normalises Unicode, and matches() runs for every option on every
+    // keystroke. Labels never change, so each is folded once; the query is
+    // folded once per distinct value.
+    _folded: new Map(),
+    _foldedQuery: { raw: null, folded: "" },
+
+    _fold(text) {
+      let folded = this._folded.get(text);
+      if (folded === undefined) {
+        folded = foldText(text);
+        this._folded.set(text, folded);
+      }
+      return folded;
+    },
+
+    _query() {
+      if (this._foldedQuery.raw !== this.query) {
+        this._foldedQuery = { raw: this.query, folded: foldText(this.query.trim()) };
+      }
+      return this._foldedQuery.folded;
+    },
 
     _options() {
       return Array.from(this.$root.querySelectorAll('[role="option"]'));
@@ -394,12 +421,12 @@ document.addEventListener("alpine:init", () => {
       );
     },
 
-    // While the field still shows the current selection, the whole list is
-    // offered — opening a filled combobox should not show a single option.
+    // Until the user types, the whole list is offered — opening a filled
+    // combobox should not show a single option.
     matches(optionLabel) {
-      const q = foldText(this.query.trim());
-      if (!q || this.query === this.label) return true;
-      return foldText(optionLabel).includes(q);
+      if (!this.filtering) return true;
+      const q = this._query();
+      return !q || this._fold(optionLabel).includes(q);
     },
 
     hasMatches() {
@@ -458,8 +485,18 @@ document.addEventListener("alpine:init", () => {
 
     // Typing highlights the first match, so Enter picks the top result.
     onInput() {
+      this.filtering = true;
       this.open = true;
       this._highlight(this._navigable()[0]);
+    },
+
+    // Written to the element directly as well as to query: x-model applies
+    // its update a tick later, and an Enter-triggered submit validates
+    // `required` against the field before then.
+    _show(text) {
+      this.query = text;
+      this.filtering = false;
+      this.$root.querySelector('[role="combobox"]').value = text;
     },
 
     // The hidden input is what the form submits, and what hx-trigger="change"
@@ -468,7 +505,7 @@ document.addEventListener("alpine:init", () => {
       const changed = value !== this.value;
       this.value = value;
       this.label = label;
-      this.query = label;
+      this._show(label);
       this.$refs.hidden.value = value;
       if (changed) {
         this.$refs.hidden.dispatchEvent(new Event("change", { bubbles: true }));
@@ -487,17 +524,17 @@ document.addEventListener("alpine:init", () => {
     // clears, and anything else reverts to the last real selection.
     commit() {
       this.close();
-      const q = foldText(this.query.trim());
+      const q = this._query();
       if (!q) {
         this._set("", "");
         return;
       }
       const exact = this._options().find(
         (el) =>
-          el.getAttribute("aria-disabled") !== "true" && foldText(el.dataset.label) === q,
+          el.getAttribute("aria-disabled") !== "true" && this._fold(el.dataset.label) === q,
       );
       if (exact) this._set(exact.dataset.value, exact.dataset.label);
-      else this.query = this.label;
+      else this._show(this.label);
     },
 
     onKeydown(e) {
@@ -516,19 +553,32 @@ document.addEventListener("alpine:init", () => {
           else this._move(-1);
           break;
         case "Enter":
-          // Without a highlight, Enter falls through and submits the form.
           if (this.open && this.active >= 0) {
             e.preventDefault();
             this.choose(this.active);
+          } else {
+            // Without a highlight, Enter submits the form — and it does so
+            // before blur, so the text is reconciled here first. Otherwise the
+            // field would show one thing while the form sent another.
+            this.commit();
           }
+          break;
+        case "Tab":
+          // Leaving after arrowing to an option takes it, as Enter would.
+          // No preventDefault: Tab still moves on.
+          if (this.open && this.active >= 0) this.choose(this.active);
           break;
         case "Escape":
           // First Escape closes; a second one clears, as the pattern asks.
+          // stopPropagation because Modal and Drawer close on Escape at
+          // window: closing the list must not close the dialog around it.
           if (this.open) {
             e.preventDefault();
+            e.stopPropagation();
             this.close();
           } else if (this.query) {
             e.preventDefault();
+            e.stopPropagation();
             this._set("", "");
           }
           break;
