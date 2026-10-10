@@ -1,0 +1,68 @@
+package components
+
+type MessageProps struct {
+	Author    string
+	Initials  string // avatar fallback
+	AvatarSrc string
+	Time      string // as shown, e.g. "14:02"
+	Datetime  string // machine-readable, for <time datetime>
+	Align     string // start | end; end is the viewer's own messages
+	Variant   string // bubble variant (default: default at start, primary at end)
+	Group     string // single | first | middle | last
+	Reactions []BubbleReaction
+	Attrs     templ.Attributes
+}
+
+func (p MessageProps) end() bool { return p.Align == "end" }
+
+// showHeader: in a run of messages from one author only the first carries the
+// avatar, name and time; the rest keep a spacer so their bubbles line up.
+func (p MessageProps) showHeader() bool { return p.Group == "" || p.Group == "single" || p.Group == "first" }
+
+func (p MessageProps) variant() string {
+	if p.Variant != "" {
+		return p.Variant
+	}
+	if p.end() {
+		return "primary"
+	}
+	return "default"
+}
+
+func (p MessageProps) label() string {
+	if p.Time == "" {
+		return p.Author
+	}
+	return p.Author + ", " + p.Time
+}
+
+// Message is one message: avatar, name, time and a Bubble with the content
+// (children). Grouped messages hide the repeated header visually, but each
+// <article> keeps "author, time" as its name, so a screen reader moving
+// message by message always hears who and when.
+templ Message(props MessageProps) {
+	<article
+		aria-label={ props.label() }
+		class={ "flex w-full items-end gap-2", templ.KV("flex-row-reverse", props.end()), templ.KV("mt-3", props.showHeader()) }
+		{ props.Attrs... }
+	>
+		if props.showHeader() {
+			@Avatar(AvatarProps{Initials: props.Initials, Src: props.AvatarSrc, Size: "sm"})
+		} else {
+			<span aria-hidden="true" class="w-8 shrink-0"></span>
+		}
+		<div class={ "flex min-w-0 flex-1 flex-col gap-1", templ.KV("items-end", props.end()), templ.KV("items-start", !props.end()) }>
+			if props.showHeader() {
+				<p aria-hidden="true" class="flex items-baseline gap-2 px-1 text-xs text-muted">
+					<span class="font-medium text-fg">{ props.Author }</span>
+					if props.Time != "" {
+						<time datetime={ props.Datetime }>{ props.Time }</time>
+					}
+				</p>
+			}
+			@Bubble(BubbleProps{Variant: props.variant(), Align: props.Align, Group: props.Group, Reactions: props.Reactions}) {
+				{ children... }
+			}
+		</div>
+	</article>
+}

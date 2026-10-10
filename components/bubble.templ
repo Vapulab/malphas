@@ -1,0 +1,71 @@
+package components
+
+import "strconv"
+
+type BubbleReaction struct {
+	Emoji string
+	Label string // what the reaction means, read instead of the emoji's name
+	Count int
+}
+
+type BubbleProps struct {
+	Variant   string // default | primary | muted | outline
+	Align     string // start | end (default start)
+	Group     string // single | first | middle | last (default single)
+	Reactions []BubbleReaction
+	Attrs     templ.Attributes
+}
+
+func (p BubbleProps) end() bool { return p.Align == "end" }
+
+// cornerClasses flattens the corners where consecutive bubbles from the same
+// author meet, on the author's side, so a run of messages reads as one block.
+func (p BubbleProps) cornerClasses() string {
+	top, bottom := "rounded-tl-md", "rounded-bl-md"
+	if p.end() {
+		top, bottom = "rounded-tr-md", "rounded-br-md"
+	}
+	switch p.Group {
+	case "first":
+		return bottom
+	case "middle":
+		return top + " " + bottom
+	case "last":
+		return top
+	}
+	return ""
+}
+
+func (p BubbleProps) variantClasses() string {
+	return map[string]string{
+		"default": "bg-muted/10 text-fg",
+		"primary": "bg-primary text-primary-fg",
+		"muted":   "bg-muted/20 text-fg",
+		"outline": "border border-border text-fg",
+	}[or(p.Variant, "default")]
+}
+
+func (r BubbleReaction) label() string {
+	return or(r.Label, r.Emoji) + ": " + strconv.Itoa(r.Count)
+}
+
+// Bubble frames one piece of conversation. It carries no author or time —
+// Message adds those — so it also fits quoted replies or short structured
+// output inside a message.
+templ Bubble(props BubbleProps) {
+	<div class={ "flex max-w-[75%] flex-col gap-1", templ.KV("self-end items-end", props.end()), templ.KV("self-start items-start", !props.end()) } { props.Attrs... }>
+		<div class={ "rounded-2xl px-4 py-2 text-sm leading-relaxed [overflow-wrap:anywhere]", props.variantClasses(), props.cornerClasses() }>
+			{ children... }
+		</div>
+		if len(props.Reactions) > 0 {
+			<ul aria-label="Reações" class="flex flex-wrap gap-1">
+				for _, r := range props.Reactions {
+					<li aria-label={ r.label() } class="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-2 py-0.5 text-xs text-muted">
+						<span aria-hidden="true">{ r.Emoji }</span>
+						<span aria-hidden="true">{ strconv.Itoa(r.Count) }</span>
+					</li>
+				}
+			</ul>
+		}
+	</div>
+}
