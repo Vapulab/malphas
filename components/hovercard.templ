@@ -1,0 +1,56 @@
+package components
+
+type HoverCardProps struct {
+	ID       string
+	Label    string // the link text
+	Href     string // where the link goes; the card only previews it
+	Position string // bottom-start | bottom-end | top-start | top-end
+	Attrs    templ.Attributes
+}
+
+func (p HoverCardProps) cardID() string { return p.ID + "-card" }
+
+// HoverCard previews what is behind a link — a profile, a document — when the
+// pointer rests on it or keyboard focus reaches it.
+//
+// It is supplemental by contract: the trigger is a real link, and nothing may
+// live only in the card. Screen reader and touch users never see it, and
+// keyboard users see it but cannot Tab into it. That is why it has no role
+// and the link does not point at it with aria-describedby — reading the whole
+// card on every focus would be noise. Put anything actionable on the page the
+// link opens.
+//
+// The delays keep it from flashing while the pointer crosses the page; the
+// card also counts as "inside", so the pointer can travel from link to card.
+templ HoverCard(props HoverCardProps) {
+	<span
+		class="relative inline-block"
+		x-data="hoverCard(400, 200)"
+		x-on:keydown="onKeydown($event)"
+		{ props.Attrs... }
+	>
+		<a
+			href={ templ.URL(props.Href) }
+			x-on:mouseenter="enter()"
+			x-on:mouseleave="leave()"
+			x-on:focusin="enter()"
+			x-on:focusout="leave()"
+			class="font-medium text-primary underline-offset-2 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+		>{ props.Label }</a>
+		// A span, not a div: the card lives inside running text, and a <div>
+		// in a <p> makes the parser close the paragraph and hoist the card out
+		// of the component. Children must be phrasing content too (span, a,
+		// strong…), styled block as needed.
+		<span
+			id={ props.cardID() }
+			x-show="open"
+			style="display:none"
+			x-on:mouseenter="enter()"
+			x-on:mouseleave="leave()"
+			class={ "absolute z-40 block w-72 rounded border border-border bg-surface p-4 text-left shadow-lg",
+				floatingPosition(props.Position) }
+		>
+			{ children... }
+		</span>
+	</span>
+}

@@ -454,6 +454,35 @@ document.addEventListener("alpine:init", () => {
 
   Alpine.data("popover", () => ({ ...floatingPanel() }));
 
+  // Timers rather than CSS :hover, because the card must survive the gap
+  // between link and card, and open on keyboard focus too. One pending timer
+  // at a time: entering cancels a pending close and vice versa.
+  Alpine.data("hoverCard", (openDelay = 400, closeDelay = 200) => ({
+    open: false,
+    _timer: null,
+
+    _schedule(fn, ms) {
+      clearTimeout(this._timer);
+      this._timer = setTimeout(fn, ms);
+    },
+
+    enter() {
+      if (this.open) clearTimeout(this._timer);
+      else this._schedule(() => (this.open = true), openDelay);
+    },
+
+    leave() {
+      this._schedule(() => (this.open = false), closeDelay);
+    },
+
+    onKeydown(e) {
+      if (e.key !== "Escape" || !this.open) return;
+      e.stopPropagation();
+      clearTimeout(this._timer);
+      this.open = false;
+    },
+  }));
+
   // The menu-button pattern, and the mirror image of modalOverlay: this
   // overlay is NOT modal. Arrows move between items and Escape returns focus,
   // but Tab must leave and close — trapping focus here would be as wrong as
