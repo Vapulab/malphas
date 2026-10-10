@@ -34,9 +34,9 @@ func Toast(props ToastProps) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{"fixed bottom-4 right-4 z-50 rounded px-4 py-3 text-sm text-white shadow-lg",
-			templ.KV("bg-primary", or(props.Variant, "success") == "success"),
-			templ.KV("bg-danger", props.Variant == "error")}
+		var templ_7745c5c3_Var2 = []any{"fixed bottom-4 right-4 z-50 rounded px-4 py-3 text-sm shadow-lg",
+			templ.KV("bg-primary text-primary-fg", or(props.Variant, "success") == "success"),
+			templ.KV("bg-danger text-danger-fg", props.Variant == "error")}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -61,7 +61,7 @@ func Toast(props ToastProps) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(props.Message)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/toast.templ`, Line: 17, Col: 17}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/toast.templ`, Line: 19, Col: 17}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {

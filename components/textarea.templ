@@ -1,6 +1,9 @@
 package components
 
-import "unicode/utf16"
+import (
+	"strings"
+	"unicode/utf16"
+)
 
 type TextareaProps struct {
 	ID          string
@@ -22,11 +25,16 @@ func (p TextareaProps) rows() int {
 	return 4
 }
 
-// valueLength counts UTF-16 code units, because that is what maxlength and the
-// JS counter count: an emoji is 2, not 1. Counting runes would make the
-// server-rendered counter disagree with the first keystroke.
+// valueLength counts what the browser will count once the value is parsed:
+// UTF-16 code units (an emoji is 2, not 1), with line breaks normalised to LF.
+// Browsers submit breaks as CRLF and the HTML parser turns them back into LF,
+// so a value echoed after a validation error would otherwise count each break
+// twice. Either mistake makes the server-rendered counter disagree with the
+// first keystroke.
 func (p TextareaProps) valueLength() int {
-	return len(utf16.Encode([]rune(p.Value)))
+	v := strings.ReplaceAll(p.Value, "\r\n", "\n")
+	v = strings.ReplaceAll(v, "\r", "\n")
+	return len(utf16.Encode([]rune(v)))
 }
 
 templ Textarea(props TextareaProps) {

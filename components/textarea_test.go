@@ -49,3 +49,15 @@ func TestTextareaKeepsALeadingNewline(t *testing.T) {
 		t.Errorf("expected a guard newline before the value, got: %q", html)
 	}
 }
+
+// Browsers submit line breaks as CRLF, and the HTML parser turns them back
+// into LF, so the value the server echoes after a validation error has two
+// units per break where the browser counts one.
+func TestTextareaCounterIgnoresCRLF(t *testing.T) {
+	html := renderToString(t, components.Textarea(components.TextareaProps{
+		ID: "bio", Name: "bio", Value: "a\r\nb\rc", MaxLength: 10,
+	}))
+	if !strings.Contains(html, `x-data="charCounter(5)"`) {
+		t.Errorf("\"a\r\nb\rc\" is 5 units in the browser, got: %s", html)
+	}
+}
