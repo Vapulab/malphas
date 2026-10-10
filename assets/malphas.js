@@ -693,6 +693,67 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 
+  // The menu opens at a point, so it is the one overlay that measures: after
+  // rendering at the pointer it is pushed back inside the viewport. Items and
+  // arrows are the Dropdown's (dropdownItem markup, rovingList).
+  Alpine.data("contextMenu", () => ({
+    ...rovingList({ orientation: "vertical", active: 0 }),
+    open: false,
+    x: 0,
+    y: 0,
+    _returnFocusTo: null,
+
+    openAt(x, y) {
+      this._returnFocusTo = document.activeElement;
+      this.x = x;
+      this.y = y;
+      this.open = true;
+      this.$nextTick(() => {
+        const menu = this.$refs.menu;
+        const { width, height } = menu.getBoundingClientRect();
+        const margin = 4;
+        this.x = Math.max(margin, Math.min(x, window.innerWidth - width - margin));
+        this.y = Math.max(margin, Math.min(y, window.innerHeight - height - margin));
+        const first = this._rovingItems()[0];
+        if (first) {
+          this.active = Number(first.dataset.rovingItem);
+          first.focus();
+        }
+      });
+    },
+
+    // Shift+F10 and the Menu key are the platform's keyboard right-click.
+    onTargetKeydown(e) {
+      if (e.key !== "ContextMenu" && !(e.shiftKey && e.key === "F10")) return;
+      e.preventDefault();
+      const r = this.$refs.target.getBoundingClientRect();
+      this.openAt(r.left + 8, r.top + 8);
+    },
+
+    close({ restoreFocus = true } = {}) {
+      if (!this.open) return;
+      this.open = false;
+      const back = this._returnFocusTo;
+      this._returnFocusTo = null;
+      if (restoreFocus && back && document.contains(back)) back.focus();
+    },
+
+    onMenuKeydown(e) {
+      if (!this.open) return;
+      if (e.key === "Tab") {
+        this.close({ restoreFocus: false });
+        return;
+      }
+      if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopPropagation();
+        this.close();
+        return;
+      }
+      this.onKeydown(e);
+    },
+  }));
+
   // Reads the theme the inline script already applied, so the toggle's initial
   // state matches what is on screen. "" means "follow the OS".
   Alpine.data("themeToggle", () => ({
