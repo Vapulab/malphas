@@ -194,6 +194,59 @@ function listboxNav() {
   };
 }
 
+// --- Non-modal floating panels ----------------------------------------------
+//
+// floatingPanel is the non-modal half of the overlay pair, for a trigger that
+// opens a panel of free content (Popover). Opening moves focus in, Escape
+// closes and returns focus to the trigger, and focus leaving the component
+// closes it without pulling focus back. No trap, no scroll lock, no inert:
+// the page behind stays usable, which is the whole point of not being modal.
+//
+// Escape calls stopPropagation because Modal and Drawer close on Escape at
+// window: a popover inside a dialog must close alone (the Combobox lesson).
+// Expects x-ref="trigger" and x-ref="panel" inside the component root.
+function floatingPanel() {
+  return {
+    open: false,
+
+    show() {
+      if (this.open) return;
+      this.open = true;
+      this.$nextTick(() => {
+        const panel = this.$refs.panel;
+        if (!panel) return;
+        (panel.querySelector(FOCUSABLE) || panel).focus();
+      });
+    },
+
+    hide({ restoreFocus = true } = {}) {
+      if (!this.open) return;
+      this.open = false;
+      if (restoreFocus) this.$refs.trigger?.focus();
+    },
+
+    toggle() {
+      this.open ? this.hide() : this.show();
+    },
+
+    onPanelKeydown(e) {
+      if (e.key !== "Escape" || !this.open) return;
+      e.preventDefault();
+      e.stopPropagation();
+      this.hide();
+    },
+
+    // relatedTarget is where focus is going; null means it left the document
+    // (another window, or a click on nothing focusable), which click.outside
+    // already handles.
+    onFocusOut(e) {
+      if (e.relatedTarget && !this.$root.contains(e.relatedTarget)) {
+        this.hide({ restoreFocus: false });
+      }
+    },
+  };
+}
+
 // --- Modal overlays ---------------------------------------------------------
 //
 // Making an overlay modal takes three things, and the last two are the ones
@@ -398,6 +451,8 @@ document.addEventListener("alpine:init", () => {
       boxes[Math.min(digits.length, this.length - 1)].focus();
     },
   }));
+
+  Alpine.data("popover", () => ({ ...floatingPanel() }));
 
   // The menu-button pattern, and the mirror image of modalOverlay: this
   // overlay is NOT modal. Arrows move between items and Escape returns focus,

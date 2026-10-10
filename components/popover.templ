@@ -1,0 +1,62 @@
+package components
+
+type PopoverProps struct {
+	ID       string
+	Label    string // the trigger's text
+	Title    string // accessible name for the panel (default Label)
+	Position string // bottom-start | bottom-end | top-start | top-end
+	Variant  string // trigger button variant (default secondary)
+	Attrs    templ.Attributes
+}
+
+func (p PopoverProps) panelID() string { return p.ID + "-panel" }
+
+// Popover is a button that opens a non-modal panel of free content — a filter
+// form, a short explanation, a color picker.
+//
+// It is a dialog, not a menu: Tab moves through its content and on out to the
+// page, and leaving it closes it. Nothing behind it is blocked, which is the
+// difference from Modal; see floatingPanel() in malphas.js.
+//
+// The panel uses x-show, not x-if, so a half-filled form inside it keeps its
+// values when the popover closes and reopens.
+templ Popover(props PopoverProps) {
+	<div
+		class="relative inline-block"
+		x-data="popover"
+		x-on:keydown="onPanelKeydown($event)"
+		x-on:focusout="onFocusOut($event)"
+		x-on:click.outside="hide({ restoreFocus: false })"
+		{ props.Attrs... }
+	>
+		<button
+			type="button"
+			x-ref="trigger"
+			aria-haspopup="dialog"
+			aria-expanded="false"
+			aria-controls={ props.panelID() }
+			x-bind:aria-expanded="open ? 'true' : 'false'"
+			x-on:click="toggle()"
+			class={ "inline-flex items-center gap-2 rounded px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50",
+				dropdownTriggerClasses(or(props.Variant, "secondary")) }
+		>
+			{ props.Label }
+			<span aria-hidden="true" class="text-xs transition-transform" x-bind:class="open && 'rotate-180'">&#9662;</span>
+		</button>
+		// Inline display, as in Collapse: x-show drives el.style.display, so
+		// the closed state renders right before Alpine loads.
+		<div
+			id={ props.panelID() }
+			role="dialog"
+			aria-label={ or(props.Title, props.Label) }
+			tabindex="-1"
+			x-ref="panel"
+			x-show="open"
+			style="display:none"
+			class={ "absolute z-40 w-72 rounded border border-border bg-surface p-4 shadow-lg focus:outline-none",
+				floatingPosition(props.Position) }
+		>
+			{ children... }
+		</div>
+	</div>
+}
