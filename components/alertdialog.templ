@@ -1,0 +1,81 @@
+package components
+
+import "strconv"
+
+type AlertDialogProps struct {
+	ID           string
+	Title        string
+	Description  string
+	ConfirmLabel string           // default "Confirmar"
+	CancelLabel  string           // default "Cancelar"
+	Variant      string           // confirm button variant: danger | primary (default danger)
+	ConfirmAttrs templ.Attributes // on the confirm button: hx-delete, x-on:click…
+	Attrs        templ.Attributes
+}
+
+func (p AlertDialogProps) titleID() string { return p.ID + "-title" }
+
+func (p AlertDialogProps) descriptionID() string { return p.ID + "-description" }
+
+// confirmAttrs adds the close marker to the caller's attributes without
+// touching their map, which may be shared between renders.
+func (p AlertDialogProps) confirmAttrs() templ.Attributes {
+	attrs := templ.Attributes{"data-alert-close": true}
+	for k, v := range p.ConfirmAttrs {
+		attrs[k] = v
+	}
+	return attrs
+}
+
+// AlertDialog interrupts to confirm a consequential action. Open it with
+// x-on:click="$dispatch('open-alert-dialog', 'ID')" inside an Alpine scope.
+//
+// It differs from Modal in three deliberate ways:
+//   - role="alertdialog" with the description wired to aria-describedby, so
+//     the consequence is announced with the question.
+//   - no × button and no closing on backdrop click: a stray click must not
+//     count as an answer. Escape still cancels.
+//   - Cancel comes first in the DOM, so modalOverlay's initial focus lands on
+//     the safe choice, never on the destructive one.
+//
+// Closing is delegated to the footer (data-alert-close) instead of an
+// x-on:click on each button, so ConfirmAttrs can carry its own x-on:click or
+// hx-* without colliding with ours.
+templ AlertDialog(props AlertDialogProps) {
+	<div
+		x-data="alertDialog"
+		x-on:open-alert-dialog.window={ "if ($event.detail === " + strconv.Quote(props.ID) + ") openOverlay()" }
+		x-on:keydown.escape.window="closeOverlay()"
+		{ props.Attrs... }
+	>
+		<template x-if="open">
+			<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+				<div class="absolute inset-0 bg-black/50"></div>
+				<div
+					x-ref="panel"
+					role="alertdialog"
+					aria-modal="true"
+					aria-labelledby={ props.titleID() }
+					aria-describedby={ props.descriptionID() }
+					tabindex="-1"
+					x-on:keydown.tab="onTab($event)"
+					class="relative z-10 w-full max-w-md rounded border border-border bg-surface p-6 shadow-lg focus:outline-none"
+				>
+					<h2 id={ props.titleID() } class="text-lg font-semibold text-fg">{ props.Title }</h2>
+					<p id={ props.descriptionID() } class="mt-2 text-sm text-muted">{ props.Description }</p>
+					<div
+						class="mt-6 flex justify-end gap-2"
+						x-on:click="if ($event.target.closest('[data-alert-close]')) closeOverlay()"
+					>
+						@Button(ButtonProps{Variant: "secondary", Attrs: templ.Attributes{"data-alert-close": true}}) {
+							{ or(props.CancelLabel, "Cancelar") }
+						}
+						@Button(ButtonProps{Variant: or(props.Variant, "danger"), Attrs: props.confirmAttrs()}) {
+							{ or(props.ConfirmLabel, "Confirmar") }
+						}
+					</div>
+				</div>
+			</div>
+		</template>
+	</div>
+}

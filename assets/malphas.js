@@ -376,6 +376,7 @@ function modalOverlay() {
 document.addEventListener("alpine:init", () => {
   Alpine.data("modal", () => ({ ...modalOverlay() }));
   Alpine.data("drawer", () => ({ ...modalOverlay() }));
+  Alpine.data("alertDialog", () => ({ ...modalOverlay() }));
 
   Alpine.data("carousel", () => ({
     // Respecting the preference matters most in a component whose entire job
