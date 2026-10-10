@@ -112,3 +112,24 @@ func TestMessageEndAlignmentMirrors(t *testing.T) {
 		t.Errorf("an end-aligned message mirrors: %s", html)
 	}
 }
+
+// --- Message Scroller ---------------------------------------------------------
+
+func TestMessageScrollerIsALog(t *testing.T) {
+	html := renderWithChildren(t, components.MessageScroller(components.MessageScrollerProps{ID: "chat", Label: "Conversa do protocolo"}), templ.Raw("<article>oi</article>"))
+	for _, want := range []string{
+		`role="log"`,
+		`aria-live="polite"`,
+		`aria-label="Conversa do protocolo"`,
+		`tabindex="0"`,
+		`id="chat-content"`,
+		`x-data="messageScroller"`,
+		"[overflow-anchor:none]",
+		"Ir para o fim",
+		`style="display:none"`,
+	} {
+		if !strings.Contains(html, want) {
+			t.Errorf("missing %s in: %s", want, html)
+		}
+	}
+}

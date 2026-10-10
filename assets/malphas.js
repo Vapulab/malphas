@@ -1239,6 +1239,83 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 
+  // A chat transcript that follows new messages only while the reader is at
+  // the end. Everything is driven by observing the content, so it works with
+  // whatever brings messages in. The observer callback runs as a microtask,
+  // after the DOM changed and before the browser paints, so each correction
+  // lands in the same frame as the change it corrects.
+  Alpine.data("messageScroller", () => ({
+    atBottom: true,
+    unread: 0,
+    _height: 0,
+    _first: null,
+
+    init() {
+      const vp = this.$refs.viewport;
+      vp.scrollTop = vp.scrollHeight;
+      this._remember();
+      this._observer = new MutationObserver((records) => this._onMutate(records));
+      this._observer.observe(this.$refs.content, { childList: true, subtree: true, characterData: true });
+      // Growth without a mutation (an image finishing loading) must not
+      // strand a reader who was at the end either.
+      this._resize = new ResizeObserver(() => {
+        if (this.atBottom) vp.scrollTop = vp.scrollHeight;
+        this._remember();
+      });
+      this._resize.observe(this.$refs.content);
+    },
+
+    destroy() {
+      this._observer?.disconnect();
+      this._resize?.disconnect();
+    },
+
+    _remember() {
+      this._height = this.$refs.viewport.scrollHeight;
+      this._first = this.$refs.content.firstElementChild;
+    },
+
+    _isAtBottom() {
+      const vp = this.$refs.viewport;
+      return vp.scrollHeight - vp.scrollTop - vp.clientHeight <= 24;
+    },
+
+    onScroll() {
+      this.atBottom = this._isAtBottom();
+      if (this.atBottom) this.unread = 0;
+    },
+
+    _onMutate(records) {
+      const vp = this.$refs.viewport;
+      const content = this.$refs.content;
+      const grew = vp.scrollHeight - this._height;
+      const old = this._first;
+      // Something went in before the message that used to be first: older
+      // history. Shift by exactly what was added, so the reader's view stays
+      // on the same pixel.
+      if (old && old.isConnected && content.firstElementChild !== old) {
+        vp.scrollTop += grew;
+      } else if (this.atBottom) {
+        vp.scrollTop = vp.scrollHeight;
+      } else {
+        for (const r of records) {
+          if (r.target !== content) continue;
+          for (const n of r.addedNodes) if (n.nodeType === Node.ELEMENT_NODE) this.unread++;
+        }
+      }
+      this._remember();
+    },
+
+    toEnd() {
+      const vp = this.$refs.viewport;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      vp.scrollTo({ top: vp.scrollHeight, behavior: reduce ? "auto" : "smooth" });
+      this.unread = 0;
+      // The button disappears at the end; keep focus in the conversation.
+      vp.focus({ preventScroll: true });
+    },
+  }));
+
   // Reads the theme the inline script already applied, so the toggle's initial
   // state matches what is on screen. "" means "follow the OS".
   Alpine.data("themeToggle", () => ({
