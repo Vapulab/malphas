@@ -1,0 +1,59 @@
+package components
+
+type InputGroupProps struct {
+	ID          string
+	Name        string
+	Type        string // default text
+	Label       string
+	Placeholder string
+	Value       string
+	Prefix      templ.Component // InputGroupText, an icon or a Button
+	Suffix      templ.Component
+	Required    bool
+	Disabled    bool
+	Attrs       templ.Attributes // on the input, so Field.ControlAttrs() fits
+}
+
+// InputGroupText is the common addon: a unit, currency or domain.
+templ InputGroupText(text string) {
+	<span class="px-3 text-sm text-muted">{ text }</span>
+}
+
+// InputGroup draws one bordered box around addons and an unbordered input, so
+// the focus ring wraps the whole group (focus-within) instead of only the
+// input in the middle.
+templ InputGroup(props InputGroupProps) {
+	<div class="flex flex-col gap-1">
+		if props.Label != "" {
+			@Label(LabelProps{For: props.ID, Required: props.Required}) {
+				{ props.Label }
+			}
+		}
+		<div
+			class={ "flex h-10 items-stretch overflow-hidden rounded border border-border bg-surface focus-within:ring-2 focus-within:ring-primary/50",
+				templ.KV("cursor-not-allowed opacity-50", props.Disabled) }
+		>
+			if props.Prefix != nil {
+				<div class="flex shrink-0 items-center border-r border-border bg-muted/5">
+					@props.Prefix
+				</div>
+			}
+			<input
+				id={ props.ID }
+				name={ props.Name }
+				type={ or(props.Type, "text") }
+				placeholder={ props.Placeholder }
+				value={ props.Value }
+				required?={ props.Required }
+				disabled?={ props.Disabled }
+				class="min-w-0 flex-1 bg-transparent px-3 text-sm text-fg focus:outline-none disabled:cursor-not-allowed"
+				{ props.Attrs... }
+			/>
+			if props.Suffix != nil {
+				<div class="flex shrink-0 items-center border-l border-border bg-muted/5">
+					@props.Suffix
+				</div>
+			}
+		</div>
+	</div>
+}
