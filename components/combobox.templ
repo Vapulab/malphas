@@ -1,0 +1,151 @@
+package components
+
+type ComboboxProps struct {
+	ID          string
+	Name        string
+	Label       string
+	Placeholder string
+	Options     []SelectOption
+	Value       string
+	Disabled    bool
+	Required    bool
+	// Empty is shown when the filter matches nothing (default "Nenhum resultado").
+	Empty string
+	Attrs templ.Attributes
+}
+
+func (p ComboboxProps) listboxID() string { return p.ID + "-listbox" }
+
+func (p ComboboxProps) optionID(i int) string { return p.ID + "-opt-" + intJS(i) }
+
+// selectedLabel is what the text field shows on first paint. An unknown or
+// disabled Value renders as no selection rather than as text the user could
+// not have picked.
+func (p ComboboxProps) selectedLabel() string {
+	for _, o := range p.Options {
+		if o.Value == p.Value && p.Value != "" && !o.Disabled {
+			return o.Label
+		}
+	}
+	return ""
+}
+
+func (p ComboboxProps) selectedValue() string {
+	if p.selectedLabel() == "" {
+		return ""
+	}
+	return p.Value
+}
+
+// Combobox is Select with a search field: the WAI-ARIA combobox pattern with a
+// list-autocomplete listbox. Reach for it when the list is too long to scroll —
+// for a handful of options the native Select is still the better control.
+//
+// Focus never leaves the text field. The highlighted option is announced
+// through aria-activedescendant, so typing and arrowing work together, and
+// Tab leaves the component like any other field.
+//
+// The text field has no name; a hidden input carries the value, so free text
+// is never submitted. On blur, text that is not exactly an option's label is
+// reverted to the current selection, and an empty field clears it.
+templ Combobox(props ComboboxProps) {
+	<div
+		class="flex flex-col gap-1"
+		x-data={ "combobox(" + strJS(props.selectedValue()) + ", " + strJS(props.selectedLabel()) + ")" }
+		{ props.Attrs... }
+	>
+		if props.Label != "" {
+			<label for={ props.ID } class="text-sm font-medium text-fg">{ props.Label }</label>
+		}
+		<div class="relative">
+			<input
+				id={ props.ID }
+				type="text"
+				role="combobox"
+				autocomplete="off"
+				aria-autocomplete="list"
+				aria-expanded="false"
+				aria-controls={ props.listboxID() }
+				x-bind:aria-expanded="open ? 'true' : 'false'"
+				x-bind:aria-activedescendant="activeId()"
+				x-model="query"
+				x-on:input="onInput()"
+				x-on:keydown="onKeydown($event)"
+				x-on:blur="commit()"
+				placeholder={ props.Placeholder }
+				value={ props.selectedLabel() }
+				disabled?={ props.Disabled }
+				required?={ props.Required }
+				class="h-10 w-full rounded border border-border bg-surface px-3 pr-9 text-sm text-fg focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
+			/>
+			<input type="hidden" name={ props.Name } value={ props.selectedValue() } x-ref="hidden"/>
+			// Out of the tab order, as the pattern asks: the field already opens
+			// with Alt+↓, and a second stop per combobox is noise.
+			<button
+				type="button"
+				tabindex="-1"
+				aria-label="Mostrar opções"
+				aria-controls={ props.listboxID() }
+				disabled?={ props.Disabled }
+				x-on:mousedown.prevent
+				x-on:click="toggle()"
+				class="absolute right-0 top-0 flex h-10 w-9 items-center justify-center text-xs text-muted disabled:cursor-not-allowed"
+			>
+				<span aria-hidden="true" class="transition-transform" x-bind:class="open && 'rotate-180'">&#9662;</span>
+			</button>
+			// Inline display, as in Collapse: x-show drives el.style.display, so
+			// the closed state renders right before Alpine loads.
+			<ul
+				id={ props.listboxID() }
+				role="listbox"
+				if props.Label != "" {
+					aria-label={ props.Label }
+				}
+				x-show="open && hasMatches()"
+				style="display:none"
+				class="absolute left-0 top-full z-40 mt-1 max-h-60 w-full overflow-y-auto rounded border border-border bg-surface py-1 shadow-lg"
+			>
+				for i, o := range props.Options {
+					<li
+						id={ props.optionID(i) }
+						role="option"
+						data-combobox-index={ intJS(i) }
+						data-value={ o.Value }
+						data-label={ o.Label }
+						aria-selected={ ariaBool(o.Value == props.selectedValue() && props.selectedValue() != "") }
+						x-bind:aria-selected={ "isSelected(" + strJS(o.Value) + ") ? 'true' : 'false'" }
+						if o.Disabled {
+							aria-disabled="true"
+						}
+						x-show={ "matches(" + strJS(o.Label) + ")" }
+						x-on:mousedown.prevent
+						x-on:click={ "choose(" + intJS(i) + ")" }
+						x-bind:class={ "active === " + intJS(i) + " && 'bg-muted/10'" }
+						class={ "flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-sm text-fg",
+							templ.KV("cursor-not-allowed opacity-50", o.Disabled) }
+					>
+						<span>{ o.Label }</span>
+						<span
+							aria-hidden="true"
+							class="text-primary"
+							x-show={ "isSelected(" + strJS(o.Value) + ")" }
+							if o.Value != props.selectedValue() || o.Value == "" {
+								style="display:none"
+							}
+						>&#10003;</span>
+					</li>
+				}
+			</ul>
+			// Outside the listbox: a listbox may only contain options. The live
+			// region tells screen reader users why the list vanished.
+			<p
+				aria-live="polite"
+				x-show="open && !hasMatches()"
+				style="display:none"
+				class="absolute left-0 top-full z-40 mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-muted shadow-lg"
+			>
+				{ or(props.Empty, "Nenhum resultado") }
+			</p>
+		</div>
+	</div>
+}
