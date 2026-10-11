@@ -67,14 +67,14 @@ func Modal(props ModalProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "><template x-if=\"open\"><div class=\"fixed inset-0 z-50 flex items-center justify-center p-4\"><div class=\"absolute inset-0 bg-black/50\" x-on:click=\"closeOverlay()\"></div><div x-ref=\"panel\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "><template x-if=\"open\"><div class=\"fixed inset-0 z-50 flex items-center justify-center p-4\" x-init=\"window.htmx && htmx.process($el)\"><div class=\"absolute inset-0 bg-black/50\" x-on:click=\"closeOverlay()\"></div><div x-ref=\"panel\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.titleID())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/modal.templ`, Line: 34, Col: 38}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/modal.templ`, Line: 36, Col: 38}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
@@ -87,7 +87,7 @@ func Modal(props ModalProps) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.titleID())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/modal.templ`, Line: 40, Col: 30}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/modal.templ`, Line: 42, Col: 30}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 		if templ_7745c5c3_Err != nil {
@@ -100,7 +100,7 @@ func Modal(props ModalProps) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(props.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/modal.templ`, Line: 40, Col: 84}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/modal.templ`, Line: 42, Col: 84}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {

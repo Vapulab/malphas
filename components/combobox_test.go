@@ -105,3 +105,19 @@ func TestComboboxListboxStartsClosed(t *testing.T) {
 		t.Errorf("expected the listbox hidden on first paint, got: %s", html[i:i+end])
 	}
 }
+
+// An error is tied to the text field the way Field ties one to its control:
+// announced on focus, and marked invalid.
+func TestComboboxLinksItsError(t *testing.T) {
+	p := comboboxFixture()
+	p.Error = "Escolha uma cidade."
+	html := renderToString(t, components.Combobox(p))
+	for _, want := range []string{`aria-invalid="true"`, `aria-describedby="cidade-error"`, `id="cidade-error"`, "Escolha uma cidade."} {
+		if !strings.Contains(html, want) {
+			t.Errorf("missing %q in: %s", want, html)
+		}
+	}
+	if html := renderToString(t, components.Combobox(comboboxFixture())); strings.Contains(html, "aria-invalid") || strings.Contains(html, "-error") {
+		t.Error("no error, no invalid state")
+	}
+}

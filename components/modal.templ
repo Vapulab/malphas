@@ -24,8 +24,10 @@ templ Modal(props ModalProps) {
 		x-on:keydown.escape.window="onEscape()"
 		{ props.Attrs... }
 	>
+		// x-if builds the content on every open, after htmx scanned the page:
+		// x-init hands it to htmx, or an hx-post form inside would submit natively.
 		<template x-if="open">
-			<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+			<div class="fixed inset-0 z-50 flex items-center justify-center p-4" x-init="window.htmx && htmx.process($el)">
 				<div class="absolute inset-0 bg-black/50" x-on:click="closeOverlay()"></div>
 				<div
 					x-ref="panel"

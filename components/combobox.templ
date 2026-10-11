@@ -11,6 +11,8 @@ type ComboboxProps struct {
 	Required    bool
 	// Empty is shown when the filter matches nothing (default "Nenhum resultado").
 	Empty string
+	// Error is shown under the field and tied to it, as in Field.
+	Error string
 	Attrs templ.Attributes
 }
 
@@ -72,6 +74,10 @@ templ Combobox(props ComboboxProps) {
 				value={ label }
 				disabled?={ props.Disabled }
 				required?={ props.Required }
+				if props.Error != "" {
+					aria-invalid="true"
+					aria-describedby={ props.ID + "-error" }
+				}
 				class="h-10 w-full rounded border border-border bg-surface px-3 pr-9 text-sm text-fg focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
 			/>
 			// Disabled with the field: a disabled control is left out of the
@@ -149,5 +155,8 @@ templ Combobox(props ComboboxProps) {
 				{ or(props.Empty, "Nenhum resultado") }
 			</p>
 		</div>
+		if props.Error != "" {
+			<p id={ props.ID + "-error" } class="text-sm text-danger">{ props.Error }</p>
+		}
 	</div>
 }
