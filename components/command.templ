@@ -103,7 +103,7 @@ templ Command(props CommandProps) {
 						role="listbox"
 						aria-label="Comandos"
 						x-show="hasMatches()"
-						class="max-h-80 overflow-y-auto p-2"
+						class="max-h-80 overflow-y-auto [scrollbar-width:thin] p-2"
 					>
 						for g, group := range props.indexed() {
 							<div

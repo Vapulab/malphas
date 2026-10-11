@@ -85,6 +85,14 @@
   --color-border: 30 41 59;
 }
 
+/* One scrollbar look everywhere, the Scroll Area's: scrollbar-color is
+ * inherited, so set once at the root it reaches every scroll container (and
+ * switches Chromium to the standard bar, without the legacy arrows). The
+ * thin width is per component, since scrollbar-width is not inherited. */
+html {
+  scrollbar-color: rgb(var(--color-muted) / 0.5) transparent;
+}
+
 /* Typography for long-form content (components.Prose). Plain CSS rather than
  * utilities because the markup comes from elsewhere and cannot carry classes.
  * Tailwind's preflight strips heading sizes and list markers; every selector

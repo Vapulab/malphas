@@ -49,7 +49,7 @@ templ MessageScroller(props MessageScrollerProps) {
 			}
 			tabindex="0"
 			x-on:scroll="onScroll()"
-			class="min-h-0 flex-1 overflow-y-auto [overflow-anchor:none] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50"
+			class="min-h-0 flex-1 overflow-y-auto [scrollbar-width:thin] [overflow-anchor:none] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50"
 		>
 			// relative: rows measure their offsetTop against the content, which
 			// is what the anchor compares across a change.

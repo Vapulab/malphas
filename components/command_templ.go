@@ -157,7 +157,7 @@ func Command(props CommandProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" role=\"listbox\" aria-label=\"Comandos\" x-show=\"hasMatches()\" class=\"max-h-80 overflow-y-auto p-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "\" role=\"listbox\" aria-label=\"Comandos\" x-show=\"hasMatches()\" class=\"max-h-80 overflow-y-auto [scrollbar-width:thin] p-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

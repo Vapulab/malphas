@@ -74,7 +74,7 @@ func Carousel(props CarouselProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "><div x-ref=\"track\" tabindex=\"0\" x-on:keydown.arrow-left.prevent=\"prev()\" x-on:keydown.arrow-right.prevent=\"next()\" class=\"flex snap-x snap-mandatory gap-4 overflow-x-auto rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "><div x-ref=\"track\" tabindex=\"0\" x-on:keydown.arrow-left.prevent=\"prev()\" x-on:keydown.arrow-right.prevent=\"next()\" class=\"flex snap-x snap-mandatory gap-4 overflow-x-auto [scrollbar-width:thin] rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

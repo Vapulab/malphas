@@ -293,7 +293,7 @@ func Combobox(props ComboboxProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, " x-show=\"open && hasMatches()\" x-on:mousedown.prevent style=\"display:none\" class=\"absolute left-0 top-full z-40 mt-1 max-h-60 w-full overflow-y-auto rounded border border-border bg-surface py-1 shadow-lg\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, " x-show=\"open && hasMatches()\" x-on:mousedown.prevent style=\"display:none\" class=\"absolute left-0 top-full z-40 mt-1 max-h-60 w-full overflow-y-auto [scrollbar-width:thin] rounded border border-border bg-surface py-1 shadow-lg\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

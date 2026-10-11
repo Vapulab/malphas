@@ -338,6 +338,7 @@ function modalOverlay() {
         const panel = this.$refs.panel;
         if (!panel) return;
         lockBodyScroll();
+        this._liftInert(panel);
         this._applyInert(panel);
         (panel.querySelector(FOCUSABLE) || panel).focus();
       });
@@ -350,6 +351,7 @@ function modalOverlay() {
       if (at !== -1) overlayStack.splice(at, 1);
       unlockBodyScroll();
       this._releaseInert();
+      this._restoreLifted();
       // Returning focus is what keeps a keyboard user from being dumped at the
       // top of the document every time they dismiss something.
       if (this._returnFocusTo && document.contains(this._returnFocusTo)) {
@@ -361,6 +363,25 @@ function modalOverlay() {
     // Bound to keydown.escape.window: only the overlay on top closes.
     onEscape() {
       if (overlayStack[overlayStack.length - 1] === this._overlayId) this.closeOverlay();
+    },
+
+    // An overlay opened over another (a confirmation over an edit form) sits
+    // in the part of the page the first one made inert — and inert would
+    // swallow every click and focus in the new one. The new overlay lifts
+    // inert off its own ancestors while it is open, and puts it back when it
+    // closes, since the overlay underneath still wants them unreachable.
+    _liftInert(panel) {
+      this._lifted = [];
+      for (let el = panel.parentElement; el && el !== document.body; el = el.parentElement) {
+        if (!el.hasAttribute("inert")) continue;
+        el.removeAttribute("inert");
+        this._lifted.push(el);
+      }
+    },
+
+    _restoreLifted() {
+      for (const el of this._lifted || []) el.setAttribute("inert", "");
+      this._lifted = [];
     },
 
     // Everything that is not an ancestor of the panel becomes unreachable —

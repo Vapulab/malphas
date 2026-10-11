@@ -80,7 +80,7 @@ func Modal(props ModalProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" tabindex=\"-1\" x-on:keydown.tab=\"onTab($event)\" class=\"relative z-10 max-h-full w-full max-w-md overflow-y-auto rounded border border-border bg-surface p-6 shadow-lg focus:outline-none\"><div class=\"mb-4 flex items-center justify-between gap-4\"><h2 id=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\" tabindex=\"-1\" x-on:keydown.tab=\"onTab($event)\" class=\"relative z-10 max-h-full w-full max-w-md overflow-y-auto [scrollbar-width:thin] rounded border border-border bg-surface p-6 shadow-lg focus:outline-none\"><div class=\"mb-4 flex items-center justify-between gap-4\"><h2 id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

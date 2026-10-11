@@ -90,7 +90,7 @@ func MessageScroller(props MessageScrollerProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, " tabindex=\"0\" x-on:scroll=\"onScroll()\" class=\"min-h-0 flex-1 overflow-y-auto [overflow-anchor:none] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50\"><div id=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, " tabindex=\"0\" x-on:scroll=\"onScroll()\" class=\"min-h-0 flex-1 overflow-y-auto [scrollbar-width:thin] [overflow-anchor:none] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50\"><div id=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

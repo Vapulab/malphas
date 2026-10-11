@@ -14,7 +14,7 @@ func (p DrawerProps) titleID() string { return p.ID + "-title" }
 // bottom is a sheet rising from the bottom edge, the shadcn "Drawer": full
 // width and height capped, so the page above stays visible as context.
 func (p DrawerProps) panelClasses() string {
-	base := "relative z-10 flex flex-col overflow-y-auto border-border bg-surface p-6 shadow-lg focus:outline-none"
+	base := "relative z-10 flex flex-col overflow-y-auto [scrollbar-width:thin] border-border bg-surface p-6 shadow-lg focus:outline-none"
 	switch or(p.Side, "left") {
 	case "right":
 		return base + " h-full w-80 max-w-[85vw] ml-auto border-l"

@@ -25,15 +25,15 @@ templ Base(props BaseProps) {
 			// Declaring the icon stops the browser probing /favicon.ico, which
 			// otherwise logs a 404 on every page load. Served from the design
 			// system's embedded assets, so consumers get it for free.
-			<link rel="icon" type="image/svg+xml" href="/malphas-assets/favicon.svg"/>
+			<link rel="icon" type="image/svg+xml" href={ asset("/malphas-assets/favicon.svg") }/>
 			@templ.Raw(themeInitScript)
-			<link rel="stylesheet" href="/static/app.css"/>
-			<script src="/static/vendor/htmx.min.js" defer></script>
+			<link rel="stylesheet" href={ asset("/static/app.css") }/>
+			<script src={ asset("/static/vendor/htmx.min.js") } defer></script>
 			// ui.js registers Alpine.data() from an alpine:init listener, so it
 			// MUST be deferred before Alpine itself: Alpine fires alpine:init as
 			// soon as it loads, and a listener attached after that never runs.
-			<script src="/malphas-assets/malphas.js" defer></script>
-			<script src="/static/vendor/alpine.min.js" defer></script>
+			<script src={ asset("/malphas-assets/malphas.js") } defer></script>
+			<script src={ asset("/static/vendor/alpine.min.js") } defer></script>
 			if props.Head != nil {
 				@props.Head
 			}

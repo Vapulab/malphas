@@ -33,7 +33,7 @@ templ Carousel(props CarouselProps) {
 			tabindex="0"
 			x-on:keydown.arrow-left.prevent="prev()"
 			x-on:keydown.arrow-right.prevent="next()"
-			class="flex snap-x snap-mandatory gap-4 overflow-x-auto rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+			class="flex snap-x snap-mandatory gap-4 overflow-x-auto [scrollbar-width:thin] rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 		>
 			for i, slide := range props.Slides {
 				<div

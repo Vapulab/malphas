@@ -106,7 +106,7 @@ templ Combobox(props ComboboxProps) {
 				x-show="open && hasMatches()"
 				x-on:mousedown.prevent
 				style="display:none"
-				class="absolute left-0 top-full z-40 mt-1 max-h-60 w-full overflow-y-auto rounded border border-border bg-surface py-1 shadow-lg"
+				class="absolute left-0 top-full z-40 mt-1 max-h-60 w-full overflow-y-auto [scrollbar-width:thin] rounded border border-border bg-surface py-1 shadow-lg"
 			>
 				for i, o := range props.Options {
 					<li
