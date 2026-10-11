@@ -80,24 +80,31 @@ templ Sidebar(props SidebarProps) {
 			x-bind:data-collapsed="collapsed ? 'true' : 'false'"
 			class="group/sidebar hidden w-60 shrink-0 flex-col border-r border-border bg-surface duration-200 data-[ready=true]:transition-[width] data-[collapsed=true]:w-16 md:flex"
 		>
-			<div class="flex-1 overflow-y-auto p-3">
-				@sidebarNav(props, false)
-			</div>
-			if props.Collapsible {
-				<div class="border-t border-border p-2">
-					<button
-						type="button"
-						aria-controls={ props.asideID() }
-						aria-expanded="true"
-						x-bind:aria-expanded="collapsed ? 'false' : 'true'"
-						aria-label="Menu lateral"
-						x-on:click="toggle()"
-						class="flex w-full items-center justify-center rounded px-2 py-1.5 text-sm text-muted hover:bg-muted/10 hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-					>
-						<span aria-hidden="true" class="transition-transform group-data-[collapsed=true]/sidebar:rotate-180">&laquo;</span>
-					</button>
+			// The aside stretches to the page's height; this column sticks to the
+			// window and is at most as tall, so on a long page the menu and the
+			// collapse button stay in view instead of the button sitting at the
+			// bottom of the page. In a box shorter than the window, h-full keeps
+			// it to the box.
+			<div class="sticky top-0 flex h-full max-h-screen flex-col">
+				<div class="flex-1 overflow-y-auto p-3">
+					@sidebarNav(props, false)
 				</div>
-			}
+				if props.Collapsible {
+					<div class="border-t border-border p-2">
+						<button
+							type="button"
+							aria-controls={ props.asideID() }
+							aria-expanded="true"
+							x-bind:aria-expanded="collapsed ? 'false' : 'true'"
+							aria-label="Menu lateral"
+							x-on:click="toggle()"
+							class="flex w-full items-center justify-center rounded px-2 py-1.5 text-sm text-muted hover:bg-muted/10 hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+						>
+							<span aria-hidden="true" class="transition-transform group-data-[collapsed=true]/sidebar:rotate-180">&laquo;</span>
+						</button>
+					</div>
+				}
+			</div>
 		</aside>
 		if props.Collapsible {
 			@templ.Raw(props.restoreScript())
