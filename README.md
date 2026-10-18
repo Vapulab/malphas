@@ -257,6 +257,22 @@ O app passa a compilar contra o clone local, e o `go list -m` do
 as mudanças nos `.templ`. Para publicar, faça o merge aqui, crie a tag
 `vX.Y.Z` e atualize o app com `go get github.com/vapulab/malphas@vX.Y.Z`.
 
+## Apoie o Malphas
+
+O Malphas é gratuito e de código aberto. Se ele poupou trabalho no seu
+projeto, você pode ajudar a manter o desenvolvimento:
+
+- **GitHub Sponsors:** [github.com/sponsors/darkanum](https://github.com/sponsors/darkanum)
+- **Pix**, qualquer valor, para a Vapulab:
+
+<img src=".github/pix-qr.png" alt="QR Code Pix da Vapulab" width="220">
+
+Pix copia e cola:
+
+```
+00020126580014br.gov.bcb.pix01360de2b4e5-2274-4744-bb86-786b019352755204000053039865802BR5907VAPULAB6008LONDRINA62070503***6304DAAC
+```
+
 ## Licença
 
 [MIT](LICENSE). A fonte Space Grotesk (`assets/fonts/`) é distribuída sob a
