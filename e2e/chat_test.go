@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 // --- Message Scroller ---------------------------------------------------------
@@ -204,8 +205,9 @@ func TestScrollerStreamingIsBusyWhileItGrows(t *testing.T) {
 	if got := eval[string](t, ctx, `[...document.querySelectorAll('#chat-demo-content article')].at(-1).getAttribute('aria-busy')`); got != "true" {
 		t.Errorf("the streaming message should be aria-busy, got %q", got)
 	}
-	sleep(t, ctx, 2400)
-	if got := eval[string](t, ctx, `[...document.querySelectorAll('#chat-demo-content article')].at(-1).getAttribute('aria-busy') || ''`); got != "" {
-		t.Errorf("aria-busy should clear when streaming ends, got %q", got)
+	// The stream is 30 words at 60ms, 1.8s on a fast machine and twice that
+	// on a slow one: wait for the end, not for a guess at when it comes.
+	if !waitUntil(t, ctx, `![...document.querySelectorAll('#chat-demo-content article')].at(-1).hasAttribute('aria-busy')`, 15*time.Second) {
+		t.Errorf("aria-busy should clear when streaming ends, got %q", eval[string](t, ctx, `[...document.querySelectorAll('#chat-demo-content article')].at(-1).getAttribute('aria-busy') || ''`))
 	}
 }

@@ -13,14 +13,17 @@ package e2e_test
 
 import (
 	"context"
+	"encoding/json"
 	"net/http/httptest"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"testing"
 	"time"
 
+	"github.com/chromedp/cdproto/emulation"
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
 	"github.com/vapulab/malphas/e2e"
@@ -122,6 +125,18 @@ func findChrome() string {
 	return ""
 }
 
+// cpuThrottle slows the page's CPU by this factor (E2E_CPU_THROTTLE=4 is four
+// times slower). A fast machine hides races that a CI runner hits: a test that
+// acts before a listener is wired, or reads before a frame is painted, passes
+// here and fails there. Running the suite throttled surfaces them on demand.
+var cpuThrottle = func() int {
+	n, err := strconv.Atoi(os.Getenv("E2E_CPU_THROTTLE"))
+	if err != nil || n < 1 {
+		return 1
+	}
+	return n
+}()
+
 // assetsLoadedJS is true when every same-origin script and stylesheet arrived.
 // A failed download shows up in Resource Timing with responseStatus 0.
 const assetsLoadedJS = `(() => {
@@ -140,8 +155,13 @@ func openPage(t *testing.T, path string) context.Context {
 
 	ctx, cancel := chromedp.NewContext(allocCtx)
 	t.Cleanup(cancel)
-	ctx, cancelTimeout := context.WithTimeout(ctx, 45*time.Second)
+	ctx, cancelTimeout := context.WithTimeout(ctx, time.Duration(cpuThrottle)*45*time.Second)
 	t.Cleanup(cancelTimeout)
+	if cpuThrottle > 1 {
+		if err := chromedp.Run(ctx, emulation.SetCPUThrottlingRate(float64(cpuThrottle))); err != nil {
+			t.Fatalf("throttle the CPU: %v", err)
+		}
+	}
 
 	// On Windows, Chrome occasionally fails a localhost download with
 	// net::ERR_NO_BUFFER_SPACE (a socket-buffer condition of the OS, not of
@@ -255,4 +275,23 @@ func settle(t *testing.T, ctx context.Context) {
 	if err := chromedp.Run(ctx, chromedp.Sleep(150*time.Millisecond)); err != nil {
 		t.Fatalf("settle: %v", err)
 	}
+}
+
+// waitUntil polls a JS condition until it holds or timeout passes, and says
+// whether it held. It is the answer to "sleep, then check once": how long an
+// animation, a timer or a frame takes depends on the machine, and a fixed
+// sleep tuned on a fast one fails on a slow CI runner while the component is
+// fine. The caller still fails with its own message, so the test reads the
+// same.
+func waitUntil(t *testing.T, ctx context.Context, cond string, timeout time.Duration) bool {
+	t.Helper()
+	var ok bool
+	err := chromedp.Run(ctx, chromedp.Poll(cond, &ok, chromedp.WithPollingTimeout(timeout), chromedp.WithPollingInterval(25*time.Millisecond)))
+	return err == nil && ok
+}
+
+// jsString quotes s as a JS string literal, for building conditions.
+func jsString(s string) string {
+	b, _ := json.Marshal(s)
+	return string(b)
 }
