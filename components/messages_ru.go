@@ -1,5 +1,7 @@
 package components
 
+import "time"
+
 var messagesRU = messages{
 	Close: "Закрыть", Cancel: "Отмена", Confirm: "Подтвердить",
 
@@ -29,6 +31,15 @@ var messagesRU = messages{
 	UploadOf:     func(name string) string { return "Загрузка " + name },
 	ProcessingOf: func(name string) string { return "Обработка " + name },
 
+	WeekdayShort: [7]string{"вс", "пн", "вт", "ср", "чт", "пт", "сб"},
+	WeekdayLong:  ruWeekdays,
+	// The heading names the month on its own (nominative); inside a date the
+	// month is genitive: "октябрь 2026", but "20 октября 2026 г.".
+	MonthLabel: func(t time.Time) string { return ruMonths[t.Month()-1] + " " + itoa(t.Year()) },
+	DayLabel: func(t time.Time) string {
+		return ruWeekdays[t.Weekday()] + ", " + itoa(t.Day()) + " " + ruMonthsGenitive[t.Month()-1] + " " + itoa(t.Year()) + " г."
+	},
+
 	Unread: map[string]string{"one": "(%d новое)", "few": "(%d новых)", "many": "(%d новых)", "other": "(%d новых)"},
 }
 
@@ -45,3 +56,10 @@ func ruPlural(n int, one, few, many string) string {
 		return many
 	}
 }
+
+var (
+	ruMonths         = [12]string{"январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"}
+	ruMonthsGenitive = [12]string{"января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"}
+)
+
+var ruWeekdays = [7]string{"воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"}

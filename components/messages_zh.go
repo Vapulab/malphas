@@ -1,5 +1,7 @@
 package components
 
+import "time"
+
 var messagesZH = messages{
 	Close: "关闭", Cancel: "取消", Confirm: "确认",
 
@@ -27,5 +29,14 @@ var messagesZH = messages{
 	UploadOf:     func(name string) string { return "正在上传 " + name },
 	ProcessingOf: func(name string) string { return "正在处理 " + name },
 
+	WeekdayShort: [7]string{"日", "一", "二", "三", "四", "五", "六"},
+	WeekdayLong:  zhWeekdays,
+	MonthLabel:   func(t time.Time) string { return itoa(t.Year()) + "年" + itoa(int(t.Month())) + "月" },
+	DayLabel: func(t time.Time) string {
+		return itoa(t.Year()) + "年" + itoa(int(t.Month())) + "月" + itoa(t.Day()) + "日" + zhWeekdays[t.Weekday()]
+	},
+
 	Unread: map[string]string{"other": "(%d 条新消息)"},
 }
+
+var zhWeekdays = [7]string{"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"}

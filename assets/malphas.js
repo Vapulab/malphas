@@ -1000,9 +1000,10 @@ document.addEventListener("alpine:init", () => {
   // The APG date grid over a server-rendered month. Dates travel as ISO
   // strings (YYYY-MM-DD), which compare correctly as plain strings and never
   // pick up a time zone. When a key lands outside the rendered month, the
-  // next month is fetched (htmx) with foco=, and the grid that comes back
-  // focuses that day itself (data-autofocus, see init).
-  Alpine.data("calendar", (mode = "single", navURL = "") => ({
+  // next month is fetched (htmx) with focus=, and the grid that comes back
+  // focuses that day itself (data-autofocus, see init). weekStart is the
+  // first day of the week in the page's language (0 = Sunday), for Home/End.
+  Alpine.data("calendar", (mode = "single", navURL = "", weekStart = 0) => ({
     mode,
     value: "",
     start: "",
@@ -1078,7 +1079,7 @@ document.addEventListener("alpine:init", () => {
         values[input.name] = input.value;
       }
       const sep = navURL.includes("?") ? "&" : "?";
-      htmx.ajax("GET", `${navURL}${sep}mes=${iso.slice(0, 7)}&foco=${iso}`, {
+      htmx.ajax("GET", `${navURL}${sep}month=${iso.slice(0, 7)}&focus=${iso}`, {
         target: "#" + this.$root.id,
         select: "#" + this.$root.id,
         swap: "outerHTML",
@@ -1091,7 +1092,8 @@ document.addEventListener("alpine:init", () => {
       if (!el) return;
       const [y, m, d] = el.dataset.date.split("-").map(Number);
       const date = new Date(Date.UTC(y, m - 1, d));
-      const weekday = date.getUTCDay();
+      // Days since the week's first day, in the page's language.
+      const intoWeek = (date.getUTCDay() - weekStart + 7) % 7;
       // Month and year steps keep the day, clamped to the target month's
       // length: 31 Jan + 1 month is 28/29 Feb, not 3 March.
       const addMonths = (n) => {
@@ -1106,8 +1108,8 @@ document.addEventListener("alpine:init", () => {
         ArrowRight: () => addDays(1),
         ArrowUp: () => addDays(-7),
         ArrowDown: () => addDays(7),
-        Home: () => addDays(-weekday),
-        End: () => addDays(6 - weekday),
+        Home: () => addDays(-intoWeek),
+        End: () => addDays(6 - intoWeek),
         PageUp: () => addMonths(e.shiftKey ? -12 : -1),
         PageDown: () => addMonths(e.shiftKey ? 12 : 1),
       }[e.key];

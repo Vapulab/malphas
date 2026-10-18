@@ -3,6 +3,7 @@ package components
 import (
 	"context"
 	"strconv"
+	"time"
 
 	"github.com/vapulab/malphas"
 )
@@ -36,6 +37,12 @@ type messages struct {
 
 	UploadOf     func(name string) string
 	ProcessingOf func(name string) string
+
+	// Calendar. Weekday arrays are indexed by time.Weekday (Sunday = 0); the
+	// grid reorders them from the language's first day of the week.
+	WeekdayShort, WeekdayLong [7]string
+	MonthLabel                func(t time.Time) string // the grid's heading: "October 2026"
+	DayLabel                  func(t time.Time) string // a day's accessible name
 
 	// Unread is the jump button's counter, built in the browser. Keys are CLDR
 	// plural categories (one, few, many, other); %d is the count. The script

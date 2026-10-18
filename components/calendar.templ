@@ -1,6 +1,10 @@
 package components
 
-import "time"
+import (
+	"time"
+
+	"github.com/vapulab/malphas"
+)
 
 type CalendarProps struct {
 	ID    string
@@ -20,7 +24,7 @@ type CalendarProps struct {
 	Today    time.Time   // default time.Now()
 	Focus    time.Time   // the day that takes focus when the grid loads
 
-	// NavURL receives "mes=YYYY-MM" (and "foco=YYYY-MM-DD" when the keyboard
+	// NavURL receives "month=YYYY-MM" (and "focus=YYYY-MM-DD" when the keyboard
 	// crosses into another month). The response must contain an element with
 	// this calendar's ID: it is swapped in place with hx-select.
 	NavURL string
@@ -118,7 +122,7 @@ func (p CalendarProps) tabStop() time.Time {
 }
 
 func (p CalendarProps) navHref(month time.Time) string {
-	return withQuery(p.NavURL, "mes="+isoMonth(month))
+	return withQuery(p.NavURL, "month="+isoMonth(month))
 }
 
 func (p CalendarProps) includeSelector() string {
@@ -142,25 +146,25 @@ templ Calendar(props CalendarProps) {
 	<div
 		id={ props.ID }
 		class="inline-block rounded border border-border bg-surface p-3"
-		x-data={ "calendar(" + strJS(or(props.Mode, "single")) + ", " + strJS(props.NavURL) + ")" }
+		x-data={ "calendar(" + strJS(or(props.Mode, "single")) + ", " + strJS(props.NavURL) + ", " + intJS(int(malphas.LocaleFrom(ctx).WeekStart())) + ")" }
 		x-on:keydown="onKeydown($event)"
 		{ props.Attrs... }
 	>
 		<div class="mb-2 flex items-center justify-between gap-2">
-			@calendarNav(props, props.ID+"-prev", props.month().AddDate(0, -1, 0), "Mês anterior", "‹")
-			<div id={ props.ID + "-title" } aria-live="polite" class="text-sm font-semibold text-fg">{ monthLabel(props.month()) }</div>
-			@calendarNav(props, props.ID+"-next", props.month().AddDate(0, 1, 0), "Próximo mês", "›")
+			@calendarNav(props, props.ID+"-prev", props.month().AddDate(0, -1, 0), msg(ctx).PrevMonth, "‹")
+			<div id={ props.ID + "-title" } aria-live="polite" class="text-sm font-semibold text-fg">{ monthLabel(ctx, props.month()) }</div>
+			@calendarNav(props, props.ID+"-next", props.month().AddDate(0, 1, 0), msg(ctx).NextMonth, "›")
 		</div>
 		<table role="grid" aria-labelledby={ props.ID + "-title" } class="border-collapse">
 			<thead>
 				<tr>
-					for i, wd := range weekdayShort {
-						<th scope="col" abbr={ weekdayLong[i] } class="h-8 w-9 text-center text-xs font-medium text-muted">{ wd }</th>
+					for _, wd := range weekdayHeaders(ctx) {
+						<th scope="col" abbr={ wd.long } class="h-8 w-9 text-center text-xs font-medium text-muted">{ wd.short }</th>
 					}
 				</tr>
 			</thead>
 			<tbody>
-				for _, week := range calendarWeeks(props.month()) {
+				for _, week := range calendarWeeks(props.month(), malphas.LocaleFrom(ctx).WeekStart()) {
 					<tr>
 						for _, d := range week {
 							if d.IsZero() {
@@ -221,7 +225,7 @@ templ calendarDay(props CalendarProps, d time.Time) {
 		<button
 			type="button"
 			data-date={ isoDate(d) }
-			aria-label={ dayLabel(d) }
+			aria-label={ dayLabel(ctx, d) }
 			if d.Equal(props.tabStop()) {
 				tabindex="0"
 				if props.autofocus(d) {

@@ -103,8 +103,8 @@ func demoCalendar() templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		now := time.Now()
 		today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
-		month := QueryDate(ctx, "mes", today)
-		focus := QueryDate(ctx, "foco", time.Time{})
+		month := QueryDate(ctx, "month", today)
+		focus := QueryDate(ctx, "focus", time.Time{})
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"flex flex-col gap-6\"><p class=\"text-sm text-muted\">Setas andam por dia e semana, Home/End vão aos extremos da semana, PageUp/PageDown trocam o mês (com Shift, o ano). Andar além do mês carrega o mês vizinho e mantém o foco no dia. Enter ou Espaço escolhem.</p><div class=\"flex flex-wrap items-start gap-6\"><div class=\"flex flex-col gap-2\"><p class=\"text-sm font-medium text-fg\">Entrega (a partir de 5/10/2026)</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

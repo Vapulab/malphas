@@ -1,5 +1,7 @@
 package components
 
+import "time"
+
 var messagesEN = messages{
 	Close: "Close", Cancel: "Cancel", Confirm: "Confirm",
 
@@ -31,6 +33,13 @@ var messagesEN = messages{
 
 	UploadOf:     func(name string) string { return "Uploading " + name },
 	ProcessingOf: func(name string) string { return "Processing " + name },
+
+	WeekdayShort: [7]string{"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"},
+	WeekdayLong:  [7]string{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"},
+	MonthLabel:   func(t time.Time) string { return t.Month().String() + " " + itoa(t.Year()) },
+	DayLabel: func(t time.Time) string {
+		return t.Weekday().String() + ", " + t.Month().String() + " " + itoa(t.Day()) + ", " + itoa(t.Year())
+	},
 
 	Unread: map[string]string{"one": "(%d new)", "other": "(%d new)"},
 }

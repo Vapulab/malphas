@@ -16,7 +16,7 @@ func calDay(cal, iso string) string { return cal + ` button[data-date="` + iso +
 const focusedDate = `document.activeElement.dataset.date || ''`
 
 func TestCalendarArrowsMoveFocusWithinTheMonth(t *testing.T) {
-	ctx := openPage(t, "/components/calendar?mes=2026-10")
+	ctx := openPage(t, "/components/calendar?month=2026-10")
 
 	focus(t, ctx, calDay(calEntrega, "2026-10-15"))
 	for _, step := range []struct{ key, want string }{
@@ -41,12 +41,12 @@ func TestCalendarArrowsMoveFocusWithinTheMonth(t *testing.T) {
 // Walking off the month fetches the neighbouring one from the server, and the
 // new grid puts focus on the day the key was heading for.
 func TestCalendarArrowAcrossTheMonthLoadsItAndKeepsFocus(t *testing.T) {
-	ctx := openPage(t, "/components/calendar?mes=2026-10")
+	ctx := openPage(t, "/components/calendar?month=2026-10")
 
 	focus(t, ctx, calDay(calEntrega, "2026-10-01"))
 	press(t, ctx, kb.ArrowLeft)
 	sleep(t, ctx, 600)
-	if got := eval[string](t, ctx, `document.querySelector('#cal-entrega-title').textContent.trim()`); got != "setembro de 2026" {
+	if got := eval[string](t, ctx, `document.querySelector('#cal-entrega-title').textContent.trim()`); got != "September 2026" {
 		t.Fatalf("the previous month did not load: title %q", got)
 	}
 	if got := eval[string](t, ctx, focusedDate); got != "2026-09-30" {
@@ -55,7 +55,7 @@ func TestCalendarArrowAcrossTheMonthLoadsItAndKeepsFocus(t *testing.T) {
 }
 
 func TestCalendarPageDownGoesToNextMonth(t *testing.T) {
-	ctx := openPage(t, "/components/calendar?mes=2026-10")
+	ctx := openPage(t, "/components/calendar?month=2026-10")
 
 	focus(t, ctx, calDay(calEntrega, "2026-10-31"))
 	press(t, ctx, kb.PageDown)
@@ -67,7 +67,7 @@ func TestCalendarPageDownGoesToNextMonth(t *testing.T) {
 }
 
 func TestCalendarSelectsAndSubmits(t *testing.T) {
-	ctx := openPage(t, "/components/calendar?mes=2026-10")
+	ctx := openPage(t, "/components/calendar?month=2026-10")
 
 	focus(t, ctx, calDay(calEntrega, "2026-10-20"))
 	press(t, ctx, kb.Enter)
@@ -99,7 +99,7 @@ func TestCalendarSelectsAndSubmits(t *testing.T) {
 
 // The second pick before the first still makes a forward period.
 func TestCalendarRangeOrdersItsEnds(t *testing.T) {
-	ctx := openPage(t, "/components/calendar?mes=2026-10")
+	ctx := openPage(t, "/components/calendar?month=2026-10")
 
 	click(t, ctx, calDay(`#cal-periodo`, "2026-10-20"))
 	click(t, ctx, calDay(`#cal-periodo`, "2026-10-10"))

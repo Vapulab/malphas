@@ -62,15 +62,15 @@ func TestQueryStringReadsAndFallsBack(t *testing.T) {
 func TestQueryDateAcceptsDayAndMonth(t *testing.T) {
 	def := time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC)
 	cases := map[string]time.Time{
-		"mes=2026-10":    time.Date(2026, 10, 1, 0, 0, 0, 0, time.UTC),
-		"mes=2026-10-20": time.Date(2026, 10, 20, 0, 0, 0, 0, time.UTC),
-		"mes=":           def,
-		"mes=ontem":      def,
-		"mes=2026-13":    def,
+		"month=2026-10":    time.Date(2026, 10, 1, 0, 0, 0, 0, time.UTC),
+		"month=2026-10-20": time.Date(2026, 10, 20, 0, 0, 0, 0, time.UTC),
+		"month=":           def,
+		"month=ontem":      def,
+		"month=2026-13":    def,
 		"":               def,
 	}
 	for query, want := range cases {
-		if got := showcase.QueryDate(ctxWith(t, query), "mes", def); !got.Equal(want) {
+		if got := showcase.QueryDate(ctxWith(t, query), "month", def); !got.Equal(want) {
 			t.Errorf("%q: QueryDate = %v, want %v", query, got, want)
 		}
 	}

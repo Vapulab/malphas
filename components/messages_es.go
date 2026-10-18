@@ -1,5 +1,7 @@
 package components
 
+import "time"
+
 var messagesES = messages{
 	Close: "Cerrar", Cancel: "Cancelar", Confirm: "Confirmar",
 
@@ -32,5 +34,16 @@ var messagesES = messages{
 	UploadOf:     func(name string) string { return "Subiendo " + name },
 	ProcessingOf: func(name string) string { return "Procesando " + name },
 
+	WeekdayShort: [7]string{"dom", "lun", "mar", "mié", "jue", "vie", "sáb"},
+	WeekdayLong:  esWeekdays,
+	MonthLabel:   func(t time.Time) string { return esMonths[t.Month()-1] + " de " + itoa(t.Year()) },
+	DayLabel: func(t time.Time) string {
+		return esWeekdays[t.Weekday()] + ", " + itoa(t.Day()) + " de " + esMonths[t.Month()-1] + " de " + itoa(t.Year())
+	},
+
 	Unread: map[string]string{"one": "(%d nuevo)", "other": "(%d nuevos)"},
 }
+
+var esMonths = [12]string{"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"}
+
+var esWeekdays = [7]string{"domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"}
