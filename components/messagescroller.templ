@@ -1,5 +1,7 @@
 package components
 
+import "github.com/vapulab/malphas"
+
 type MessageScrollerProps struct {
 	ID    string // the content element is ID + "-content": the target for new messages
 	Label string // accessible name of the conversation log
@@ -66,7 +68,7 @@ templ MessageScroller(props MessageScrollerProps) {
 		>
 			<span aria-hidden="true">&#8595;</span>
 			{ msg(ctx).JumpToEnd }
-			<span x-show="unread > 0" style="display:none" x-text="unreadLabel()" data-unread-forms={ unreadFormsJSON(ctx) } class="text-primary"></span>
+			<span x-show="unread > 0" style="display:none" x-text="unreadLabel()" data-unread-forms={ unreadFormsJSON(ctx) } data-unread-lang={ malphas.LocaleFrom(ctx).Tag() } class="text-primary"></span>
 		</button>
 	</div>
 }

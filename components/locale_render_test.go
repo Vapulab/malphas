@@ -86,3 +86,12 @@ func TestAttachmentStatusSpeaksTheLocale(t *testing.T) {
 		t.Errorf("Chinese processing status: %s", proc)
 	}
 }
+
+// The counter's plural rule must be the same language as its words: the
+// server says which, instead of the script trusting the page's lang.
+func TestScrollerNamesTheLanguageOfItsForms(t *testing.T) {
+	html := renderIn(t, malphas.RU, components.MessageScroller(components.MessageScrollerProps{ID: "s"}))
+	if !strings.Contains(html, `data-unread-lang="ru"`) {
+		t.Errorf("the forms should come with their language: %s", html)
+	}
+}

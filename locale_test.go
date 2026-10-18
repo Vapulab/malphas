@@ -34,7 +34,7 @@ func TestParseLocale(t *testing.T) {
 			t.Errorf("ParseLocale(%q) = %v, %v; want %v, true", s, got, found, want)
 		}
 	}
-	for _, s := range []string{"de", "", "pt-PT-x", "english"} {
+	for _, s := range []string{"de", "", "english"} {
 		if _, found := malphas.ParseLocale(s); found {
 			t.Errorf("ParseLocale(%q) should not be found", s)
 		}
@@ -73,5 +73,25 @@ func TestLocalesOrder(t *testing.T) {
 	want := []malphas.Locale{malphas.EN, malphas.PT, malphas.ES, malphas.RU, malphas.ZH}
 	if got := malphas.Locales(); !slices.Equal(got, want) {
 		t.Errorf("got %v, want %v", got, want)
+	}
+}
+
+// Hosts feed ParseLocale what they receive: Accept-Language entries and
+// navigator.language values carry regions. The primary subtag decides, except
+// for Traditional Chinese, which the ZH texts (Simplified) do not serve.
+func TestParseLocaleAcceptsRegionalTags(t *testing.T) {
+	ok := map[string]malphas.Locale{
+		"en-US": malphas.EN, "en-GB": malphas.EN, "es-MX": malphas.ES, "es-419": malphas.ES,
+		"pt-PT": malphas.PT, "ru-RU": malphas.RU, "zh-CN": malphas.ZH, "zh-Hans-CN": malphas.ZH, "zh-SG": malphas.ZH,
+	}
+	for s, want := range ok {
+		if got, found := malphas.ParseLocale(s); !found || got != want {
+			t.Errorf("ParseLocale(%q) = %v, %v; want %v, true", s, got, found, want)
+		}
+	}
+	for _, s := range []string{"zh-TW", "zh-HK", "zh-Hant", "zh-Hant-TW", "de-DE", "e"} {
+		if _, found := malphas.ParseLocale(s); found {
+			t.Errorf("ParseLocale(%q) should not be found", s)
+		}
 	}
 }

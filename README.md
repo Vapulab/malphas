@@ -148,7 +148,30 @@ A label passed as a prop always wins over the language's default:
 
 Plurals follow each language's rules (Russian has three forms, Chinese none).
 The one counter built in the browser, the Message Scroller's "(3 new)", picks
-its form with `Intl.PluralRules` for the page's `lang`.
+its form with `Intl.PluralRules` for the language the server rendered it in.
+
+`ParseLocale` takes a tag or a short code, and regional tags by their language
+(`es-MX` is `ES`, `zh-CN` is `ZH`). Traditional Chinese (`zh-TW`, `zh-Hant`) is
+not matched: the Chinese texts are Simplified.
+
+## Upgrading from v0.2
+
+v0.3.0 changes three things a v0.2 app sees without touching its code:
+
+1. **Built-in text is English by default.** It used to be Portuguese. To keep
+   it, set the language once per request:
+   `ctx = malphas.WithLocale(ctx, malphas.PT)`.
+2. **`<html lang>` follows that language** (`en` by default) instead of a fixed
+   `pt-BR`.
+3. **The Calendar's query parameters are `month` and `focus`**, no longer `mes`
+   and `foco`. A handler that still reads `mes` gets the default month every
+   time, so the arrows and PageUp/PageDown stop moving the calendar, with no
+   error. Rename them where you build the Calendar's month and focus from the
+   URL. The Calendar's `x-data` also takes a third argument, the week's first
+   day, which the component fills in itself.
+
+If you link to the catalog's all-in-one page, it moved from
+`/components/todos` to `/components/all`; the old path redirects.
 
 ## How the components behave
 

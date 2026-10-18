@@ -211,3 +211,15 @@ func TestScrollerStreamingIsBusyWhileItGrows(t *testing.T) {
 		t.Errorf("aria-busy should clear when streaming ends, got %q", eval[string](t, ctx, `[...document.querySelectorAll('#chat-demo-content article')].at(-1).getAttribute('aria-busy') || ''`))
 	}
 }
+
+// A host whose page shell writes an invalid lang (pt_BR, with an underscore)
+// must not lose the counter: Intl.PluralRules throws on such a tag.
+func TestScrollerCounterSurvivesAnInvalidPageLang(t *testing.T) {
+	ctx := openPage(t, "/components/message-scroller")
+	eval[bool](t, ctx, `(document.documentElement.lang = "pt_BR", true)`)
+	scrolledTo(t, ctx, 150)
+	click(t, ctx, "#chat-nova")
+	if !waitUntil(t, ctx, `(b => !!b && /\(1 new\)/.test(b.textContent))(`+chatJump+`)`, 5*time.Second) {
+		t.Errorf("the counter should still read (1 new), shows %q", eval[string](t, ctx, `(b => b ? b.textContent.replace(/\s+/g, ' ').trim() : '')(`+chatJump+`)`))
+	}
+}

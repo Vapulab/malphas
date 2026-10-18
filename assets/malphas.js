@@ -1278,13 +1278,18 @@ document.addEventListener("alpine:init", () => {
     atBottom: true,
     unread: 0,
 
-    // The counter's words come from the server, one per plural category of
-    // the page's language ({"one": "(%d new)", "other": …}); Intl.PluralRules
-    // picks which, so Russian gets its three forms with no rules here.
+    // The counter's words come from the server, one per plural category
+    // ({"one": "(%d new)", "other": …}), with the language they are in;
+    // Intl.PluralRules picks which, so Russian gets its three forms with no
+    // rules here. Without Intl, or with a tag it rejects, the counter falls
+    // back to one/other rather than disappearing.
     unreadLabel() {
       const el = this.$root.querySelector("[data-unread-forms]");
       const forms = el ? JSON.parse(el.dataset.unreadForms) : {};
-      const cat = new Intl.PluralRules(document.documentElement.lang || "en").select(this.unread);
+      let cat = this.unread === 1 ? "one" : "other";
+      try {
+        cat = new Intl.PluralRules(el?.dataset.unreadLang || "en").select(this.unread);
+      } catch {}
       return (forms[cat] || forms.other || "(%d)").replace("%d", this.unread);
     },
     // Set by toEnd(): the reader asked for the end, so the end keeps being

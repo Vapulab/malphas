@@ -55,10 +55,28 @@ func (l Locale) NativeName() string { return locales[l.valid()].native }
 // WeekStart is the first day of the week in calendars.
 func (l Locale) WeekStart() time.Weekday { return locales[l.valid()].weekStart }
 
-// ParseLocale accepts a tag or a segment, case-insensitively.
+// ParseLocale accepts a tag or a segment, case-insensitively, and regional
+// tags by their language: "es-MX" is ES, "zh-CN" is ZH. Traditional Chinese
+// (zh-Hant, zh-TW, zh-HK, zh-MO) is not: the ZH texts are Simplified.
 func ParseLocale(s string) (Locale, bool) {
 	for _, l := range Locales() {
 		if strings.EqualFold(s, l.Tag()) || strings.EqualFold(s, l.Segment()) {
+			return l, true
+		}
+	}
+	parts := strings.FieldsFunc(strings.ToLower(s), func(r rune) bool { return r == '-' || r == '_' })
+	if len(parts) < 2 {
+		return EN, false
+	}
+	if parts[0] == "zh" {
+		for _, sub := range parts[1:] {
+			if sub == "hant" || sub == "tw" || sub == "hk" || sub == "mo" {
+				return EN, false
+			}
+		}
+	}
+	for _, l := range Locales() {
+		if parts[0] == l.Segment() {
 			return l, true
 		}
 	}
