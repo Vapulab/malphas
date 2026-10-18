@@ -16,9 +16,9 @@ import (
 type messages struct {
 	Close, Cancel, Confirm string
 
-	CarouselRole, CarouselPrevious, CarouselNext string
-	Pagination, PagePrevious, PageNext           string
-	PrevMonth, NextMonth                         string
+	CarouselRole, SlideRole, CarouselPrevious, CarouselNext string
+	Pagination, PagePrevious, PageNext                      string
+	PrevMonth, NextMonth                                    string
 
 	Breadcrumb, Search, NoResults, ShowOptions string
 	CommandPalette, Commands                   string
@@ -34,11 +34,15 @@ type messages struct {
 	Results    func(n int) string
 	Page       func(n int) string
 	QuestionOf func(n, total int) string
-	OfTotal    func(n, total int) string
+	SlideOf    func(n, total int) string // a carousel slide's position
+	RatingOf   func(n, total int) string // a rating's value, in stars
 	Digit      func(n, total int) string
 
 	UploadOf     func(name string) string
 	ProcessingOf func(name string) string
+
+	UploadingStatus  func(percent int) string // the visible status line
+	ProcessingStatus string
 
 	// Calendar. Weekday arrays are indexed by time.Weekday (Sunday = 0); the
 	// grid reorders them from the language's first day of the week.

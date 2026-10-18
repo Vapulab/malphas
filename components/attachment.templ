@@ -1,6 +1,6 @@
 package components
 
-import "strconv"
+import "context"
 
 type AttachmentProps struct {
 	ID       string
@@ -18,12 +18,12 @@ type AttachmentProps struct {
 
 func (p AttachmentProps) state() string { return or(p.State, "idle") }
 
-func (p AttachmentProps) statusText() string {
+func (p AttachmentProps) statusText(ctx context.Context) string {
 	switch p.state() {
 	case "uploading":
-		return "Uploading " + strconv.Itoa(clampInt(p.Progress, 0, 100)) + "%"
+		return msg(ctx).UploadingStatus(clampInt(p.Progress, 0, 100))
 	case "processing":
-		return "Processing…"
+		return msg(ctx).ProcessingStatus
 	}
 	return ""
 }
@@ -72,7 +72,7 @@ templ Attachment(props AttachmentProps) {
 			// region born together with its text is often not announced, so the
 			// region must already exist when the text changes. Callers updating
 			// a card in place should swap its contents, not the whole card.
-			<p role="status" class="text-xs text-muted empty:hidden">{ props.statusText() }</p>
+			<p role="status" class="text-xs text-muted empty:hidden">{ props.statusText(ctx) }</p>
 		</div>
 		if props.Actions != nil {
 			<div class="flex shrink-0 items-center gap-1">

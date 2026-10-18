@@ -25,8 +25,16 @@ func Handler(frame Frame) http.Handler {
 	mux.HandleFunc("GET /components", func(w http.ResponseWriter, r *http.Request) {
 		render(w, r, frame("Components", false, IndexPage(ByCategory())))
 	})
-	mux.HandleFunc("GET /components/todos", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /components/all", func(w http.ResponseWriter, r *http.Request) {
 		render(w, r, frame("Showcase", true, AllPage(ByCategory())))
+	})
+	// The showcase page used to live at /components/todos; old links keep working.
+	mux.HandleFunc("GET /components/todos", func(w http.ResponseWriter, r *http.Request) {
+		target := "/components/all"
+		if r.URL.RawQuery != "" {
+			target += "?" + r.URL.RawQuery
+		}
+		http.Redirect(w, r, target, http.StatusMovedPermanently)
 	})
 	mux.HandleFunc("GET /components/{slug}", func(w http.ResponseWriter, r *http.Request) {
 		c, ok := BySlug(r.PathValue("slug"))

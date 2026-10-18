@@ -14,7 +14,7 @@ const (
 	chatLog      = `document.querySelector('#chat-demo-content').parentElement`
 	chatAtBottom = `(() => { const v = ` + chatLog + `; return v.scrollHeight - v.scrollTop - v.clientHeight <= 24 })()`
 	chatCount    = `document.querySelectorAll('#chat-demo-content article').length`
-	chatJump     = `[...document.querySelectorAll('button')].find(b => b.textContent.includes('Jump to the end'))`
+	chatJump     = `[...document.querySelectorAll('button')].find(b => b.textContent.includes('Jump to latest'))`
 	chatWatched  = `document.querySelectorAll('#chat-demo-content article')[5]`
 	chatContent  = `document.querySelector('#chat-demo-content')`
 )

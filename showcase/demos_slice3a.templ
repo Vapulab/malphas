@@ -24,7 +24,7 @@ templ demoDrawer() {
 			{Label: "Home", Href: "/", Current: true},
 			{Label: "Components", Href: "/"},
 			components.MenuDivider(),
-			{Label: "All", Href: "/todos"},
+			{Label: "All", Href: "/all"},
 		}})
 	}
 	@components.Drawer(components.DrawerProps{ID: "demo-drawer-right", Title: "Filters", Side: "right"}) {
@@ -56,7 +56,7 @@ templ demoMenu() {
 				Entries: []components.MenuEntry{
 					{Label: "Home", Href: "/", Current: true},
 					{Label: "Components", Href: "/"},
-					{Label: "All", Href: "/todos"},
+					{Label: "All", Href: "/all"},
 					components.MenuDivider(),
 					{Label: "Sign out", OnClick: "$dispatch('demo-logout')"},
 				},
@@ -76,7 +76,7 @@ templ demoNavbar() {
 		DrawerID: "demo-navbar-drawer",
 		Entries: []components.MenuEntry{
 			{Label: "Components", Href: "/", Current: true},
-			{Label: "All", Href: "/todos"},
+			{Label: "All", Href: "/all"},
 		},
 	}) {
 		@components.Badge(components.BadgeProps{Variant: "success", Size: "sm"}) {
@@ -86,7 +86,7 @@ templ demoNavbar() {
 	@components.Drawer(components.DrawerProps{ID: "demo-navbar-drawer", Title: "Menu"}) {
 		@components.Menu(components.MenuProps{Entries: []components.MenuEntry{
 			{Label: "Components", Href: "/", Current: true},
-			{Label: "All", Href: "/todos"},
+			{Label: "All", Href: "/all"},
 		}})
 	}
 	<p class="mt-3 text-sm text-muted">

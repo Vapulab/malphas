@@ -183,7 +183,7 @@ func TestDataTableDemoClampsHugePages(t *testing.T) {
 
 // Every component, live, on one page.
 func TestVitrineRendersEveryComponent(t *testing.T) {
-	rec := get(t, "/components/todos")
+	rec := get(t, "/components/all")
 	if rec.Code != 200 {
 		t.Fatalf("status %d", rec.Code)
 	}
@@ -199,10 +199,27 @@ func TestVitrineRendersEveryComponent(t *testing.T) {
 	}
 }
 
+// The showcase page moved from /components/todos; old links still land on it,
+// query string included.
+func TestOldVitrineURLRedirects(t *testing.T) {
+	for path, want := range map[string]string{
+		"/components/todos":          "/components/all",
+		"/components/todos?page=2&x": "/components/all?page=2&x",
+	} {
+		rec := get(t, path)
+		if rec.Code != http.StatusMovedPermanently {
+			t.Errorf("%s: want 301, got %d", path, rec.Code)
+		}
+		if loc := rec.Header().Get("Location"); loc != want {
+			t.Errorf("%s: want Location %q, got %q", path, want, loc)
+		}
+	}
+}
+
 // Demos written for their own page now share one document: a repeated id
 // would make a modal, a calendar or an htmx target find the wrong element.
 func TestVitrineHasUniqueIDs(t *testing.T) {
-	body := get(t, "/components/todos").Body.String()
+	body := get(t, "/components/all").Body.String()
 	// Only real attributes: x-bind:id and friends are not ids.
 	re := regexp.MustCompile(`[\s"]id="([^"]+)"`)
 	seen := map[string]int{}

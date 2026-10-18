@@ -33,7 +33,7 @@ func IndexPage(groups []Group) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<h1 class=\"text-2xl font-bold text-fg\">Components</h1><p class=\"mt-1 text-muted\">Living documentation for the Malphas design system. <a href=\"/components/todos\" class=\"font-medium text-primary underline-offset-2 hover:underline\">See them all working on a single page</a></p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<h1 class=\"text-2xl font-bold text-fg\">Components</h1><p class=\"mt-1 text-muted\">Living documentation for the Malphas design system. <a href=\"/components/all\" class=\"font-medium text-primary underline-offset-2 hover:underline\">See them all working on a single page</a></p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -204,7 +204,7 @@ func ComponentPage(c Component) templ.Component {
 			templ_7745c5c3_Var9 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<nav class=\"text-sm text-muted\"><a href=\"/\" class=\"hover:text-fg\">Components</a> <span class=\"mx-2\">/</span> <span class=\"text-fg\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<nav aria-label=\"Breadcrumb\" class=\"text-sm text-muted\"><a href=\"/\" class=\"hover:text-fg\">Components</a> <span class=\"mx-2\">/</span> <span class=\"text-fg\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

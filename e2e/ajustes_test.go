@@ -45,7 +45,7 @@ func TestAlertOverModalIsClickable(t *testing.T) {
 // Every scroll container in Malphas uses the same thin, themed scrollbar as
 // Scroll Area, instead of the platform's default bar.
 func TestScrollContainersUseTheThemedScrollbar(t *testing.T) {
-	ctx := openPage(t, "/components/todos")
+	ctx := openPage(t, "/components/all")
 	click(t, ctx, "#abrir-modal-popover")
 	settle(t, ctx)
 	for _, sel := range []string{

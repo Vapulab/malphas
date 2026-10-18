@@ -125,7 +125,7 @@ func demoCheckboxIndeterminate() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "c-todos", Name: "todos", Label: "Select all", Indeterminate: true}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "c-all", Name: "all", Label: "Select all", Indeterminate: true}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

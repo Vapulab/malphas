@@ -95,7 +95,7 @@ func TestEnglishResultsPlural(t *testing.T) {
 
 func TestChineseResultsHasNoPlural(t *testing.T) {
 	zh := msgFor(malphas.ZH)
-	for n, want := range map[int]string{1: "1 个结果", 5: "5 个结果"} {
+	for n, want := range map[int]string{1: "共 1 条结果", 5: "共 5 条结果"} {
 		if got := zh.Results(n); got != want {
 			t.Errorf("Results(%d) = %q, want %q", n, got, want)
 		}

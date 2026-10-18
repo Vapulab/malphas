@@ -33,8 +33,8 @@ func TestCalendarHomeEndFollowWeekStart(t *testing.T) {
 // Russian and its first column is Monday.
 func TestFixtureRendersInRussian(t *testing.T) {
 	ctx := openPage(t, "/fixtures/calendar?locale=ru&month=2026-10")
-	if got := eval[string](t, ctx, `document.querySelector('#fx-cal-title').textContent.trim()`); got != "октябрь 2026" {
-		t.Errorf("heading = %q, want октябрь 2026", got)
+	if got := eval[string](t, ctx, `document.querySelector('#fx-cal-title').textContent.trim()`); got != "Октябрь 2026" {
+		t.Errorf("heading = %q, want Октябрь 2026", got)
 	}
 	if got := eval[string](t, ctx, `document.querySelector('#fx-cal th').textContent.trim()`); got != "пн" {
 		t.Errorf("first column = %q, want пн", got)

@@ -61,3 +61,28 @@ func TestScrollerCarriesTheUnreadForms(t *testing.T) {
 		t.Error("the Portuguese counter is gone")
 	}
 }
+
+// Each slide announces its own role too, not just the carousel.
+func TestCarouselSlidesSpeakTheLocale(t *testing.T) {
+	html := renderIn(t, malphas.RU, components.Carousel(components.CarouselProps{
+		ID: "c", Label: "Фото", Slides: []templ.Component{templ.Raw("a"), templ.Raw("b")},
+	}))
+	if !strings.Contains(html, `aria-roledescription="слайд"`) || strings.Contains(html, `aria-roledescription="slide"`) {
+		t.Errorf("Russian slides should be announced as слайд: %s", html)
+	}
+	if !strings.Contains(html, `aria-label="1 из 2"`) {
+		t.Errorf("Russian slide position: %s", html)
+	}
+}
+
+// The upload status line is text people read, in the page's language.
+func TestAttachmentStatusSpeaksTheLocale(t *testing.T) {
+	up := renderIn(t, malphas.ES, components.Attachment(components.AttachmentProps{Name: "a.pdf", State: "uploading", Progress: 40}))
+	if !strings.Contains(up, "Subiendo 40 %") && !strings.Contains(up, "Subiendo 40%") {
+		t.Errorf("Spanish upload status: %s", up)
+	}
+	proc := renderIn(t, malphas.ZH, components.Attachment(components.AttachmentProps{Name: "a.pdf", State: "processing"}))
+	if !strings.Contains(proc, "处理中") {
+		t.Errorf("Chinese processing status: %s", proc)
+	}
+}

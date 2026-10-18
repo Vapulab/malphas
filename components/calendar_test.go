@@ -173,7 +173,7 @@ func TestCalendarCarriesWeekStart(t *testing.T) {
 	if !strings.Contains(ru, `, 1)"`) {
 		t.Errorf("Russian weeks start on Monday (1): %s", ru[:400])
 	}
-	if !strings.Contains(ru, ">пн<") || !strings.Contains(ru, "октябрь 2026") {
+	if !strings.Contains(ru, ">пн<") || !strings.Contains(ru, "Октябрь 2026") {
 		t.Error("the Russian calendar should speak Russian")
 	}
 }

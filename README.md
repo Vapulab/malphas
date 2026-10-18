@@ -7,8 +7,8 @@ behavior in **Alpine** and ready for **HTMX**. No Node/npm, no CDN at runtime.
 live catalog, with a page per component, is at
 [malphas.vapulab.com](https://malphas.vapulab.com/components).
 
-The components speak English by default and also Portuguese, Spanish,
-Russian and Chinese: see [Languages](#languages).
+Built-in component text is in English by default, with Portuguese, Spanish,
+Russian and Chinese available: see [Languages](#languages).
 
 Malphas is the UI layer of [Vapulab](https://vapulab.com).
 
@@ -22,8 +22,8 @@ go get github.com/vapulab/malphas@latest
 
 ### 2. Point Tailwind at the module
 
-Tailwind **v3**, standalone CLI or npm. v4 drops JS `presets`, which Malphas
-relies on.
+Malphas requires Tailwind **v3** (standalone CLI or npm). v4 dropped JS
+`presets`, which Malphas relies on.
 
 The module lives in Go's cache, at a path that changes per version and per
 machine. `tailwind.config.js` asks Go for it:
@@ -60,9 +60,10 @@ directives:
 ```
 
 To change the palette, redefine the `--color-*` variables in your CSS, after
-`@tailwind base`. `theme/tokens.css` is the reference for what exists. The two
-dark blocks have to move together: CSS cannot share one block of declarations
-between a media query and a selector.
+`@tailwind base`. `theme/tokens.css` is the reference for what exists. If you
+override dark colors, change both dark blocks, `@media (prefers-color-scheme: dark)`
+and `:root[data-theme="dark"]`, the same way: CSS can't share one declaration
+block between a media query and a selector.
 
 ### 3. Serve the assets
 
@@ -107,9 +108,9 @@ The generated `*_templ.go` files are committed, so the module builds without
 
 ## Languages
 
-The components write some text on their own: accessible names ("Close",
+Some components render built-in text: accessible names ("Close",
 "Pagination"), empty states ("No results"), counters ("3 results",
-"Question 2 of 4") and the Calendar's months and weekdays. That text exists in
+"Question 2 of 4") and the Calendar's months and weekdays. That text ships in
 five languages:
 
 | `malphas.Locale` | Tag | Week starts on |
@@ -153,14 +154,15 @@ its form with `Intl.PluralRules` for the page's `lang`.
 
 ### Real forms
 
-Form controls are an Alpine visual over a real `<input>` with `sr-only`. The
-input carries focus, submission and screen reader output; Alpine only handles
-the looks. In practice **they work inside a `<form>` and with `hx-post` with
-nothing extra.**
+Each form control is a real `<input>`, visually hidden with `sr-only`, under an
+Alpine-driven visual. The input handles focus, submission and screen reader
+output; Alpine only handles presentation. So **they work in a plain `<form>`
+and with `hx-post` out of the box.**
 
-**Range is the deliberate exception**: it keeps the native input visible and
-styled. Hiding it and reimplementing pointer drag, touch and `aria-valuenow`
-would cost a lot for a worse result than the browser's.
+**Range, Select and Date Picker are the deliberate exceptions**: they keep the
+native control visible and styled. Hiding it and reimplementing dragging, touch,
+pointer capture and the native pickers would be a lot of work to end up worse
+than what the browser already does.
 
 ### Keyboard
 
@@ -173,7 +175,7 @@ Following the WAI-ARIA patterns:
 | Collapse, Accordion | Enter, Space |
 | Tooltip | opens on focus, closes on Escape |
 | Toggle, Swap | Space |
-| Calendar | arrows by day and week, Home/End to the week's ends (in the language's week), PageUp/PageDown by month |
+| Calendar | arrows by day and week, Home/End to the start/end of the week (per locale), PageUp/PageDown by month |
 
 The list components share a single `rovingList()` in `assets/malphas.js`: one
 roving tabindex implementation, not one per component.
@@ -199,7 +201,7 @@ keyboard users and a non-modal to screen reader users.
 ### Light and dark
 
 By default the theme follows the operating system (`prefers-color-scheme`).
-An explicit choice, saved in `localStorage`, beats the system **both ways**:
+An explicit choice, saved in `localStorage`, overrides the system **in either direction**:
 you can force light on a dark OS.
 
 `layout.Base` applies the theme with an **inline, synchronous** `<script>`
@@ -218,9 +220,9 @@ go vet ./...
 go test ./...
 ```
 
-These tests cover rendering, the accessibility of the markup, every language's
-text (a language missing a text does not compile, and a test checks none is
-empty), the catalog pages and the contract between the `.templ` files and
+These tests cover rendering, the accessibility of the markup, every locale's
+strings (a locale missing a string doesn't compile, and a test checks that none
+is empty), the catalog pages and the contract between the `.templ` files and
 `malphas.js`: every `x-data="name"` needs a registered `Alpine.data()`.
 
 ### The catalog
@@ -229,8 +231,8 @@ empty), the catalog pages and the contract between the `.templ` files and
 its examples, the pages that show them and an `http.Handler` that serves it
 all under `/components`, always in English. It is what runs at
 [malphas.vapulab.com/components](https://malphas.vapulab.com/components).
-Adding a component to the catalog is adding a registry entry; the route and
-render tests and the showcase page cover it on their own.
+Adding a component to the catalog means adding a registry entry; the route,
+the render tests and the showcase page pick it up automatically.
 
 A host serving the catalog provides the page frame and adds `showcase/` to
 Tailwind's `content`:
@@ -250,7 +252,7 @@ compiles them.
 [chromedp](https://github.com/chromedp/chromedp), which speaks CDP straight
 from Go, no Node. It covers what no render test reaches: arrows moving focus
 and selection, focus trapped in modals and free in menus, Escape returning
-focus, scroll lock, `inert`, the `FormData` the browser really sends, the
+focus, scroll lock, `inert`, the `FormData` the browser actually sends, the
 demos that talk to the server over HTMX, and the Calendar's week in each
 language.
 
@@ -261,6 +263,7 @@ people who `go get` Malphas. It always tests the code in this tree.
 cd e2e
 tailwindcss -c tailwind.config.js -i input.css -o static/app.css --minify
 go test ./...
+# or, if Chrome isn't on PATH:
 CHROME_PATH=/path/to/chrome go test ./...
 ```
 
@@ -301,7 +304,7 @@ use (
 
 The app then builds against the local clone, and the `go list -m` in
 `tailwind.config.js` points at it too, so Tailwind's watch sees changes to the
-`.templ` files. To release, merge here, tag `vX.Y.Z` and update the app with
+`.templ` files. To release, merge into Malphas's `main`, tag `vX.Y.Z` and update the app with
 `go get github.com/vapulab/malphas@vX.Y.Z`.
 
 ## License

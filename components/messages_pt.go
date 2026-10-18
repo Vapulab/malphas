@@ -5,7 +5,7 @@ import "time"
 var messagesPT = messages{
 	Close: "Fechar", Cancel: "Cancelar", Confirm: "Confirmar",
 
-	CarouselRole: "carrossel", CarouselPrevious: "Anterior", CarouselNext: "Próximo",
+	CarouselRole: "carrossel", SlideRole: "slide", CarouselPrevious: "Anterior", CarouselNext: "Próximo",
 	Pagination: "Paginação", PagePrevious: "Anterior", PageNext: "Próxima",
 	PrevMonth: "Mês anterior", NextMonth: "Próximo mês",
 
@@ -29,11 +29,15 @@ var messagesPT = messages{
 	},
 	Page:       func(n int) string { return "Página " + itoa(n) },
 	QuestionOf: func(n, total int) string { return "Pergunta " + itoa(n) + " de " + itoa(total) },
-	OfTotal:    func(n, total int) string { return itoa(n) + " de " + itoa(total) },
+	SlideOf:    func(n, total int) string { return itoa(n) + " de " + itoa(total) },
+	RatingOf:   func(n, total int) string { return itoa(n) + " de " + itoa(total) },
 	Digit:      func(n, total int) string { return "Dígito " + itoa(n) + " de " + itoa(total) },
 
 	UploadOf:     func(name string) string { return "Envio de " + name },
 	ProcessingOf: func(name string) string { return "Processamento de " + name },
+
+	UploadingStatus:  func(percent int) string { return "Enviando " + itoa(percent) + "%" },
+	ProcessingStatus: "Processando…",
 
 	WeekdayShort: [7]string{"Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"},
 	WeekdayLong:  ptWeekdays,

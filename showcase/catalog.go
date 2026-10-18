@@ -8,7 +8,7 @@ func catalog() []Component {
 			Slug:        "button",
 			Name:        "Button",
 			Category:    CategoryActions,
-			Description: "Clickable button with color variants, sizes and support for arbitrary attributes (HTMX, Alpine).",
+			Description: "Button with color variants, sizes and pass-through attributes (HTMX, Alpine).",
 			Examples: []Example{
 				{
 					Title:  "Variants",
@@ -51,7 +51,7 @@ func catalog() []Component {
 			Slug:        "alert-dialog",
 			Name:        "Alert Dialog",
 			Category:    CategoryActions,
-			Description: "Modal that asks for confirmation of an action with consequences. role=alertdialog with the description announced, initial focus on Cancel, and clicking outside does not count as an answer. ConfirmAttrs carries hx-delete and the like.",
+			Description: "Modal that asks the user to confirm a destructive or irreversible action. role=alertdialog with the description announced, initial focus on Cancel, and clicking outside does not count as an answer. ConfirmAttrs takes hx-delete and similar attributes.",
 			Examples: []Example{
 				{
 					Title: "Delete with confirmation",
@@ -98,7 +98,7 @@ func catalog() []Component {
 			Slug:        "hover-card",
 			Name:        "Hover Card",
 			Category:    CategoryDataDisplay,
-			Description: "Preview of what sits behind a link, on mouse hover or keyboard focus, with a delay so it does not flicker. It is only a complement: the trigger is a real link, and nothing may exist only in the card.",
+			Description: "Preview of what sits behind a link, on mouse hover or keyboard focus, with a delay so it does not flicker. It is only a complement: the trigger is a real link, and nothing should live only in the card.",
 			Examples: []Example{
 				{
 					Title: "Reviewer profile",
@@ -113,7 +113,7 @@ func catalog() []Component {
 			Slug:        "bubble",
 			Name:        "Bubble",
 			Category:    CategoryDataDisplay,
-			Description: "Chat bubble with variants, aligned to the start or the end. Consecutive messages from the same author flatten the corners where they meet; reactions say what they mean and how many there are, not just the emoji.",
+			Description: "Chat bubble with variants, aligned to the start or the end. Consecutive messages from the same author flatten the corners where they meet; reactions expose their meaning and count to screen readers, not just the emoji.",
 			Examples: []Example{
 				{
 					Title:  "Group, reaction, own message and quote",
@@ -126,7 +126,7 @@ func catalog() []Component {
 			Slug:        "marker",
 			Name:        "Marker",
 			Category:    CategoryDataDisplay,
-			Description: "A conversation line nobody said: someone joined, a reply being generated, the date between days. Updates use role=status; the divider keeps its label readable for screen readers.",
+			Description: "System line in a conversation, not written by any participant: someone joined, a reply is being generated, a date separator. Live updates use role=status; the divider's label stays readable to screen readers.",
 			Examples: []Example{
 				{
 					Title:  "Divider, note and status",
@@ -139,7 +139,7 @@ func catalog() []Component {
 			Slug:        "message",
 			Name:        "Message",
 			Category:    CategoryDataDisplay,
-			Description: "Message with avatar, name, time and a Bubble. In a run from the same author only the first one shows the header, but every message keeps author and time in its accessible name.",
+			Description: "Message with avatar, name, time and a Bubble. In consecutive messages from the same author, only the first shows the header, but every message keeps author and time in its accessible name.",
 			Examples: []Example{
 				{
 					Title: "Short conversation",
@@ -154,7 +154,7 @@ func catalog() []Component {
 			Slug:        "attachment",
 			Name:        "Attachment",
 			Category:    CategoryDataDisplay,
-			Description: "File or image in a composer, a message or an upload list, with its state in text (uploading, processing, error, done) as well as the bar. The name only becomes a link once the file is ready; the actions stay reachable, especially on error. AttachmentGroup scrolls horizontally.",
+			Description: "File or image in a composer, a message or an upload list, with its state shown as text (uploading, processing, error, done), not only as a progress bar. The name only becomes a link once the file is ready; the actions stay reachable, especially on error. AttachmentGroup scrolls horizontally.",
 			Examples: []Example{
 				{
 					Title: "The four states",
@@ -170,7 +170,7 @@ func catalog() []Component {
 			Slug:        "message-scroller",
 			Name:        "Message Scroller",
 			Category:    CategoryDataDisplay,
-			Description: "Conversation transcript that behaves like a chat: it follows new messages only if you are at the bottom, shows \"Jump to the end\" (with how many arrived) when you have scrolled up, and keeps your position when older messages are added at the top. It does not care how messages arrive: it watches its own content. role=log, polite.",
+			Description: "Conversation transcript that behaves like a chat: it follows new messages only if you are at the bottom, shows \"Jump to latest\" (with how many arrived) when you have scrolled up, and keeps your position when older messages are added at the top. It does not care how messages arrive: it watches its own content. Uses role=log with aria-live=polite.",
 			Examples: []Example{
 				{
 					Title: "New via HTMX, older at the top, and streaming",
@@ -197,7 +197,7 @@ func catalog() []Component {
 		},
 		{
 			Slug:        "input",
-			Name:        "Text input",
+			Name:        "Input",
 			Category:    CategoryDataInput,
 			Description: "Text field with a label associated by id. Accepts any native type.",
 			Examples: []Example{
@@ -322,7 +322,7 @@ func catalog() []Component {
 			Slug:        "footer",
 			Name:        "Footer",
 			Category:    CategoryLayout,
-			Description: "Structural footer with link columns and a note line. It announces itself as a navigation landmark even when nested, and hands its links to Link to inherit href sanitizing.",
+			Description: "Structural footer with link columns and a note line. It keeps the contentinfo landmark even when nested (explicit role), and passes its links to Link so they inherit href sanitizing.",
 			Examples: []Example{
 				{
 					Title: "Columns and note",
@@ -434,7 +434,7 @@ func catalog() []Component {
 			Slug:        "drawer",
 			Name:        "Drawer",
 			Category:    CategoryActions,
-			Description: "Modal panel that slides in from the side or from the bottom (Side: \"bottom\"). Same primitive as Modal — trapped focus, locked scroll, inert content behind — because a panel that lets Tab escape is worse than a dialog doing the same: the page looks like it is still usable.",
+			Description: "Modal panel that slides in from the side or from the bottom (Side: \"bottom\"). Same primitive as Modal — trapped focus, locked scroll, inert content behind. A side panel that lets Tab escape is even worse than a dialog that does, because the page behind still looks usable.",
 			Examples: []Example{
 				{
 					Title: "Left and right",
@@ -490,7 +490,7 @@ func catalog() []Component {
 			Slug:        "sidebar",
 			Name:        "Sidebar",
 			Category:    CategoryNavigation,
-			Description: "Application frame: grouped side navigation with the content next to it. It collapses to icons only (the names remain for screen readers and in the title) and remembers the choice; on a phone it becomes a Menu button that opens the same navigation in a modal Drawer.",
+			Description: "Application frame: grouped side navigation with the content next to it. It collapses to icons only (labels stay available to screen readers and as a title tooltip) and remembers the choice; on a phone it becomes a Menu button that opens the same navigation in a modal Drawer.",
 			Examples: []Example{
 				{
 					Title: "App with two groups",
@@ -573,7 +573,7 @@ func catalog() []Component {
 			Slug:        "select",
 			Name:        "Select",
 			Category:    CategoryDataInput,
-			Description: "Single choice on top of the native <select> — the second deliberate exception to Alpine, after Range. It gets the native picker on mobile, type-ahead and full keyboard support; in exchange, the open options cannot be styled.",
+			Description: "Single choice built on the native <select> — the second deliberate exception to Alpine, after Range. It gets the native picker on mobile, type-ahead and full keyboard support; in exchange, the open options cannot be styled.",
 			Examples: []Example{
 				{
 					Title:  "With a value and with a placeholder",
@@ -615,7 +615,7 @@ func catalog() []Component {
 			Slug:        "calendar",
 			Name:        "Calendar",
 			Category:    CategoryDataInput,
-			Description: "A month grid for picking a day or a range, always visible on the page. The server builds the month; changing months fetches the neighbor and swaps only the calendar. APG keyboard pattern; month and weekday names, and the first day of the week, follow the locale.",
+			Description: "A month grid for picking a day or a range, always visible on the page. The server builds the month; changing months fetches the adjacent month and swaps only the calendar. APG keyboard pattern; month and weekday names, and the first day of the week, follow the locale.",
 			Examples: []Example{
 				{
 					Title: "Single day with a minimum, and a range",
@@ -676,7 +676,7 @@ func catalog() []Component {
 			Slug:        "textarea",
 			Name:        "Textarea",
 			Category:    CategoryDataInput,
-			Description: "Multi-line text field. With MaxLength it gets a counter that counts the way the browser does (an emoji counts as 2) and is already filled in by the server.",
+			Description: "Multi-line text field. With MaxLength it gets a counter that counts the way the browser's maxlength does (an emoji counts as 2), already filled in on the server render.",
 			Examples: []Example{
 				{
 					Title:  "With a counter, and disabled",
@@ -703,7 +703,7 @@ func catalog() []Component {
 		},
 		{
 			Slug:        "toggle-button",
-			Name:        "ToggleButton",
+			Name:        "Toggle Button",
 			Category:    CategoryDataInput,
 			Description: "Two-state button with aria-pressed, like bold in an editor. Not the same as Toggle, which is a settings switch. With Name, it submits its value only while pressed.",
 			Examples: []Example{
@@ -718,9 +718,9 @@ func catalog() []Component {
 		},
 		{
 			Slug:        "toggle-group",
-			Name:        "ToggleGroup",
+			Name:        "Toggle Group",
 			Category:    CategoryDataInput,
-			Description: "A set of ToggleButtons with a single Tab stop. Single presses at most one (and clicking the pressed one releases it); multiple toggles each one. The arrows move focus only.",
+			Description: "A set of ToggleButtons with a single Tab stop. In single mode at most one is pressed (clicking it again releases it); in multiple mode each toggles independently. Arrow keys move focus only.",
 			Examples: []Example{
 				{
 					Title: "Single and multiple",
@@ -798,7 +798,7 @@ func catalog() []Component {
 			Slug:        "collapse",
 			Name:        "Collapse",
 			Category:    CategoryDataDisplay,
-			Description: "Expandable area. The trigger is a real button — a clickable div does not take focus, does not respond to Enter or Space, and is announced as nothing.",
+			Description: "Expandable area. The trigger is a real button — a clickable div does not take focus, does not respond to Enter or Space, and exposes no role to screen readers.",
 			Examples: []Example{
 				{
 					Title:  "Closed and open",
@@ -853,10 +853,10 @@ func catalog() []Component {
 			Slug:        "timeline",
 			Name:        "Timeline",
 			Category:    CategoryDataDisplay,
-			Description: "Chronological timeline of events, with a rail connecting the markers.",
+			Description: "Chronological list of events, with a rail connecting the markers.",
 			Examples: []Example{
 				{
-					Title: "Events of a deploy",
+					Title: "Deploy events",
 					Code: `@components.Timeline(components.TimelineProps{Items: []components.TimelineItem{
   {Time: "09:00", Title: "Deploy started", Description: "build #481"},
   {Time: "09:04", Title: "Deploy finished", Variant: "success"},
@@ -981,7 +981,7 @@ func catalog() []Component {
 			Slug:        "progress",
 			Name:        "Progress",
 			Category:    CategoryFeedback,
-			Description: "Linear progress bar on top of the native <progress> element, which comes with accessibility built in.",
+			Description: "Linear progress bar built on the native <progress> element, which comes with accessibility built in.",
 			Examples: []Example{
 				{
 					Title:  "With a value",
@@ -1090,7 +1090,7 @@ func catalog() []Component {
 			Slug:        "range",
 			Name:        "Range",
 			Category:    CategoryDataInput,
-			Description: "Numeric slider. It is the only control in the set that keeps the native input visible — reimplementing dragging, touch and pointer capture would cost a lot for a worse result. Alpine only mirrors the value into the label.",
+			Description: "Numeric slider. Like Select and Date Picker, it keeps the native control visible: reimplementing dragging, touch and pointer capture would be a lot of work to end up worse than what the browser already does. Alpine only mirrors the value into the label.",
 			Examples: []Example{
 				{
 					Title:  "With a visible value",
@@ -1118,8 +1118,8 @@ func catalog() []Component {
 		{
 			Slug:        "tooltip",
 			Name:        "Tooltip",
-			Category:    CategoryLayout,
-			Description: "Contextual hint. It opens on hover and also on focus, closes with Escape, and delivers its text through aria-describedby — styling alone delivers it to no one.",
+			Category:    CategoryDataDisplay,
+			Description: "Contextual hint. It opens on hover and also on focus, closes with Escape, and exposes its text through aria-describedby; a hint that exists only visually never reaches screen reader users.",
 			Examples: []Example{
 				{
 					Title:  "Placements",

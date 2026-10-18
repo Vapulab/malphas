@@ -196,18 +196,18 @@ func TestCollapseReopensAfterClosing(t *testing.T) {
 func TestCheckboxIndeterminateIsSetAndResolvesOnInteraction(t *testing.T) {
 	ctx := openPage(t, "/components/checkbox")
 
-	if !eval[bool](t, ctx, `document.getElementById('c-todos').indeterminate`) {
+	if !eval[bool](t, ctx, `document.getElementById('c-all').indeterminate`) {
 		t.Fatal("the indeterminate property was never applied")
 	}
 	if got := eval[string](t, ctx,
-		`document.querySelector('label[for="c-todos"] [role="checkbox"]').getAttribute('aria-checked')`); got != "mixed" {
+		`document.querySelector('label[for="c-all"] [role="checkbox"]').getAttribute('aria-checked')`); got != "mixed" {
 		t.Errorf("expected aria-checked=mixed, got %q", got)
 	}
 
-	click(t, ctx, `label[for="c-todos"]`)
+	click(t, ctx, `label[for="c-all"]`)
 	settle(t, ctx)
 
-	if eval[bool](t, ctx, `document.getElementById('c-todos').indeterminate`) {
+	if eval[bool](t, ctx, `document.getElementById('c-all').indeterminate`) {
 		t.Error("the third state survived a deliberate interaction, so the box lies about what it submits")
 	}
 }

@@ -8,7 +8,7 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "strconv"
+import "context"
 
 type AttachmentProps struct {
 	ID       string
@@ -26,12 +26,12 @@ type AttachmentProps struct {
 
 func (p AttachmentProps) state() string { return or(p.State, "idle") }
 
-func (p AttachmentProps) statusText() string {
+func (p AttachmentProps) statusText(ctx context.Context) string {
 	switch p.state() {
 	case "uploading":
-		return "Uploading " + strconv.Itoa(clampInt(p.Progress, 0, 100)) + "%"
+		return msg(ctx).UploadingStatus(clampInt(p.Progress, 0, 100))
 	case "processing":
-		return "Processing…"
+		return msg(ctx).ProcessingStatus
 	}
 	return ""
 }
@@ -252,9 +252,9 @@ func Attachment(props AttachmentProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 string
-		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(props.statusText())
+		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(props.statusText(ctx))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/attachment.templ`, Line: 75, Col: 80}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/attachment.templ`, Line: 75, Col: 83}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {

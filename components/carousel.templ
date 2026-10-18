@@ -38,8 +38,8 @@ templ Carousel(props CarouselProps) {
 			for i, slide := range props.Slides {
 				<div
 					role="group"
-					aria-roledescription="slide"
-					aria-label={ msg(ctx).OfTotal(i+1, len(props.Slides)) }
+					aria-roledescription={ msg(ctx).SlideRole }
+					aria-label={ msg(ctx).SlideOf(i+1, len(props.Slides)) }
 					class="w-full shrink-0 snap-start"
 				>
 					@slide

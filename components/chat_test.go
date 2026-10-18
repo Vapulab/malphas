@@ -127,7 +127,7 @@ func TestMessageScrollerIsALog(t *testing.T) {
 		`id="chat-content"`,
 		`x-data="messageScroller"`,
 		"[overflow-anchor:none]",
-		"Jump to the end",
+		"Jump to latest",
 		`style="display:none"`,
 	} {
 		if !strings.Contains(html, want) {

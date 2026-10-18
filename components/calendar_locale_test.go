@@ -17,8 +17,8 @@ func TestMonthAndDayLabels(t *testing.T) {
 		malphas.EN: {"October 2026", "Tuesday, October 20, 2026"},
 		malphas.PT: {"outubro de 2026", "terça-feira, 20 de outubro de 2026"},
 		malphas.ES: {"octubre de 2026", "martes, 20 de octubre de 2026"},
-		malphas.RU: {"октябрь 2026", "вторник, 20 октября 2026 г."},
-		malphas.ZH: {"2026年10月", "2026年10月20日星期二"},
+		malphas.RU: {"Октябрь 2026", "вторник, 20 октября 2026 года"},
+		malphas.ZH: {"2026年10月", "2026年10月20日 星期二"},
 	}
 	for l, want := range cases {
 		if got := monthLabel(in(l), d); got != want[0] {

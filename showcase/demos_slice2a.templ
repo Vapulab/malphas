@@ -20,7 +20,7 @@ templ demoCheckbox() {
 
 templ demoCheckboxIndeterminate() {
 	<div class="flex flex-col gap-3">
-		@components.Checkbox(components.CheckboxProps{ID: "c-todos", Name: "todos", Label: "Select all", Indeterminate: true})
+		@components.Checkbox(components.CheckboxProps{ID: "c-all", Name: "all", Label: "Select all", Indeterminate: true})
 		<div class="ml-6 flex flex-col gap-3">
 			@components.Checkbox(components.CheckboxProps{ID: "c-a", Name: "item", Value: "a", Label: "Item A", Checked: true})
 			@components.Checkbox(components.CheckboxProps{ID: "c-b", Name: "item", Value: "b", Label: "Item B"})

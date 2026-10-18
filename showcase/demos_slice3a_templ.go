@@ -101,7 +101,7 @@ func demoDrawer() templ.Component {
 				{Label: "Home", Href: "/", Current: true},
 				{Label: "Components", Href: "/"},
 				components.MenuDivider(),
-				{Label: "All", Href: "/todos"},
+				{Label: "All", Href: "/all"},
 			}}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -206,7 +206,7 @@ func demoMenu() templ.Component {
 			Entries: []components.MenuEntry{
 				{Label: "Home", Href: "/", Current: true},
 				{Label: "Components", Href: "/"},
-				{Label: "All", Href: "/todos"},
+				{Label: "All", Href: "/all"},
 				components.MenuDivider(),
 				{Label: "Sign out", OnClick: "$dispatch('demo-logout')"},
 			},
@@ -310,7 +310,7 @@ func demoNavbar() templ.Component {
 			DrawerID: "demo-navbar-drawer",
 			Entries: []components.MenuEntry{
 				{Label: "Components", Href: "/", Current: true},
-				{Label: "All", Href: "/todos"},
+				{Label: "All", Href: "/all"},
 			},
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var10), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -330,7 +330,7 @@ func demoNavbar() templ.Component {
 			ctx = templ.InitializeContext(ctx)
 			templ_7745c5c3_Err = components.Menu(components.MenuProps{Entries: []components.MenuEntry{
 				{Label: "Components", Href: "/", Current: true},
-				{Label: "All", Href: "/todos"},
+				{Label: "All", Href: "/all"},
 			}}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

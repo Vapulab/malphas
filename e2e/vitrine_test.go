@@ -13,7 +13,7 @@ import (
 // Alpine expression that throws, a script that assumes it owns the page —
 // shows up as a console error.
 func TestVitrineLoadsWithoutErrors(t *testing.T) {
-	ctx := openPage(t, "/components/todos")
+	ctx := openPage(t, "/components/all")
 	var errs []string
 	chromedp.ListenTarget(ctx, func(ev any) {
 		switch e := ev.(type) {
@@ -25,7 +25,7 @@ func TestVitrineLoadsWithoutErrors(t *testing.T) {
 			}
 		}
 	})
-	navigate(t, ctx, "/components/todos")
+	navigate(t, ctx, "/components/all")
 	sleep(t, ctx, 800)
 	if len(errs) != 0 {
 		t.Errorf("the showcase logged %d error(s)/warning(s): %v", len(errs), errs)
@@ -38,11 +38,11 @@ func TestVitrineLoadsWithoutErrors(t *testing.T) {
 // The server-driven demos find their regions by id; on the showcase they must
 // still swap in place rather than navigate away.
 func TestVitrineServerDrivenDemosWork(t *testing.T) {
-	ctx := openPage(t, "/components/todos")
+	ctx := openPage(t, "/components/all")
 
 	click(t, ctx, `#dt-protocolos-sort-etapas`)
 	sleep(t, ctx, 600)
-	if loc := eval[string](t, ctx, `location.pathname`); loc != "/components/todos" && loc != "/components/data-table" {
+	if loc := eval[string](t, ctx, `location.pathname`); loc != "/components/all" && loc != "/components/data-table" {
 		t.Fatalf("unexpected navigation to %q", loc)
 	}
 	if !eval[bool](t, ctx, `!!document.querySelector('#c-data-table th[aria-sort="ascending"] #dt-protocolos-sort-etapas')`) {
@@ -57,7 +57,7 @@ func TestVitrineServerDrivenDemosWork(t *testing.T) {
 }
 
 func TestVitrineInteractiveDemosWork(t *testing.T) {
-	ctx := openPage(t, "/components/todos")
+	ctx := openPage(t, "/components/all")
 
 	focus(t, ctx, "#cb-estado")
 	eval[bool](t, ctx, `(document.querySelector('#cb-estado').select(), true)`)
