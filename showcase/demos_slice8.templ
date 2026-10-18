@@ -1,0 +1,123 @@
+package showcase
+
+import "github.com/vapulab/malphas/components"
+
+templ demoBubble() {
+	<div role="group" aria-label="Conversa de exemplo" class="flex max-w-md flex-col gap-1 rounded-lg border border-border bg-surface p-4">
+		@components.Bubble(components.BubbleProps{Group: "first"}) {
+			A curva do ciclo 32 saiu acima do limiar.
+		}
+		@components.Bubble(components.BubbleProps{Group: "last", Reactions: []components.BubbleReaction{{Emoji: "👀", Label: "Vendo", Count: 2}}}) {
+			Repito a corrida amanhã cedo?
+		}
+		@components.Bubble(components.BubbleProps{Variant: "primary", Align: "end"}) {
+			Repete, e separa uma alíquota de controle.
+		}
+		@components.Bubble(components.BubbleProps{Variant: "outline"}) {
+			Citação: "separa uma alíquota de controle"
+		}
+	</div>
+}
+
+templ demoMarker() {
+	<div class="flex max-w-md flex-col gap-2">
+		@components.Marker(components.MarkerProps{Variant: "separator"}) {
+			Ontem
+		}
+		@components.Marker(components.MarkerProps{Icon: "●"}) {
+			Ana Lima entrou na conversa
+		}
+		@components.Marker(components.MarkerProps{Variant: "border", Status: true, Icon: "⟳"}) {
+			Gerando o resumo do protocolo…
+		}
+	</div>
+}
+
+templ demoMessage() {
+	<div role="group" aria-label="Conversa de exemplo" class="flex max-w-lg flex-col rounded-lg border border-border bg-surface p-4">
+		@components.Message(components.MessageProps{Author: "Ana Lima", Initials: "AL", Time: "14:02", Datetime: "2026-10-10T14:02", Group: "first"}) {
+			A curva do ciclo 32 saiu acima do limiar.
+		}
+		@components.Message(components.MessageProps{Author: "Ana Lima", Initials: "AL", Time: "14:02", Datetime: "2026-10-10T14:02", Group: "last"}) {
+			Repito a corrida amanhã cedo?
+		}
+		@components.Message(components.MessageProps{Author: "Você", Initials: "VC", Time: "14:05", Datetime: "2026-10-10T14:05", Align: "end", Reactions: []components.BubbleReaction{{Emoji: "👍", Label: "Curtir", Count: 1}}}) {
+			Repete, e separa uma alíquota de controle.
+		}
+	</div>
+}
+
+templ demoAttachmentRemove(name string) {
+	<button type="button" aria-label={ "Remover " + name } class="rounded px-1.5 text-muted hover:bg-muted/10 hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50">&times;</button>
+}
+
+templ demoAttachmentRetry(name string) {
+	<button type="button" aria-label={ "Tentar de novo: " + name } class="rounded px-2 py-1 text-xs font-medium text-primary hover:bg-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50">Tentar de novo</button>
+}
+
+templ demoAttachment() {
+	@components.AttachmentGroup(components.AttachmentGroupProps{
+		Label: "Anexos da mensagem",
+		Items: []components.AttachmentProps{
+			{Name: "protocolo-v2.pdf", Meta: "PDF · 2,4 MB", State: "done", Href: "/components/attachment", Actions: demoAttachmentRemove("protocolo-v2.pdf")},
+			{Name: "curva-ciclo-32.png", Meta: "PNG · 840 KB", State: "uploading", Progress: 45, Actions: demoAttachmentRemove("curva-ciclo-32.png")},
+			{Name: "resultados.csv", Meta: "CSV · 12 KB", State: "processing"},
+			{Name: "amostras.xlsx", Meta: "XLSX · 1,1 MB", State: "error", Error: "Falha na conexão.", Actions: demoAttachmentRetry("amostras.xlsx")},
+		},
+	})
+}
+
+// ChatMessageView renders one demo message; the demo endpoint answers with it.
+templ ChatMessageView(m ChatMessage) {
+	@components.Message(components.MessageProps{
+		Author: m.Author, Initials: m.Initials, Time: m.Time,
+		Align: map[bool]string{true: "end", false: "start"}[m.Mine],
+	}) {
+		{ m.Text }
+	}
+}
+
+const chatEndpoint = "/components/message-scroller/mensagem"
+
+templ demoMessageScroller() {
+	// x-data: the streaming button's x-on:click needs an Alpine scope above
+	// it, or Alpine ignores the directive without a word.
+	<div class="flex flex-col gap-3" x-data>
+		<p class="text-sm text-muted">
+			Role para cima e peça novas mensagens: sua posição fica, e o botão conta o que
+			chegou. "Carregar anteriores" entra no topo sem empurrar o que você lê.
+		</p>
+		<div class="flex flex-wrap gap-2">
+			@components.Button(components.ButtonProps{Size: "sm", Attrs: templ.Attributes{
+				"id": "chat-nova", "hx-get": chatEndpoint, "hx-target": "#chat-demo-content", "hx-swap": "beforeend",
+			}}) {
+				Receber mensagem
+			}
+			@components.Button(components.ButtonProps{Size: "sm", Variant: "secondary", Attrs: templ.Attributes{
+				"id": "chat-antigas", "hx-get": chatEndpoint + "?antes=1", "hx-target": "#chat-demo-content", "hx-swap": "afterbegin",
+				// Marks this as a history load: the log stays quiet for it.
+				"data-history": true,
+			}}) {
+				Carregar anteriores
+			}
+			@components.Button(components.ButtonProps{Size: "sm", Variant: "secondary", Attrs: templ.Attributes{
+				"id":         "chat-stream",
+				// The streaming message is aria-busy while it grows, so a screen
+				// reader announces it once, complete, instead of word by word.
+				"x-on:click": "const m = [...document.querySelectorAll('#chat-demo-content [data-message]')].at(-1); if (m) { const b = m.querySelector('[data-bubble-content]'); m.setAttribute('aria-busy', 'true'); let i = 0; const t = setInterval(() => { b.append(' palavra'); if (++i >= 30) { clearInterval(t); m.removeAttribute('aria-busy') } }, 60) }",
+			}}) {
+				Simular streaming
+			}
+		</div>
+		<div class="h-96 overflow-hidden rounded border border-border">
+			@components.MessageScroller(components.MessageScrollerProps{ID: "chat-demo", Label: "Conversa do laboratório"}) {
+				@components.Marker(components.MarkerProps{Variant: "separator"}) {
+					Hoje
+				}
+				for i := 0; i < 12; i++ {
+					@ChatMessageView(DemoChatMessage(i))
+				}
+			}
+		</div>
+	</div>
+}

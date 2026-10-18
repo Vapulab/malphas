@@ -1,0 +1,27 @@
+package e2e
+
+import (
+	"github.com/vapulab/malphas/layout"
+)
+
+// Frame is the chrome the catalog runs in during the browser tests: a header
+// and a main, as on any real host. Tests rely on both landmarks; the Sidebar
+// drawer, for one, has to make the header inert.
+func Frame(title string, wide bool, body templ.Component) templ.Component {
+	width := "max-w-5xl"
+	if wide {
+		width = "max-w-7xl"
+	}
+	return layout.Base(layout.BaseProps{Title: title, Body: shell(width, body)})
+}
+
+templ shell(width string, body templ.Component) {
+	<header class="border-b border-border">
+		<nav class={ "mx-auto flex items-center gap-4 px-4 py-3", width } aria-label="Malphas">
+			<a href="/components" class="text-sm text-muted hover:text-fg">Componentes</a>
+		</nav>
+	</header>
+	<main class={ "mx-auto px-4 py-8", width }>
+		@body
+	</main>
+}

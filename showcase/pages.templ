@@ -1,0 +1,100 @@
+package showcase
+
+// The catalog pages render only their body. The host wraps them in its own
+// chrome through the Frame given to Handler.
+
+// IndexPage lists every registered component, grouped by category.
+templ IndexPage(groups []Group) {
+	<h1 class="text-2xl font-bold text-fg">Componentes</h1>
+	<p class="mt-1 text-muted">
+		Documentação viva do design system Malphas.
+		<a href="/components/todos" class="font-medium text-primary underline-offset-2 hover:underline">Ver todos funcionando numa página só</a>
+	</p>
+	for _, g := range groups {
+		<section class="mt-10">
+			<h2 class="mb-4 text-sm font-semibold uppercase tracking-wide text-muted">{ g.Category }</h2>
+			<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				for _, c := range g.Components {
+					<a
+						href={ templ.SafeURL("/components/" + c.Slug) }
+						class="rounded border border-border bg-surface p-4 transition-colors hover:border-primary"
+					>
+						<h3 class="font-medium text-fg">{ c.Name }</h3>
+						<p class="mt-1 line-clamp-2 text-sm text-muted">{ c.Description }</p>
+					</a>
+				}
+			</div>
+		</section>
+	}
+}
+
+templ example(ex Example) {
+	<section class="mt-8">
+		<h3 class="mb-3 text-sm font-semibold text-fg">{ ex.Title }</h3>
+		<div class="rounded border border-border bg-surface p-6">
+			@ex.Render
+		</div>
+		if ex.Code != "" {
+			<pre class="mt-2 overflow-x-auto rounded border border-border bg-muted/5 p-4 text-xs leading-relaxed text-fg"><code>{ ex.Code }</code></pre>
+		}
+	</section>
+}
+
+// ComponentPage is one component: its description and every example.
+templ ComponentPage(c Component) {
+	<nav class="text-sm text-muted">
+		<a href="/" class="hover:text-fg">Componentes</a>
+		<span class="mx-2">/</span>
+		<span class="text-fg">{ c.Name }</span>
+	</nav>
+	<h1 class="mt-2 text-2xl font-bold text-fg">{ c.Name }</h1>
+	<p class="mt-1 max-w-2xl text-muted">{ c.Description }</p>
+	for _, ex := range c.Examples {
+		@example(ex)
+	}
+}
+
+// AllPage is the vitrine: every component, live, on one page — no cards,
+// no code, just the components themselves under a small heading, with a
+// sticky index to jump around. It reuses each component's catalog examples,
+// so a new component shows up here with no extra work.
+templ AllPage(groups []Group) {
+	<div class="lg:grid lg:grid-cols-[13rem_1fr] lg:gap-10">
+		<nav aria-label="Índice da vitrine" class="hidden lg:block">
+			<div class="sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto pr-2 text-sm [scrollbar-color:rgb(var(--color-muted)/0.5)_transparent] [scrollbar-width:thin]">
+				for _, g := range groups {
+					<p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-muted first:mt-0">{ g.Category }</p>
+					<ul class="flex flex-col">
+						for _, c := range g.Components {
+							<li>
+								<a href={ templ.SafeURL("#c-" + c.Slug) } class="block rounded px-2 py-1 text-muted hover:bg-muted/10 hover:text-fg">{ c.Name }</a>
+							</li>
+						}
+					</ul>
+				}
+			</div>
+		</nav>
+		<div class="min-w-0">
+			<h1 class="text-2xl font-bold text-fg">Vitrine</h1>
+			<p class="mt-1 text-muted">Todos os componentes do Malphas, funcionando, numa página só.</p>
+			for _, g := range groups {
+				<section aria-labelledby={ "cat-" + categorySlug(g.Category) } class="mt-12">
+					<h2 id={ "cat-" + categorySlug(g.Category) } class="border-b border-border pb-2 text-sm font-semibold uppercase tracking-wide text-muted">{ g.Category }</h2>
+					for _, c := range g.Components {
+						<section id={ "c-" + c.Slug } aria-labelledby={ "c-" + c.Slug + "-title" } class="mt-10 scroll-mt-6">
+							<h3 id={ "c-" + c.Slug + "-title" } class="mb-4 flex items-baseline gap-3 text-base font-semibold text-fg">
+								{ c.Name }
+								<a href={ templ.SafeURL("/components/" + c.Slug) } class="text-xs font-normal text-muted hover:text-primary">documentação</a>
+							</h3>
+							<div class="flex flex-col gap-6">
+								for _, ex := range c.Examples {
+									@ex.Render
+								}
+							</div>
+						</section>
+					}
+				</section>
+			}
+		</div>
+	</div>
+}

@@ -1,0 +1,27 @@
+package showcase
+
+import "github.com/vapulab/malphas/components"
+
+// Toast dismisses itself after 3s; the wrapper unmounts it slightly later so
+// the button can show it again.
+templ demoToast() {
+	<div x-data="{ shown: false }">
+		@components.Button(components.ButtonProps{Variant: "secondary", Attrs: templ.Attributes{"x-on:click": "shown = true; setTimeout(() => shown = false, 3200)"}}) {
+			Mostrar toast
+		}
+		<template x-if="shown">
+			@components.Toast(components.ToastProps{Message: "Alterações salvas", Variant: "success"})
+		</template>
+	</div>
+}
+
+templ demoToastError() {
+	<div x-data="{ shown: false }">
+		@components.Button(components.ButtonProps{Variant: "secondary", Attrs: templ.Attributes{"x-on:click": "shown = true; setTimeout(() => shown = false, 3200)"}}) {
+			Mostrar erro
+		}
+		<template x-if="shown">
+			@components.Toast(components.ToastProps{Message: "Não foi possível salvar", Variant: "error"})
+		</template>
+	</div>
+}

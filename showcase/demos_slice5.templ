@@ -1,0 +1,201 @@
+package showcase
+
+import "github.com/vapulab/malphas/components"
+
+templ demoPopover() {
+	<div class="flex flex-col gap-4">
+		<p class="text-sm text-muted">
+			O foco entra no painel ao abrir. Escape fecha e devolve o foco ao botão; Tab
+			percorre o conteúdo e segue para a página, fechando o painel.
+		</p>
+		<div class="flex flex-wrap gap-4">
+			@components.Popover(components.PopoverProps{ID: "pop-filtros", Label: "Filtros", Title: "Filtros da busca"}) {
+				<div class="flex flex-col gap-3">
+					@components.Input(components.InputProps{ID: "pop-autor", Name: "autor", Label: "Autor"})
+					@components.Checkbox(components.CheckboxProps{ID: "pop-recentes", Name: "recentes", Label: "Só os últimos 30 dias"})
+				</div>
+			}
+			<div x-data>
+				@components.Button(components.ButtonProps{Variant: "secondary", Attrs: templ.Attributes{
+					"id": "abrir-modal-popover", "x-on:click": "$dispatch('open-modal', 'modal-popover')",
+				}}) {
+					Popover dentro de um modal
+				}
+			</div>
+		</div>
+		@components.Modal(components.ModalProps{ID: "modal-popover", Title: "Editar protocolo"}) {
+			<p class="mb-4 text-sm text-muted">Escape com o popover aberto fecha só o popover.</p>
+			@components.Popover(components.PopoverProps{ID: "pop-no-modal", Label: "Ajuda"}) {
+				<p class="text-sm text-fg">O protocolo é salvo a cada etapa concluída.</p>
+			}
+		}
+	</div>
+}
+
+templ demoHoverCard() {
+	<p class="text-sm text-fg">
+		// templ trims the whitespace around a component call; the spaces in
+		// the sentence have to be explicit.
+		Protocolo revisado por{ " " }
+		@components.HoverCard(components.HoverCardProps{ID: "hc-lincoln", Label: "@lincoln", Href: "/components/hover-card"}) {
+			<span class="flex flex-col gap-1">
+				<span class="text-sm font-semibold text-fg">Lincoln Santos</span>
+				<span class="text-sm text-muted">Pesquisador · 42 protocolos publicados</span>
+			</span>
+		}
+		{ " " }ontem às 18h.
+	</p>
+}
+
+templ demoAlertDialog() {
+	<div class="flex flex-col gap-4">
+		<p class="text-sm text-muted">
+			O foco começa em Cancelar. Clicar fora não fecha: só as duas respostas ou Escape.
+		</p>
+		<div class="flex items-center gap-4" x-data>
+			@components.Button(components.ButtonProps{Variant: "danger", Attrs: templ.Attributes{
+				"id": "abrir-ad", "x-on:click": "$dispatch('open-alert-dialog', 'ad-excluir')",
+			}}) {
+				Excluir protocolo
+			}
+			<span id="ad-resultado" class="text-sm text-muted" aria-live="polite"></span>
+		</div>
+		@components.AlertDialog(components.AlertDialogProps{
+			ID:           "ad-excluir",
+			Title:        "Excluir o protocolo?",
+			Description:  "As etapas e os resultados vão junto. Não dá para desfazer.",
+			ConfirmLabel: "Excluir",
+			ConfirmAttrs: templ.Attributes{"x-on:click": "document.getElementById('ad-resultado').textContent = 'excluído'"},
+		})
+		<div x-data>
+			@components.Button(components.ButtonProps{Variant: "secondary", Attrs: templ.Attributes{
+				"id": "abrir-md-editar", "x-on:click": "$dispatch('open-modal', 'md-editar')",
+			}}) {
+				Confirmação sobre um modal
+			}
+		</div>
+		@components.Modal(components.ModalProps{ID: "md-editar", Title: "Editar protocolo"}) {
+			<p class="mb-4 text-sm text-muted">Escape fecha só a confirmação; o formulário continua aberto.</p>
+			<div x-data>
+				@components.Button(components.ButtonProps{Variant: "danger", Attrs: templ.Attributes{
+					"id": "abrir-ad-descartar", "x-on:click": "$dispatch('open-alert-dialog', 'ad-descartar')",
+				}}) {
+					Descartar alterações
+				}
+			</div>
+		}
+		@components.AlertDialog(components.AlertDialogProps{
+			ID: "ad-descartar", Title: "Descartar as alterações?", Description: "O que você editou neste protocolo será perdido.",
+			ConfirmLabel: "Descartar",
+		})
+	</div>
+}
+
+templ demoContextMenu() {
+	<div class="flex flex-col gap-3">
+		@components.ContextMenu(components.ContextMenuProps{
+			ID: "cm-arquivo", Label: "Ações do arquivo",
+			Entries: []components.MenuEntry{
+				{Label: "Renomear", OnClick: "document.getElementById('cm-resultado').textContent = 'renomear'"},
+				{Label: "Duplicar", OnClick: "document.getElementById('cm-resultado').textContent = 'duplicar'"},
+				components.MenuDivider(),
+				{Label: "Excluir", OnClick: "document.getElementById('cm-resultado').textContent = 'excluir'"},
+			},
+		}) {
+			<div class="flex h-32 w-full items-center justify-center rounded border border-dashed border-border text-sm text-muted">
+				relatorio-trimestral.pdf — clique com o botão direito
+			</div>
+		}
+		<p class="text-sm text-muted">Última ação: <span id="cm-resultado" aria-live="polite">nenhuma</span></p>
+	</div>
+}
+
+func mbSet(what string) string {
+	return "document.getElementById('mb-resultado').textContent = '" + what + "'"
+}
+
+templ demoMenubar() {
+	<div class="flex flex-col gap-3">
+		@components.Menubar(components.MenubarProps{
+			Label: "Editor de protocolo",
+			Menus: []components.MenubarMenu{
+				{Label: "Arquivo", Entries: []components.MenuEntry{
+					{Label: "Novo protocolo", OnClick: mbSet("novo")},
+					{Label: "Abrir…", OnClick: mbSet("abrir")},
+					components.MenuDivider(),
+					{Label: "Exportar PDF", OnClick: mbSet("exportar")},
+				}},
+				{Label: "Editar", Entries: []components.MenuEntry{
+					{Label: "Desfazer", OnClick: mbSet("desfazer")},
+					{Label: "Refazer", OnClick: mbSet("refazer"), Disabled: true},
+					{Label: "Duplicar etapa", OnClick: mbSet("duplicar")},
+				}},
+				{Label: "Exibir", Entries: []components.MenuEntry{
+					{Label: "Modo foco", OnClick: mbSet("foco")},
+					{Label: "Mostrar comentários", OnClick: mbSet("comentarios")},
+				}},
+			},
+		})
+		<p class="text-sm text-muted">Última ação: <span id="mb-resultado" aria-live="polite">nenhuma</span></p>
+	</div>
+}
+
+func cmdSet(what string) string {
+	return "document.getElementById('cmd-resultado').textContent = '" + what + "'"
+}
+
+templ demoCommand() {
+	<div class="flex flex-col gap-3">
+		<div class="flex flex-wrap items-center gap-3" x-data>
+			@components.Button(components.ButtonProps{Variant: "secondary", Attrs: templ.Attributes{
+				"id": "abrir-cmd", "x-on:click": "$dispatch('open-command', 'cmd-paleta')",
+			}}) {
+				Abrir paleta
+			}
+			<span class="text-sm text-muted">
+				ou
+				@components.Kbd(components.KbdProps{}) {
+					Ctrl
+				}
+				+
+				@components.Kbd(components.KbdProps{}) {
+					K
+				}
+			</span>
+		</div>
+		<p class="text-sm text-muted">Último comando: <span id="cmd-resultado" aria-live="polite">nenhum</span></p>
+		@components.Command(components.CommandProps{
+			ID: "cmd-paleta", Placeholder: "Busque um comando ou página…", Hotkey: true,
+			Groups: []components.CommandGroup{
+				{Heading: "Ações", Items: []components.CommandItem{
+					{Label: "Alternar tema", OnClick: cmdSet("alternar tema"), Shortcut: "Ctrl T"},
+					{Label: "Tema do sistema", OnClick: cmdSet("tema do sistema")},
+					{Label: "Novo protocolo", OnClick: cmdSet("novo protocolo"), Shortcut: "Ctrl N"},
+					{Label: "Sair", OnClick: cmdSet("sair"), Disabled: true},
+				}},
+				{Heading: "Páginas", Items: []components.CommandItem{
+					{Label: "Todos os componentes", Href: "/components"},
+					{Label: "Combobox", Href: "/components/combobox"},
+				}},
+			},
+		})
+	</div>
+}
+
+templ demoDrawerBottom() {
+	<div x-data>
+		@components.Button(components.ButtonProps{Variant: "secondary", Attrs: templ.Attributes{
+			"id": "abrir-drawer-bottom", "x-on:click": "$dispatch('open-drawer', 'demo-drawer-bottom')",
+		}}) {
+			Abrir por baixo
+		}
+	</div>
+	@components.Drawer(components.DrawerProps{ID: "demo-drawer-bottom", Title: "Compartilhar protocolo", Side: "bottom"}) {
+		<div class="flex flex-col gap-4">
+			@components.Input(components.InputProps{ID: "db-email", Name: "email", Label: "Email de quem recebe", Type: "email"})
+			@components.Button(components.ButtonProps{Size: "sm"}) {
+				Enviar convite
+			}
+		</div>
+	}
+}

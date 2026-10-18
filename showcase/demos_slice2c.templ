@@ -1,0 +1,87 @@
+package showcase
+
+import "github.com/vapulab/malphas/components"
+
+templ demoCollapse() {
+	<div class="flex max-w-lg flex-col gap-3">
+		@components.Collapse(components.CollapseProps{ID: "col-1", Title: "O que vem no boilerplate?"}) {
+			<p>chi, templ, Tailwind, HTMX e Alpine, com Postgres via pgx e sqlc.</p>
+		}
+		@components.Collapse(components.CollapseProps{ID: "col-2", Title: "Já começa aberto", Open: true}) {
+			<p>O estado inicial vem do servidor, então não pisca ao carregar.</p>
+		}
+	</div>
+}
+
+templ demoAccordion() {
+	<div class="max-w-lg">
+		@components.Accordion(components.AccordionProps{
+			ID: "faq",
+			Items: []components.AccordionItem{
+				{Title: "Precisa de Node?", Content: accordionNode()},
+				{Title: "Dá para usar o design system em outro projeto?", Content: accordionReuse(), Open: true},
+				{Title: "Funciona sem JavaScript?", Content: accordionNoJS()},
+			},
+		})
+	</div>
+}
+
+templ demoAccordionExclusive() {
+	<div class="max-w-lg">
+		@components.Accordion(components.AccordionProps{
+			ID:        "faq-x",
+			Exclusive: true,
+			Items: []components.AccordionItem{
+				{Title: "Primeiro", Content: accordionExclusiveNote()},
+				{Title: "Segundo", Content: accordionExclusiveNote()},
+				{Title: "Terceiro", Content: accordionExclusiveNote()},
+			},
+		})
+	</div>
+}
+
+templ accordionNode() {
+	<p>Não. O Tailwind roda pelo binário standalone, e HTMX e Alpine são vendorizados.</p>
+}
+
+templ accordionReuse() {
+	<p>Sim — é um módulo Go independente, versionável por tag.</p>
+}
+
+templ accordionNoJS() {
+	<p>O HTML é renderizado no servidor, mas os componentes desta fatia dependem de Alpine para interagir.</p>
+}
+
+templ accordionExclusiveNote() {
+	<p>Abrir este painel fecha os outros.</p>
+}
+
+templ demoTabs() {
+	@components.Tabs(components.TabsProps{
+		ID:    "conta",
+		Label: "Configurações da conta",
+		Items: []components.Tab{
+			{Label: "Perfil", Content: tabsPerfil()},
+			{Label: "Segurança", Content: tabsSeguranca()},
+			{Label: "Faturamento", Content: tabsFaturamento(), Disabled: true},
+		},
+	})
+}
+
+templ tabsPerfil() {
+	<div class="flex max-w-sm flex-col gap-4">
+		<p class="text-muted">Navegue entre as abas com as setas ← →. Home e End vão para as pontas, e a aba desabilitada é pulada.</p>
+		@components.Input(components.InputProps{ID: "tab-nome", Name: "nome", Label: "Nome", Value: "Lincoln"})
+	</div>
+}
+
+templ tabsSeguranca() {
+	<div class="flex max-w-sm flex-col gap-4">
+		@components.Toggle(components.ToggleProps{ID: "tab-2fa", Name: "2fa", Label: "Autenticação em dois fatores", Checked: true})
+		@components.Input(components.InputProps{ID: "tab-senha", Name: "senha", Type: "password", Label: "Nova senha"})
+	</div>
+}
+
+templ tabsFaturamento() {
+	<p class="text-muted">Disponível apenas no plano Pro.</p>
+}

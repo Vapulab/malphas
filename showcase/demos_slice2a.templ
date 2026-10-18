@@ -1,0 +1,92 @@
+package showcase
+
+import "github.com/vapulab/malphas/components"
+
+templ demoToggle() {
+	<div class="flex flex-col gap-4">
+		@components.Toggle(components.ToggleProps{ID: "t-notif", Name: "notif", Label: "Notificações por email"})
+		@components.Toggle(components.ToggleProps{ID: "t-beta", Name: "beta", Label: "Recursos beta", Checked: true})
+		@components.Toggle(components.ToggleProps{ID: "t-off", Name: "off", Label: "Indisponível no seu plano", Disabled: true})
+	</div>
+}
+
+templ demoCheckbox() {
+	<div class="flex flex-col gap-3">
+		@components.Checkbox(components.CheckboxProps{ID: "c-termos", Name: "termos", Value: "sim", Label: "Aceito os termos de uso"})
+		@components.Checkbox(components.CheckboxProps{ID: "c-news", Name: "news", Label: "Quero receber novidades", Checked: true})
+		@components.Checkbox(components.CheckboxProps{ID: "c-off", Name: "off", Label: "Desabilitado", Disabled: true})
+	</div>
+}
+
+templ demoCheckboxIndeterminate() {
+	<div class="flex flex-col gap-3">
+		@components.Checkbox(components.CheckboxProps{ID: "c-todos", Name: "todos", Label: "Selecionar todos", Indeterminate: true})
+		<div class="ml-6 flex flex-col gap-3">
+			@components.Checkbox(components.CheckboxProps{ID: "c-a", Name: "item", Value: "a", Label: "Item A", Checked: true})
+			@components.Checkbox(components.CheckboxProps{ID: "c-b", Name: "item", Value: "b", Label: "Item B"})
+		</div>
+	</div>
+}
+
+templ demoRadio() {
+	@components.Radio(components.RadioProps{
+		Name:  "plano",
+		Label: "Plano",
+		Value: "pro",
+		Options: []components.RadioOption{
+			{Label: "Grátis", Value: "free"},
+			{Label: "Pro", Value: "pro"},
+			{Label: "Enterprise", Value: "ent", Disabled: true},
+		},
+	})
+}
+
+templ demoRadioVertical() {
+	@components.Radio(components.RadioProps{
+		Name:     "entrega",
+		Label:    "Forma de entrega",
+		Value:    "normal",
+		Vertical: true,
+		Options: []components.RadioOption{
+			{Label: "Retirar na loja", Value: "loja"},
+			{Label: "Entrega padrão", Value: "normal"},
+			{Label: "Entrega expressa", Value: "express"},
+		},
+	})
+}
+
+templ demoRating() {
+	<div class="flex flex-col gap-4">
+		@components.Rating(components.RatingProps{Name: "nota", Value: 3})
+		@components.Rating(components.RatingProps{Name: "nota10", Value: 7, Max: 10})
+	</div>
+}
+
+templ demoRatingReadOnly() {
+	<div class="flex items-center gap-3">
+		@components.Rating(components.RatingProps{Value: 4, ReadOnly: true})
+		<span class="text-sm text-muted">4 de 5 — 128 avaliações</span>
+	</div>
+}
+
+// A real form, so the hidden inputs can be seen doing their job: submit and the
+// values show up as query parameters.
+templ demoFormSubmit() {
+	<form method="get" action="/components/toggle" class="flex flex-col items-start gap-4">
+		@components.Toggle(components.ToggleProps{ID: "f-toggle", Name: "toggle", Label: "Toggle"})
+		@components.Checkbox(components.CheckboxProps{ID: "f-check", Name: "check", Value: "sim", Label: "Checkbox"})
+		@components.Radio(components.RadioProps{
+			Name:  "radio",
+			Label: "Radio",
+			Value: "b",
+			Options: []components.RadioOption{
+				{Label: "A", Value: "a"},
+				{Label: "B", Value: "b"},
+			},
+		})
+		@components.Rating(components.RatingProps{Name: "rating", Value: 3})
+		@components.Button(components.ButtonProps{Type: "submit", Size: "sm"}) {
+			Enviar
+		}
+	</form>
+}

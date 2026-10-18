@@ -1,0 +1,114 @@
+package showcase
+
+import "github.com/vapulab/malphas/components"
+
+templ demoAlertVariants() {
+	<div class="flex flex-col gap-3">
+		@components.Alert(components.AlertProps{Variant: "info"}) {
+			<span>Uma migration nova está disponível.</span>
+		}
+		@components.Alert(components.AlertProps{Variant: "success"}) {
+			<span>Deploy concluído com sucesso.</span>
+		}
+		@components.Alert(components.AlertProps{Variant: "warning"}) {
+			<span>Seu token expira em 3 dias.</span>
+		}
+		@components.Alert(components.AlertProps{Variant: "error"}) {
+			<span>Não foi possível conectar ao banco.</span>
+		}
+	</div>
+}
+
+templ demoBadgeSolid() {
+	<div class="flex flex-wrap items-center gap-2">
+		@components.Badge(components.BadgeProps{}) {
+			Neutral
+		}
+		@components.Badge(components.BadgeProps{Variant: "primary"}) {
+			Primary
+		}
+		@components.Badge(components.BadgeProps{Variant: "success"}) {
+			Ativo
+		}
+		@components.Badge(components.BadgeProps{Variant: "warning"}) {
+			Pendente
+		}
+		@components.Badge(components.BadgeProps{Variant: "danger"}) {
+			Falhou
+		}
+		@components.Badge(components.BadgeProps{Variant: "info"}) {
+			Info
+		}
+	</div>
+}
+
+templ demoBadgeOutline() {
+	<div class="flex flex-wrap items-center gap-2">
+		@components.Badge(components.BadgeProps{Variant: "primary", Outline: true}) {
+			Primary
+		}
+		@components.Badge(components.BadgeProps{Variant: "success", Outline: true}) {
+			Ativo
+		}
+		@components.Badge(components.BadgeProps{Variant: "danger", Outline: true, Size: "sm"}) {
+			Small
+		}
+	</div>
+}
+
+templ demoKbd() {
+	<div class="flex flex-wrap items-center gap-2 text-sm text-muted">
+		@components.Kbd(components.KbdProps{}) {
+			Ctrl
+		}
+		<span>+</span>
+		@components.Kbd(components.KbdProps{}) {
+			K
+		}
+		<span class="ml-4">para buscar</span>
+	</div>
+}
+
+templ demoLink() {
+	<div class="flex flex-col items-start gap-2">
+		@components.Link(components.LinkProps{Href: "/todos"}) {
+			Link interno
+		}
+		@components.Link(components.LinkProps{Href: "/", Variant: "muted"}) {
+			Discreto
+		}
+		@components.Link(components.LinkProps{Href: "https://templ.guide", External: true, Underline: true}) {
+			templ.guide (nova aba)
+		}
+	</div>
+}
+
+templ demoDivider() {
+	<div>
+		<p class="text-muted">Acima</p>
+		@components.Divider(components.DividerProps{})
+		<p class="text-muted">Abaixo</p>
+		@components.Divider(components.DividerProps{Label: "ou"})
+		<div class="flex h-12 items-center">
+			<span class="text-muted">Esquerda</span>
+			@components.Divider(components.DividerProps{Vertical: true})
+			<span class="text-muted">Direita</span>
+		</div>
+	</div>
+}
+
+templ demoFooter() {
+	@components.Footer(components.FooterProps{
+		Note: "© 2026 Vapulab",
+		Columns: []components.FooterColumn{
+			{Title: "Produto", Links: []components.FooterLink{
+				{Label: "Componentes", Href: "/components"},
+			}},
+			{Title: "Código", Links: []components.FooterLink{
+				{Label: "GitHub", Href: "https://github.com/vapulab/malphas", External: true},
+			}},
+		},
+	}) {
+		<span class="font-semibold text-fg">vapulab</span>
+	}
+}

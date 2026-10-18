@@ -172,11 +172,60 @@ go vet ./...
 go test ./...
 ```
 
-Os testes daqui cobrem renderização, acessibilidade da marcação e o contrato
-entre os `.templ` e o `malphas.js`: cada `x-data="nome"` precisa de um
-`Alpine.data()` registrado. O comportamento no browser (teclado, foco,
-`FormData`) é exercitado pela suíte chromedp da aplicação que hospeda o
-catálogo.
+Esses testes cobrem renderização, acessibilidade da marcação, as páginas do
+catálogo e o contrato entre os `.templ` e o `malphas.js`: cada
+`x-data="nome"` precisa de um `Alpine.data()` registrado.
+
+### O catálogo
+
+`showcase/` é a documentação viva: um registry com cada componente e seus
+exemplos, as páginas que os mostram e um `http.Handler` que serve tudo em
+`/components`. É ele que roda em
+[malphas.vapulab.com/components](https://malphas.vapulab.com/components).
+Adicionar um componente ao catálogo é adicionar uma entrada no registry; os
+testes de rota, de renderização e a vitrine passam a cobri-lo sozinhos.
+
+Quem hospeda o catálogo entrega a moldura da página e acrescenta `showcase/` ao
+`content` do Tailwind:
+
+```go
+mux.Handle("/components", showcase.Handler(frame))
+mux.Handle("/components/", showcase.Handler(frame))
+```
+
+O `showcase/` fica fora de `components/` e `layout/` de propósito: as demos
+usam classes que nenhuma página real precisa, e um projeto que só usa os
+componentes nunca as compila.
+
+### Testes de browser
+
+`e2e/` dirige um Chrome de verdade contra o catálogo, via
+[chromedp](https://github.com/chromedp/chromedp), que fala CDP direto de Go,
+sem Node. Cobre o que nenhum teste de renderização alcança: setas movendo foco
+e seleção, foco preso nos modais e livre nos menus, Escape devolvendo o foco,
+scroll lock, `inert`, o `FormData` que o browser realmente envia, as demos que
+conversam com o servidor por HTMX.
+
+É um módulo à parte (Go 1.26, por causa do chromedp), para que nada disso
+chegue a quem faz `go get` do Malphas. Ele testa sempre o código desta árvore.
+
+```bash
+cd e2e
+tailwindcss -c tailwind.config.js -i input.css -o static/app.css --minify
+go test ./...
+CHROME_PATH=/caminho/do/chrome go test ./...
+```
+
+Sem Chrome ou sem o `app.css`, os testes **pulam** em vez de falhar, e dizem
+por quê. Duas coisas que valem saber ao mexer neles:
+
+- Usam o **headless novo** do Chrome. No headless antigo
+  `document.hasFocus()` é `false`, e o browser não emite eventos de foco para
+  um documento sem foco: componentes acionados por foco pareceriam quebrados
+  estando corretos.
+- Use `$root`, não `$el`, quando um método do Alpine procura algo "neste
+  componente". Dentro de um método chamado pelo handler de um filho, `$el` é o
+  filho, e a busca não encontra nada sem dar erro.
 
 ### Mexendo no Malphas a partir de um app
 
