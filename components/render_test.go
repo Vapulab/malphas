@@ -55,15 +55,15 @@ func TestCardRendersChildren(t *testing.T) {
 }
 
 func TestModalHasAlpineState(t *testing.T) {
-	html := renderWithChildren(t, components.Modal(components.ModalProps{ID: "edit", Title: "Editar"}), templ.Raw("body"))
-	if !strings.Contains(html, "x-data") || !strings.Contains(html, "Editar") {
+	html := renderWithChildren(t, components.Modal(components.ModalProps{ID: "edit", Title: "Edit"}), templ.Raw("body"))
+	if !strings.Contains(html, "x-data") || !strings.Contains(html, "Edit") {
 		t.Fatalf("expected alpine modal with title, got: %s", html)
 	}
 }
 
 func TestToastSuccess(t *testing.T) {
-	html := renderToString(t, components.Toast(components.ToastProps{Message: "Salvo", Variant: "success"}))
-	if !strings.Contains(html, "Salvo") {
+	html := renderToString(t, components.Toast(components.ToastProps{Message: "Saved", Variant: "success"}))
+	if !strings.Contains(html, "Saved") {
 		t.Fatalf("expected toast message, got: %s", html)
 	}
 }

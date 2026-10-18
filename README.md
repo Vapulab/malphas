@@ -1,37 +1,38 @@
 # Malphas
 
-Design system em Go: componentes **templ** estilizados com **Tailwind**, com
-comportamento em **Alpine** e prontos para **HTMX**. Sem Node/npm e sem CDN em
-runtime.
+A design system for Go: **templ** components styled with **Tailwind**, with
+behavior in **Alpine** and ready for **HTMX**. No Node/npm, no CDN at runtime.
 
-São 71 componentes, de Button e Modal a Data Table, Command e Sidebar. O
-catálogo vivo, com uma página por componente, está em
-[malphas.vapulab.com](https://malphas.vapulab.com).
+71 components, from Button and Modal to Data Table, Command and Sidebar. The
+live catalog, with a page per component, is at
+[malphas.vapulab.com](https://malphas.vapulab.com/components).
 
-O Malphas é a camada de UI da [Vapulab](https://vapulab.com).
+The components speak English by default and also Portuguese, Spanish,
+Russian and Chinese: see [Languages](#languages).
 
-## Usando em um projeto
+Malphas is the UI layer of [Vapulab](https://vapulab.com).
 
-### 1. Instale o módulo
+## Using it in a project
+
+### 1. Install the module
 
 ```bash
 go get github.com/vapulab/malphas@latest
 ```
 
-### 2. Aponte o Tailwind para o módulo
+### 2. Point Tailwind at the module
 
-Tailwind **v3**, CLI standalone ou via npm. A v4 remove os `presets` em JS,
-dos quais o Malphas depende.
+Tailwind **v3**, standalone CLI or npm. v4 drops JS `presets`, which Malphas
+relies on.
 
-O módulo fica no cache do Go, num caminho que muda de versão para versão e de
-máquina para máquina. O `tailwind.config.js` pergunta esse caminho ao próprio
-Go:
+The module lives in Go's cache, at a path that changes per version and per
+machine. `tailwind.config.js` asks Go for it:
 
 ```js
 const { execSync } = require("child_process");
 
-// split/join em vez de regex: o parser de config do Tailwind standalone
-// tropeça em /\\/g. As barras normais servem aos globs no Windows.
+// split/join rather than a regex: the standalone Tailwind config parser
+// trips on /\\/g. Forward slashes work for globs on Windows too.
 const malphasDir = execSync("go list -m -f {{.Dir}} github.com/vapulab/malphas")
   .toString()
   .trim()
@@ -48,9 +49,9 @@ module.exports = {
 };
 ```
 
-O preset entrega cores, raio e fontes ao Tailwind **e** injeta
-`theme/tokens.css` na camada base. O CSS de entrada só precisa das diretivas de
-sempre:
+The preset gives Tailwind the colors, radius and fonts **and** injects
+`theme/tokens.css` into the base layer. Your input CSS only needs the usual
+directives:
 
 ```css
 @tailwind base;
@@ -58,14 +59,15 @@ sempre:
 @tailwind utilities;
 ```
 
-Para trocar a paleta, redefina as variáveis `--color-*` no seu CSS, depois do
-`@tailwind base`. `theme/tokens.css` é a referência do que existe. Os dois
-blocos escuros precisam andar juntos: o CSS não permite compartilhar um bloco
-de declarações entre uma media query e um seletor.
+To change the palette, redefine the `--color-*` variables in your CSS, after
+`@tailwind base`. `theme/tokens.css` is the reference for what exists. The two
+dark blocks have to move together: CSS cannot share one block of declarations
+between a media query and a selector.
 
-### 3. Sirva os assets
+### 3. Serve the assets
 
-O JavaScript dos componentes, a fonte e o favicon vão embutidos no binário:
+The components' JavaScript, the font and the favicon are embedded in the
+binary:
 
 ```go
 import "github.com/vapulab/malphas"
@@ -74,16 +76,16 @@ mux.Handle("/malphas-assets/", http.StripPrefix("/malphas-assets",
 	http.FileServer(http.FS(malphas.Assets()))))
 ```
 
-`layout.Base` também referencia o CSS gerado pelo Tailwind e os vendors do
-projeto, que ficam a cargo de quem consome:
+`layout.Base` also references the stylesheet Tailwind builds and the
+project's vendored scripts, which are yours to serve:
 
-| Caminho | O que é |
+| Path | What it is |
 |---|---|
-| `/static/app.css` | a saída do Tailwind |
+| `/static/app.css` | Tailwind's output |
 | `/static/vendor/htmx.min.js` | HTMX |
 | `/static/vendor/alpine.min.js` | Alpine.js 3 |
 
-### 4. Use os componentes
+### 4. Use the components
 
 ```go
 import (
@@ -93,155 +95,200 @@ import (
 ```
 
 ```templ
-@layout.Base(layout.BaseProps{Title: "Notas", Body: page()})
+@layout.Base(layout.BaseProps{Title: "Invoices", Body: page()})
 
 @components.Button(components.ButtonProps{}) {
-	Emitir nota
+	Issue invoice
 }
 ```
 
-Os `*_templ.go` gerados são commitados, então o módulo compila sem
+The generated `*_templ.go` files are committed, so the module builds without
 `templ generate`.
 
-## Como os componentes se comportam
+## Languages
 
-### Formulários de verdade
+The components write some text on their own: accessible names ("Close",
+"Pagination"), empty states ("No results"), counters ("3 results",
+"Question 2 of 4") and the Calendar's months and weekdays. That text exists in
+five languages:
 
-Os controles de formulário são visual em Alpine sobre um `<input>` real com
-`sr-only`. O input carrega foco, envio e leitura de tela; o Alpine cuida só da
-aparência. Na prática, **eles funcionam dentro de `<form>` e de `hx-post` sem
-nada extra.**
-
-**Range é a exceção deliberada**: mantém o input nativo visível e estilizado.
-Esconder e reimplementar arrasto por ponteiro, toque e `aria-valuenow` custaria
-muito para um resultado pior que o do browser.
-
-### Teclado
-
-Seguindo os padrões WAI-ARIA:
-
-| Componente | Teclas |
-|---|---|
-| Tabs | ← →, Home, End; abas desabilitadas são puladas |
-| Radio, Rating | setas movem foco **e** seleção |
-| Collapse, Accordion | Enter, Espaço |
-| Tooltip | abre no foco, fecha com Escape |
-| Toggle, Swap | Espaço |
-
-Os componentes de lista compartilham um único `rovingList()` em
-`assets/malphas.js`: uma implementação do roving tabindex, não uma por
-componente.
-
-### Sobreposições: modal e não-modal
-
-| | Componentes | Foco |
+| `malphas.Locale` | Tag | Week starts on |
 |---|---|---|
-| **Modal** | Modal, Drawer, Alert Dialog, Command (paleta) | preso dentro; Tab circula, Escape fecha e devolve |
-| **Não-modal** | Dropdown | livre; setas navegam, Escape devolve, **Tab sai e fecha** |
+| `EN` (default) | `en` | Sunday |
+| `PT` | `pt-BR` | Sunday |
+| `ES` | `es` | Monday |
+| `RU` | `ru` | Monday |
+| `ZH` | `zh-Hans` | Monday |
 
-Prender o foco num menu é tão errado quanto não prender num diálogo.
+The language travels in the request's `context.Context`, which templ already
+passes to every component. Set it once, in a middleware, and every component
+follows. `layout.Base` sets `<html lang>` from it too.
 
-Os modais fazem as **três** coisas que tornam uma sobreposição realmente modal:
+```go
+func withLanguage(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		l, _ := malphas.ParseLocale(r.PathValue("lang")) // "en", "pt", "pt-BR"…; EN if unknown
+		next.ServeHTTP(w, r.WithContext(malphas.WithLocale(r.Context(), l)))
+	})
+}
+```
 
-- **focus trap**: sem isso o Tab passeia pelo conteúdo atrás
-- **scroll lock**: sem isso a página rola sob a sobreposição
-- **inert**: sem isso o cursor virtual do leitor de tela lê a página inteira
+Malphas never decides a request's language: whether it comes from the URL, a
+cookie or `Accept-Language` is up to your app.
 
-O terceiro é o mais esquecido. Prender só o Tab entrega um modal para quem usa
-teclado e um não-modal para quem usa leitor de tela.
+A label passed as a prop always wins over the language's default:
 
-### Tema claro e escuro
+```templ
+@components.AlertDialog(components.AlertDialogProps{
+	ID: "delete", Title: "Delete the project?",
+	CancelLabel: "Keep it", ConfirmLabel: "Delete",
+})
+```
 
-Por padrão o tema segue o sistema operacional (`prefers-color-scheme`). Uma
-escolha explícita, gravada em `localStorage`, vence o sistema **nos dois
-sentidos**: dá para forçar claro num SO escuro.
+Plurals follow each language's rules (Russian has three forms, Chinese none).
+The one counter built in the browser, the Message Scroller's "(3 new)", picks
+its form with `Intl.PluralRules` for the page's `lang`.
 
-`layout.Base` aplica o tema com um `<script>` **inline e síncrono** antes do
-stylesheet, para que a página já pinte no tema certo. A chave de
-`localStorage` é a mesma em `layout/base.templ` e `assets/malphas.js`, e um
-teste garante isso.
+## How the components behave
 
-## Desenvolvimento
+### Real forms
 
-Go 1.25+ e [templ](https://templ.guide) na versão do `go.mod`.
+Form controls are an Alpine visual over a real `<input>` with `sr-only`. The
+input carries focus, submission and screen reader output; Alpine only handles
+the looks. In practice **they work inside a `<form>` and with `hx-post` with
+nothing extra.**
+
+**Range is the deliberate exception**: it keeps the native input visible and
+styled. Hiding it and reimplementing pointer drag, touch and `aria-valuenow`
+would cost a lot for a worse result than the browser's.
+
+### Keyboard
+
+Following the WAI-ARIA patterns:
+
+| Component | Keys |
+|---|---|
+| Tabs | ← →, Home, End; disabled tabs are skipped |
+| Radio, Rating | arrows move focus **and** selection |
+| Collapse, Accordion | Enter, Space |
+| Tooltip | opens on focus, closes on Escape |
+| Toggle, Swap | Space |
+| Calendar | arrows by day and week, Home/End to the week's ends (in the language's week), PageUp/PageDown by month |
+
+The list components share a single `rovingList()` in `assets/malphas.js`: one
+roving tabindex implementation, not one per component.
+
+### Overlays: modal and non-modal
+
+| | Components | Focus |
+|---|---|---|
+| **Modal** | Modal, Drawer, Alert Dialog, Command (palette) | trapped inside; Tab cycles, Escape closes and returns it |
+| **Non-modal** | Dropdown | free; arrows navigate, Escape returns it, **Tab leaves and closes** |
+
+Trapping focus in a menu is as wrong as not trapping it in a dialog.
+
+Modals do the **three** things that make an overlay truly modal:
+
+- **focus trap**: without it Tab wanders through the content behind
+- **scroll lock**: without it the page scrolls under the overlay
+- **inert**: without it the screen reader's virtual cursor reads the whole page
+
+The third is the one people forget. Trapping only Tab gives a modal to
+keyboard users and a non-modal to screen reader users.
+
+### Light and dark
+
+By default the theme follows the operating system (`prefers-color-scheme`).
+An explicit choice, saved in `localStorage`, beats the system **both ways**:
+you can force light on a dark OS.
+
+`layout.Base` applies the theme with an **inline, synchronous** `<script>`
+before the stylesheet, so the page paints in the right theme from the start.
+The `localStorage` key is the same in `layout/base.templ` and
+`assets/malphas.js`, and a test makes sure of it.
+
+## Development
+
+Go 1.25+ and [templ](https://templ.guide) at the version in `go.mod`.
 
 ```bash
 go install github.com/a-h/templ/cmd/templ@v0.3.1020
-templ generate
+templ generate   # always from the repo root
 go vet ./...
 go test ./...
 ```
 
-Esses testes cobrem renderização, acessibilidade da marcação, as páginas do
-catálogo e o contrato entre os `.templ` e o `malphas.js`: cada
-`x-data="nome"` precisa de um `Alpine.data()` registrado.
+These tests cover rendering, the accessibility of the markup, every language's
+text (a language missing a text does not compile, and a test checks none is
+empty), the catalog pages and the contract between the `.templ` files and
+`malphas.js`: every `x-data="name"` needs a registered `Alpine.data()`.
 
-### O catálogo
+### The catalog
 
-`showcase/` é a documentação viva: um registry com cada componente e seus
-exemplos, as páginas que os mostram e um `http.Handler` que serve tudo em
-`/components`. É ele que roda em
+`showcase/` is the living documentation: a registry with every component and
+its examples, the pages that show them and an `http.Handler` that serves it
+all under `/components`, always in English. It is what runs at
 [malphas.vapulab.com/components](https://malphas.vapulab.com/components).
-Adicionar um componente ao catálogo é adicionar uma entrada no registry; os
-testes de rota, de renderização e a vitrine passam a cobri-lo sozinhos.
+Adding a component to the catalog is adding a registry entry; the route and
+render tests and the showcase page cover it on their own.
 
-Quem hospeda o catálogo entrega a moldura da página e acrescenta `showcase/` ao
-`content` do Tailwind:
+A host serving the catalog provides the page frame and adds `showcase/` to
+Tailwind's `content`:
 
 ```go
 mux.Handle("/components", showcase.Handler(frame))
 mux.Handle("/components/", showcase.Handler(frame))
 ```
 
-O `showcase/` fica fora de `components/` e `layout/` de propósito: as demos
-usam classes que nenhuma página real precisa, e um projeto que só usa os
-componentes nunca as compila.
+`showcase/` sits outside `components/` and `layout/` on purpose: the demos use
+classes no real page needs, and a project that only uses the components never
+compiles them.
 
-### Testes de browser
+### Browser tests
 
-`e2e/` dirige um Chrome de verdade contra o catálogo, via
-[chromedp](https://github.com/chromedp/chromedp), que fala CDP direto de Go,
-sem Node. Cobre o que nenhum teste de renderização alcança: setas movendo foco
-e seleção, foco preso nos modais e livre nos menus, Escape devolvendo o foco,
-scroll lock, `inert`, o `FormData` que o browser realmente envia, as demos que
-conversam com o servidor por HTMX.
+`e2e/` drives a real Chrome against the catalog, via
+[chromedp](https://github.com/chromedp/chromedp), which speaks CDP straight
+from Go, no Node. It covers what no render test reaches: arrows moving focus
+and selection, focus trapped in modals and free in menus, Escape returning
+focus, scroll lock, `inert`, the `FormData` the browser really sends, the
+demos that talk to the server over HTMX, and the Calendar's week in each
+language.
 
-É um módulo à parte (Go 1.26, por causa do chromedp), para que nada disso
-chegue a quem faz `go get` do Malphas. Ele testa sempre o código desta árvore.
+It is a separate module (Go 1.26, because of chromedp), so none of it reaches
+people who `go get` Malphas. It always tests the code in this tree.
 
 ```bash
 cd e2e
 tailwindcss -c tailwind.config.js -i input.css -o static/app.css --minify
 go test ./...
-CHROME_PATH=/caminho/do/chrome go test ./...
+CHROME_PATH=/path/to/chrome go test ./...
 ```
 
-Sem Chrome ou sem o `app.css`, os testes **pulam** em vez de falhar, e dizem
-por quê. Duas coisas que valem saber ao mexer neles:
+Without Chrome or without `app.css`, the tests **skip** rather than fail, and
+say why. Things worth knowing when you touch them:
 
-- Usam o **headless novo** do Chrome. No headless antigo
-  `document.hasFocus()` é `false`, e o browser não emite eventos de foco para
-  um documento sem foco: componentes acionados por foco pareceriam quebrados
-  estando corretos.
-- Use `$root`, não `$el`, quando um método do Alpine procura algo "neste
-  componente". Dentro de um método chamado pelo handler de um filho, `$el` é o
-  filho, e a busca não encontra nada sem dar erro.
-- **Espere a condição, não um tempo.** Um `sleep` seguido de uma checagem
-  única passa numa máquina rápida e falha num runner lento com o componente
-  certo: um timer, uma transição ou um frame levam o que a CPU deixar. Use
-  `waitUntil` para o que tem de acontecer. Um `sleep` só faz sentido para
-  provar que algo *não* acontece, e então escala com `cpuThrottle`.
+- They use Chrome's **new headless**. In the old one `document.hasFocus()` is
+  `false`, and the browser sends no focus events to an unfocused document:
+  focus-driven components would look broken while being correct.
+- Use `$root`, not `$el`, when an Alpine method looks for something "in this
+  component". Inside a method called by a child's handler, `$el` is the child,
+  and the lookup finds nothing without an error.
+- **Wait for the condition, not for a time.** A `sleep` followed by a single
+  check passes on a fast machine and fails on a slow runner with the component
+  working: a timer, a transition or a frame takes what the CPU allows. Use
+  `waitUntil` for what has to happen. A `sleep` only makes sense to prove
+  something does *not* happen, and then it scales with `cpuThrottle`.
 
-Para achar testes sensíveis a tempo antes da CI, rode com o Chrome mais lento:
+To find timing-sensitive tests before CI does, run with a slower Chrome:
 
 ```bash
-E2E_CPU_THROTTLE=10 go test ./...   # CPU da página 10x mais lenta
+E2E_CPU_THROTTLE=10 go test ./...   # the page's CPU 10x slower
 ```
 
-### Mexendo no Malphas a partir de um app
+### Working on Malphas from an app
 
-Clone os dois lado a lado e crie um `go.work`, fora do controle de versão, na
-raiz do app:
+Clone both side by side and create a `go.work`, outside version control, at
+the app's root:
 
 ```
 go 1.26
@@ -252,12 +299,12 @@ use (
 )
 ```
 
-O app passa a compilar contra o clone local, e o `go list -m` do
-`tailwind.config.js` também aponta para ele. Assim o watch do Tailwind enxerga
-as mudanças nos `.templ`. Para publicar, faça o merge aqui, crie a tag
-`vX.Y.Z` e atualize o app com `go get github.com/vapulab/malphas@vX.Y.Z`.
+The app then builds against the local clone, and the `go list -m` in
+`tailwind.config.js` points at it too, so Tailwind's watch sees changes to the
+`.templ` files. To release, merge here, tag `vX.Y.Z` and update the app with
+`go get github.com/vapulab/malphas@vX.Y.Z`.
 
-## Licença
+## License
 
-[MIT](LICENSE). A fonte Space Grotesk (`assets/fonts/`) é distribuída sob a
-[SIL Open Font License 1.1](assets/fonts/OFL.txt).
+[MIT](LICENSE). The Space Grotesk font (`assets/fonts/`) is distributed under
+the [SIL Open Font License 1.1](assets/fonts/OFL.txt).

@@ -11,8 +11,8 @@ func menubarFixture() components.MenubarProps {
 	return components.MenubarProps{
 		Label: "Editor",
 		Menus: []components.MenubarMenu{
-			{Label: "Arquivo", Entries: []components.MenuEntry{{Label: "Novo", OnClick: "x"}, {Label: "Abrir", OnClick: "x"}}},
-			{Label: "Editar", Entries: []components.MenuEntry{{Label: "Desfazer", OnClick: "x"}, components.MenuDivider(), {Label: "Copiar", OnClick: "x"}}},
+			{Label: "File", Entries: []components.MenuEntry{{Label: "New", OnClick: "x"}, {Label: "Open", OnClick: "x"}}},
+			{Label: "Edit", Entries: []components.MenuEntry{{Label: "Undo", OnClick: "x"}, components.MenuDivider(), {Label: "Copy", OnClick: "x"}}},
 		},
 	}
 }

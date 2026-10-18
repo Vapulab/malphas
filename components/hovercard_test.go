@@ -13,7 +13,7 @@ import (
 func TestHoverCardTriggerIsALink(t *testing.T) {
 	html := renderWithChildren(t,
 		components.HoverCard(components.HoverCardProps{ID: "hc", Label: "@lincoln", Href: "/u/lincoln"}),
-		templ.Raw("<p>Pesquisador</p>"))
+		templ.Raw("<p>Researcher</p>"))
 	for _, want := range []string{
 		`<a href="/u/lincoln"`,
 		`x-data="hoverCard(400, 200)"`,

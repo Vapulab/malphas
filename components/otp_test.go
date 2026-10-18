@@ -8,7 +8,7 @@ import (
 )
 
 func TestOTPRendersOneBoxPerDigit(t *testing.T) {
-	html := renderToString(t, components.OTP(components.OTPProps{Name: "codigo", Label: "Código"}))
+	html := renderToString(t, components.OTP(components.OTPProps{Name: "codigo", Label: "Code"}))
 	if got := strings.Count(html, "data-otp-index"); got != 6 {
 		t.Errorf("expected 6 boxes by default, got %d: %s", got, html)
 	}
@@ -57,7 +57,7 @@ func TestOTPSubmitsThroughAHiddenField(t *testing.T) {
 }
 
 func TestOTPGroupIsLabelled(t *testing.T) {
-	html := renderToString(t, components.OTP(components.OTPProps{Name: "codigo", Label: "Código de verificação"}))
+	html := renderToString(t, components.OTP(components.OTPProps{Name: "codigo", Label: "Verification code"}))
 	if !strings.Contains(html, `role="group"`) || !strings.Contains(html, "aria-labelledby") {
 		t.Errorf("expected the boxes grouped under the label, got: %s", html)
 	}

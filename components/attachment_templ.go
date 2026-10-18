@@ -13,7 +13,7 @@ import "strconv"
 type AttachmentProps struct {
 	ID       string
 	Name     string
-	Meta     string // type and size, e.g. "PDF · 2,4 MB"
+	Meta     string // type and size, e.g. "PDF · 2.4 MB"
 	Kind     string // file | image (default file)
 	Src      string // image preview, for Kind image
 	Href     string // where the finished file opens
@@ -29,9 +29,9 @@ func (p AttachmentProps) state() string { return or(p.State, "idle") }
 func (p AttachmentProps) statusText() string {
 	switch p.state() {
 	case "uploading":
-		return "Enviando " + strconv.Itoa(clampInt(p.Progress, 0, 100)) + "%"
+		return "Uploading " + strconv.Itoa(clampInt(p.Progress, 0, 100)) + "%"
 	case "processing":
-		return "Processando…"
+		return "Processing…"
 	}
 	return ""
 }
@@ -39,7 +39,7 @@ func (p AttachmentProps) statusText() string {
 // Attachment is a file or image in a composer, a message or an upload list,
 // with its upload state.
 //
-// The state is text, not just a bar: "Enviando 45%" and "Processando…" live in
+// The state is text, not just a bar: "Uploading 45%" and "Processing…" live in
 // role="status", an error in role="alert", so they are announced as they
 // change. The name only becomes a link once the file is done — a link to a
 // half-uploaded file is a dead end. Actions (remove, retry) stay reachable in

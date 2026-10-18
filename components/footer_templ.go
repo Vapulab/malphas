@@ -21,20 +21,20 @@ type FooterColumn struct {
 
 type FooterProps struct {
 	Columns []FooterColumn
-	Note    string // linha inferior, ex. copyright
+	Note    string // bottom line, e.g. copyright
 	Class   string
 	Attrs   templ.Attributes
 }
 
-// Footer é o rodapé estrutural do site. Os children ficam à esquerda — é onde
-// a marca vai.
+// Footer is the site's structural footer. The children sit on the left — that
+// is where the brand goes.
 //
-// O papel é explícito de propósito: <footer> só mapeia para contentinfo
-// automaticamente quando é filho direto de <body>, e aqui ele é aninhado no
-// shell da página. Sem role, o leitor de tela não oferece o atalho.
+// The role is explicit on purpose: <footer> only maps to contentinfo
+// automatically when it is a direct child of <body>, and here it is nested in
+// the page shell. Without the role, screen readers do not offer the shortcut.
 //
-// Os links delegam para Link em vez de escrever <a>: é lá que mora o
-// saneamento de href e o rel seguro para links externos.
+// The links delegate to Link instead of writing <a>: that is where href
+// sanitizing and the safe rel for external links live.
 func Footer(props FooterProps) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context

@@ -1133,7 +1133,7 @@ document.addEventListener("alpine:init", () => {
   }));
 
   // Number keys pick an option — but never while typing an answer, where
-  // "2 semanas" must stay "2 semanas". A question that arrives as a response
+  // "2 weeks" must stay "2 weeks". A question that arrives as a response
   // takes focus on its title (data-autofocus), so it is read out; on first
   // page load nothing is focused for the user.
   Alpine.data("questionnaire", () => ({
@@ -1357,7 +1357,7 @@ document.addEventListener("alpine:init", () => {
         }
         if (wasAtBottom) continue;
         for (const n of r.addedNodes) {
-          // Only messages are news; a marker ("Gerando resposta…") or a
+          // Only messages are news; a marker ("Generating a reply…") or a
           // sentinel is not. Rows landing above the anchor are history.
           if (n.nodeType !== Node.ELEMENT_NODE || !n.matches("[data-message]")) continue;
           const anchor = this._anchor?.isConnected ? this._anchor : this._backup;

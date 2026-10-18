@@ -11,8 +11,8 @@ import (
 func modalHTML(t *testing.T) string {
 	t.Helper()
 	return renderWithChildren(t,
-		components.Modal(components.ModalProps{ID: "confirm", Title: "Confirmar"}),
-		templ.Raw("<p>corpo</p>"))
+		components.Modal(components.ModalProps{ID: "confirm", Title: "Confirm"}),
+		templ.Raw("<p>body</p>"))
 }
 
 // A styled div is not a dialog. Without these three attributes a screen reader
@@ -66,7 +66,7 @@ func TestModalCloseButtonIsLabelled(t *testing.T) {
 
 func TestModalRendersTitleAndChildren(t *testing.T) {
 	html := modalHTML(t)
-	if !strings.Contains(html, "Confirmar") || !strings.Contains(html, "<p>corpo</p>") {
+	if !strings.Contains(html, "Confirm") || !strings.Contains(html, "<p>body</p>") {
 		t.Errorf("expected title and children, got: %s", html)
 	}
 }

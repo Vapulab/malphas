@@ -23,13 +23,13 @@ func TestLabelMarksRequiredForSightedUsersOnly(t *testing.T) {
 }
 
 func TestFieldRendersDescriptionAndErrorWithIDs(t *testing.T) {
-	f := components.FieldProps{ID: "email", Label: "Email", Description: "Usado no login.", Error: "Email inválido."}
+	f := components.FieldProps{ID: "email", Label: "Email", Description: "Used to sign in.", Error: "Invalid email."}
 	html := renderWithChildren(t, components.Field(f), templ.Raw(`<input id="email">`))
 	for _, want := range []string{
 		`for="email"`,
 		`id="email-description"`,
 		`id="email-error"`,
-		`Email inválido.`,
+		`Invalid email.`,
 	} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)

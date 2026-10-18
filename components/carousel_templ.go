@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 type CarouselProps struct {
 	ID     string
-	Label  string // what the carousel is showing, e.g. "Capturas de tela"
+	Label  string // what the carousel is showing, e.g. "Screenshots"
 	Slides []templ.Component
 	Attrs  templ.Attributes
 }
@@ -22,7 +22,7 @@ type CarouselProps struct {
 // from being that:
 //
 //   - the track is focusable and ← → move between slides
-//   - each slide is a labelled group ("2 de 5"), so position is announced
+//   - each slide is a labelled group ("2 of 5"), so position is announced
 //   - the buttons carry text labels, not just glyphs
 //   - scrolling respects prefers-reduced-motion — this is a component that
 //     moves, which is exactly what that preference exists to limit

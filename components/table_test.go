@@ -37,11 +37,11 @@ func TestTableCompactChangesCellPadding(t *testing.T) {
 }
 
 func TestTableHeaderCellDefaultsToColumnScope(t *testing.T) {
-	html := renderWithChildren(t, components.TH(components.THProps{}), templ.Raw("Nome"))
+	html := renderWithChildren(t, components.TH(components.THProps{}), templ.Raw("Name"))
 	if !strings.Contains(html, `scope="col"`) {
 		t.Errorf("a header cell needs a scope to be useful, got: %s", html)
 	}
-	if !strings.Contains(html, "Nome") {
+	if !strings.Contains(html, "Name") {
 		t.Errorf("expected children rendered, got: %s", html)
 	}
 }

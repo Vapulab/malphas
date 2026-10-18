@@ -11,8 +11,8 @@ import (
 func TestIndicatorOverlaysLabelOnChildren(t *testing.T) {
 	html := renderWithChildren(t,
 		components.Indicator(components.IndicatorProps{Label: "9"}),
-		templ.Raw(`<button>Caixa</button>`))
-	if !strings.Contains(html, "<button>Caixa</button>") {
+		templ.Raw(`<button>Inbox</button>`))
+	if !strings.Contains(html, "<button>Inbox</button>") {
 		t.Errorf("expected children rendered, got: %s", html)
 	}
 	if !strings.Contains(html, "9") {
@@ -26,7 +26,7 @@ func TestIndicatorOverlaysLabelOnChildren(t *testing.T) {
 func TestIndicatorWithoutLabelRendersNoBadge(t *testing.T) {
 	html := renderWithChildren(t,
 		components.Indicator(components.IndicatorProps{}),
-		templ.Raw(`<button>Caixa</button>`))
+		templ.Raw(`<button>Inbox</button>`))
 	if strings.Contains(html, "absolute") {
 		t.Errorf("no label should mean no badge, got: %s", html)
 	}

@@ -9,11 +9,11 @@ import (
 
 func toggleGroupFixture() components.ToggleGroupProps {
 	return components.ToggleGroupProps{
-		Name: "alinhamento", Label: "Alinhamento",
+		Name: "alinhamento", Label: "Alignment",
 		Items: []components.ToggleGroupItem{
-			{Label: "Esquerda", Value: "esq"},
-			{Label: "Centro", Value: "centro"},
-			{Label: "Direita", Value: "dir", Disabled: true},
+			{Label: "Left", Value: "esq"},
+			{Label: "Center", Value: "centro"},
+			{Label: "Right", Value: "dir", Disabled: true},
 		},
 		Value: []string{"centro"},
 	}
@@ -23,7 +23,7 @@ func TestToggleGroupIsALabelledGroupOfPressableButtons(t *testing.T) {
 	html := renderToString(t, components.ToggleGroup(toggleGroupFixture()))
 	for _, want := range []string{
 		`role="group"`,
-		`aria-label="Alinhamento"`,
+		`aria-label="Alignment"`,
 		`x-data="toggleGroup([false,true,false], false, 1)"`,
 	} {
 		if !strings.Contains(html, want) {
@@ -42,10 +42,10 @@ func TestToggleGroupTabStopIsThePressedItem(t *testing.T) {
 		t.Fatalf("expected exactly one tab stop, got: %s", html)
 	}
 	stop := strings.Index(html, `tabindex="0"`)
-	centro := strings.Index(html, `>Centro<`)
-	esquerda := strings.Index(html, `>Esquerda<`)
+	centro := strings.Index(html, `>Center<`)
+	esquerda := strings.Index(html, `>Left<`)
 	if !(esquerda < stop && stop < centro) {
-		t.Errorf("the tab stop should be on Centro, got: %s", html)
+		t.Errorf("the tab stop should be on Center, got: %s", html)
 	}
 }
 

@@ -11,11 +11,11 @@ import (
 func tabsFixture() components.TabsProps {
 	return components.TabsProps{
 		ID:    "conta",
-		Label: "Configurações da conta",
+		Label: "Account settings",
 		Items: []components.Tab{
-			{Label: "Perfil", Content: templ.Raw("<p>perfil</p>")},
-			{Label: "Segurança", Content: templ.Raw("<p>segurança</p>")},
-			{Label: "Faturamento", Content: templ.Raw("<p>faturamento</p>"), Disabled: true},
+			{Label: "Profile", Content: templ.Raw("<p>profile</p>")},
+			{Label: "Security", Content: templ.Raw("<p>security</p>")},
+			{Label: "Billing", Content: templ.Raw("<p>billing</p>"), Disabled: true},
 		},
 	}
 }

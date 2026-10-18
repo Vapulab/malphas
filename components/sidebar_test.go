@@ -10,29 +10,29 @@ import (
 
 func sidebarFixture() components.SidebarProps {
 	return components.SidebarProps{
-		ID: "app", Label: "Navegação principal", Collapsible: true,
+		ID: "app", Label: "Main navigation", Collapsible: true,
 		Groups: []components.SidebarGroup{
-			{Label: "Trabalho", Items: []components.SidebarItem{
-				{Label: "Protocolos", Href: "/protocolos", Icon: "◆", Current: true, Badge: "3"},
-				{Label: "Resultados", Href: "/resultados", Icon: "▲"},
+			{Label: "Work", Items: []components.SidebarItem{
+				{Label: "Protocols", Href: "/protocolos", Icon: "◆", Current: true, Badge: "3"},
+				{Label: "Results", Href: "/resultados", Icon: "▲"},
 			}},
-			{Label: "Conta", Items: []components.SidebarItem{
-				{Label: "Mau", Href: "javascript:alert(1)", Icon: "!"},
+			{Label: "Account", Items: []components.SidebarItem{
+				{Label: "Bad", Href: "javascript:alert(1)", Icon: "!"},
 			}},
 		},
 	}
 }
 
 func TestSidebarNavAndCurrent(t *testing.T) {
-	html := renderWithChildren(t, components.Sidebar(sidebarFixture()), templ.Raw("<p>conteúdo</p>"))
+	html := renderWithChildren(t, components.Sidebar(sidebarFixture()), templ.Raw("<p>content</p>"))
 	for _, want := range []string{
-		`<nav aria-label="Navegação principal"`,
+		`<nav aria-label="Main navigation"`,
 		`href="/protocolos"`,
 		`aria-current="page"`,
-		`title="Protocolos"`,
-		`>Trabalho<`,
-		`>Conta<`,
-		"conteúdo",
+		`title="Protocols"`,
+		`>Work<`,
+		`>Account<`,
+		"content",
 		`x-data="sidebar(&#34;app&#34;)"`,
 	} {
 		if !strings.Contains(html, want) {
@@ -74,7 +74,7 @@ func TestSidebarHasAMobileDrawer(t *testing.T) {
 // The page layout owns <main>; a second one nested inside it is invalid HTML
 // and a duplicate landmark.
 func TestSidebarDoesNotClaimMain(t *testing.T) {
-	html := renderWithChildren(t, components.Sidebar(sidebarFixture()), templ.Raw("<p>conteúdo</p>"))
+	html := renderWithChildren(t, components.Sidebar(sidebarFixture()), templ.Raw("<p>content</p>"))
 	if strings.Contains(html, "<main") {
 		t.Errorf("Sidebar must not render <main>: %s", html)
 	}
@@ -108,15 +108,15 @@ func TestSidebarScriptEscapesTheID(t *testing.T) {
 // label's first letter stands in, decorative.
 func TestSidebarIconlessItemKeepsAVisibleMark(t *testing.T) {
 	p := sidebarFixture()
-	p.Groups = []components.SidebarGroup{{Items: []components.SidebarItem{{Label: "Equipe", Href: "/e"}}}}
+	p.Groups = []components.SidebarGroup{{Items: []components.SidebarItem{{Label: "Team", Href: "/e"}}}}
 	html := renderWithChildren(t, components.Sidebar(p), templ.Raw(""))
-	if !strings.Contains(html, `>E</span>`) {
+	if !strings.Contains(html, `>T</span>`) {
 		t.Errorf("expected the initial as a collapsed fallback: %s", html)
 	}
 }
 
 // One stable name plus aria-expanded; a label that also flips would announce
-// the state twice ("Expandir menu, recolhido").
+// the state twice ("Expand menu, collapsed").
 func TestSidebarToggleHasOneStableName(t *testing.T) {
 	html := renderWithChildren(t, components.Sidebar(sidebarFixture()), templ.Raw(""))
 	if strings.Contains(html, "x-bind:aria-label") || !strings.Contains(html, `aria-label="Sidebar"`) {

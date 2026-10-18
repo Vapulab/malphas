@@ -13,8 +13,8 @@ func navbarFixture(drawerID string) components.NavbarProps {
 		Brand:    "Vapulab",
 		DrawerID: drawerID,
 		Entries: []components.MenuEntry{
-			{Label: "Componentes", Href: "/", Current: true},
-			{Label: "Todos", Href: "/todos"},
+			{Label: "Components", Href: "/", Current: true},
+			{Label: "All", Href: "/todos"},
 		},
 	}
 }

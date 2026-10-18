@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-// Roda de e2e/. O Malphas e a arvore acima, entao os caminhos sao relativos.
+// Runs from e2e/. Malphas is the tree above, so the paths are relative.
 module.exports = {
   presets: [require("../theme/preset.js")],
   content: [

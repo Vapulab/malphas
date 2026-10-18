@@ -12,8 +12,8 @@ import (
 // activatable with Enter or Space, and announced as nothing.
 func TestCollapseTriggerIsAButtonWithState(t *testing.T) {
 	html := renderWithChildren(t,
-		components.Collapse(components.CollapseProps{ID: "c1", Title: "Detalhes"}),
-		templ.Raw("<p>corpo</p>"))
+		components.Collapse(components.CollapseProps{ID: "c1", Title: "Details"}),
+		templ.Raw("<p>body</p>"))
 	if !strings.Contains(html, "<button") {
 		t.Errorf("expected a button trigger, got: %s", html)
 	}
@@ -30,8 +30,8 @@ func TestCollapseTriggerIsAButtonWithState(t *testing.T) {
 
 func TestCollapseOpenStartsExpanded(t *testing.T) {
 	html := renderWithChildren(t,
-		components.Collapse(components.CollapseProps{ID: "c1", Title: "Detalhes", Open: true}),
-		templ.Raw("<p>corpo</p>"))
+		components.Collapse(components.CollapseProps{ID: "c1", Title: "Details", Open: true}),
+		templ.Raw("<p>body</p>"))
 	if !strings.Contains(html, `aria-expanded="true"`) {
 		t.Errorf("expected expanded, got: %s", html)
 	}
@@ -39,9 +39,9 @@ func TestCollapseOpenStartsExpanded(t *testing.T) {
 
 func TestCollapseRendersTitleAndChildren(t *testing.T) {
 	html := renderWithChildren(t,
-		components.Collapse(components.CollapseProps{ID: "c1", Title: "Detalhes"}),
-		templ.Raw("<p>corpo</p>"))
-	if !strings.Contains(html, "Detalhes") || !strings.Contains(html, "<p>corpo</p>") {
+		components.Collapse(components.CollapseProps{ID: "c1", Title: "Details"}),
+		templ.Raw("<p>body</p>"))
+	if !strings.Contains(html, "Details") || !strings.Contains(html, "<p>body</p>") {
 		t.Errorf("expected title and children, got: %s", html)
 	}
 }

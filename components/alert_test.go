@@ -11,14 +11,14 @@ import (
 func TestAlertUsesVariantColorAndAlertRole(t *testing.T) {
 	html := renderWithChildren(t,
 		components.Alert(components.AlertProps{Variant: "warning"}),
-		templ.Raw("Cuidado"))
+		templ.Raw("Careful"))
 	if !strings.Contains(html, `role="alert"`) {
 		t.Errorf("alert must carry role=alert for screen readers, got: %s", html)
 	}
 	if !strings.Contains(html, "warning") {
 		t.Errorf("expected the warning color, got: %s", html)
 	}
-	if !strings.Contains(html, "Cuidado") {
+	if !strings.Contains(html, "Careful") {
 		t.Errorf("expected children rendered, got: %s", html)
 	}
 }

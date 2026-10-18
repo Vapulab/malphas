@@ -43,9 +43,9 @@ func TestTextareaCounterCountsLikeTheBrowser(t *testing.T) {
 // round trip.
 func TestTextareaKeepsALeadingNewline(t *testing.T) {
 	html := renderToString(t, components.Textarea(components.TextareaProps{
-		ID: "bio", Name: "bio", Value: "\nsegunda linha",
+		ID: "bio", Name: "bio", Value: "\nsecond line",
 	}))
-	if !strings.Contains(html, ">\n\nsegunda linha</textarea>") {
+	if !strings.Contains(html, ">\n\nsecond line</textarea>") {
 		t.Errorf("expected a guard newline before the value, got: %q", html)
 	}
 }

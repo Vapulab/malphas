@@ -11,7 +11,7 @@ import (
 func drawerHTML(t *testing.T, side string) string {
 	t.Helper()
 	return renderWithChildren(t,
-		components.Drawer(components.DrawerProps{ID: "nav", Title: "Navegação", Side: side}),
+		components.Drawer(components.DrawerProps{ID: "nav", Title: "Navigation", Side: side}),
 		templ.Raw("<p>links</p>"))
 }
 
@@ -59,7 +59,7 @@ func TestDrawerDefaultsToLeft(t *testing.T) {
 // height, no side-panel width.
 func TestDrawerBottom(t *testing.T) {
 	html := renderWithChildren(t,
-		components.Drawer(components.DrawerProps{ID: "d", Title: "Filtros", Side: "bottom"}), templ.Raw("x"))
+		components.Drawer(components.DrawerProps{ID: "d", Title: "Filters", Side: "bottom"}), templ.Raw("x"))
 	for _, want := range []string{"mt-auto", "w-full", "max-h-[85vh]", "border-t", "rounded-t-lg"} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)

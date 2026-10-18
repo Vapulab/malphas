@@ -11,11 +11,11 @@ import (
 func carouselFixture() components.CarouselProps {
 	return components.CarouselProps{
 		ID:    "shots",
-		Label: "Capturas de tela",
+		Label: "Screenshots",
 		Slides: []templ.Component{
-			templ.Raw("<p>um</p>"),
-			templ.Raw("<p>dois</p>"),
-			templ.Raw("<p>três</p>"),
+			templ.Raw("<p>one</p>"),
+			templ.Raw("<p>two</p>"),
+			templ.Raw("<p>three</p>"),
 		},
 	}
 }
@@ -57,7 +57,7 @@ func TestCarouselButtonsHaveText(t *testing.T) {
 
 func TestCarouselRendersSlideContent(t *testing.T) {
 	html := renderToString(t, components.Carousel(carouselFixture()))
-	for _, want := range []string{"<p>um</p>", "<p>dois</p>", "<p>três</p>"} {
+	for _, want := range []string{"<p>one</p>", "<p>two</p>", "<p>three</p>"} {
 		if !strings.Contains(html, want) {
 			t.Errorf("expected %s, got: %s", want, html)
 		}

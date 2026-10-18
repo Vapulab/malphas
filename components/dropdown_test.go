@@ -10,12 +10,12 @@ import (
 func dropdownFixture() components.DropdownProps {
 	return components.DropdownProps{
 		ID:    "acoes",
-		Label: "Ações",
+		Label: "Actions",
 		Entries: []components.MenuEntry{
-			{Label: "Editar", OnClick: "$dispatch('edit')"},
-			{Label: "Duplicar", Href: "/duplicar"},
+			{Label: "Edit", OnClick: "$dispatch('edit')"},
+			{Label: "Duplicate", Href: "/duplicar"},
 			components.MenuDivider(),
-			{Label: "Excluir", OnClick: "$dispatch('del')", Disabled: true},
+			{Label: "Delete", OnClick: "$dispatch('del')", Disabled: true},
 		},
 	}
 }

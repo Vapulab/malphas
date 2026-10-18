@@ -29,8 +29,8 @@ func TestLoadingKinds(t *testing.T) {
 }
 
 func TestLoadingCustomLabel(t *testing.T) {
-	html := renderToString(t, components.Loading(components.LoadingProps{Label: "Salvando"}))
-	if !strings.Contains(html, "Salvando") {
+	html := renderToString(t, components.Loading(components.LoadingProps{Label: "Saving"}))
+	if !strings.Contains(html, "Saving") {
 		t.Errorf("expected the custom label, got: %s", html)
 	}
 }

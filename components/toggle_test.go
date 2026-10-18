@@ -12,7 +12,7 @@ import (
 // view except the hidden input.
 func TestToggleHasSwitchSemantics(t *testing.T) {
 	html := renderToString(t, components.Toggle(components.ToggleProps{
-		ID: "notif", Name: "notif", Label: "Notificações",
+		ID: "notif", Name: "notif", Label: "Notifications",
 	}))
 	if !strings.Contains(html, `role="switch"`) {
 		t.Errorf("expected role=switch, got: %s", html)
@@ -25,7 +25,7 @@ func TestToggleHasSwitchSemantics(t *testing.T) {
 // Without the hidden input the control looks right and submits nothing.
 func TestToggleSubmitsThroughAHiddenInput(t *testing.T) {
 	html := renderToString(t, components.Toggle(components.ToggleProps{
-		ID: "notif", Name: "notif", Label: "Notificações",
+		ID: "notif", Name: "notif", Label: "Notifications",
 	}))
 	if !strings.Contains(html, `type="checkbox"`) {
 		t.Errorf("expected a real checkbox behind the visual, got: %s", html)
@@ -49,7 +49,7 @@ func TestToggleCheckedInitialState(t *testing.T) {
 
 func TestToggleLabelIsBoundToInput(t *testing.T) {
 	html := renderToString(t, components.Toggle(components.ToggleProps{
-		ID: "notif", Name: "notif", Label: "Notificações",
+		ID: "notif", Name: "notif", Label: "Notifications",
 	}))
 	if !strings.Contains(html, `for="notif"`) {
 		t.Errorf("expected the label bound to the input, got: %s", html)

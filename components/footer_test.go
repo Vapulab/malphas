@@ -7,16 +7,16 @@ import (
 	"github.com/vapulab/malphas/components"
 )
 
-// O rodape e um marco de navegacao: <footer> sozinho ja mapeia para
-// contentinfo, mas so quando e filho direto de body. Aqui ele e aninhado no
-// shell da pagina, entao o papel precisa ser explicito — sem isso o leitor de
-// tela nao oferece o atalho para ele.
+// The footer is a navigation landmark: <footer> alone already maps to
+// contentinfo, but only when it is a direct child of body. Here it is nested
+// in the page shell, so the role has to be explicit — without it the screen
+// reader does not offer the shortcut to it.
 func TestFooterIsALandmark(t *testing.T) {
 	html := renderToString(t, components.Footer(components.FooterProps{
 		Note: "Vapulab 2026",
 		Columns: []components.FooterColumn{{
-			Title: "Produto",
-			Links: []components.FooterLink{{Label: "Componentes", Href: "/components"}},
+			Title: "Product",
+			Links: []components.FooterLink{{Label: "Components", Href: "/components"}},
 		}},
 	}))
 
@@ -26,7 +26,7 @@ func TestFooterIsALandmark(t *testing.T) {
 	if !strings.Contains(html, `role="contentinfo"`) {
 		t.Error("nested <footer> without role=contentinfo is not exposed as a landmark")
 	}
-	if !strings.Contains(html, "Produto") || !strings.Contains(html, "/components") {
+	if !strings.Contains(html, "Product") || !strings.Contains(html, "/components") {
 		t.Error("column title or link is missing from the output")
 	}
 	if !strings.Contains(html, "Vapulab 2026") {
@@ -34,20 +34,20 @@ func TestFooterIsALandmark(t *testing.T) {
 	}
 }
 
-// Link externo sem rel=noopener deixa a pagina aberta alcancar a origem via
-// window.opener. O Link do sistema ja resolve isso, mas so checar rel/target
-// nao prova que o Footer de fato delega a ele: um <a> escrito na mao com os
-// mesmos dois atributos passaria igual. A prova que so a delegacao satisfaz e
-// o saneamento de href: templ.URL rejeita esquemas fora de
-// http/https/mailto/tel/ftp/ftps e devolve FailedSanitizationURL. Um href cru
-// nao passaria por isso.
+// An external link without rel=noopener lets the opened page reach the origin
+// through window.opener. The system's Link already handles that, but checking
+// only rel/target does not prove Footer actually delegates to it: a hand-written
+// <a> with the same two attributes would pass just the same. The proof only
+// delegation satisfies is href sanitisation: templ.URL rejects schemes outside
+// http/https/mailto/tel/ftp/ftps and returns FailedSanitizationURL. A raw href
+// would not go through that.
 func TestFooterExternalLinksAreSafe(t *testing.T) {
 	html := renderToString(t, components.Footer(components.FooterProps{
 		Columns: []components.FooterColumn{{
-			Title: "Código",
+			Title: "Code",
 			Links: []components.FooterLink{
 				{Label: "GitHub", Href: "https://github.com/vapulab/vapulab", External: true},
-				{Label: "Malicioso", Href: "javascript:alert(1)"},
+				{Label: "Malicious", Href: "javascript:alert(1)"},
 			},
 		}},
 	}))

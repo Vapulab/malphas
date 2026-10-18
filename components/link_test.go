@@ -11,11 +11,11 @@ import (
 func TestLinkRendersHref(t *testing.T) {
 	html := renderWithChildren(t,
 		components.Link(components.LinkProps{Href: "/todos"}),
-		templ.Raw("Todos"))
+		templ.Raw("All"))
 	if !strings.Contains(html, `href="/todos"`) {
 		t.Errorf("expected the href, got: %s", html)
 	}
-	if !strings.Contains(html, "Todos") {
+	if !strings.Contains(html, "All") {
 		t.Errorf("expected children rendered, got: %s", html)
 	}
 }
