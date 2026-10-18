@@ -212,3 +212,16 @@ func TestVitrineHasUniqueIDs(t *testing.T) {
 		}
 	}
 }
+
+// The Message Scroller demo pulls messages from this endpoint with
+// hx-swap="beforeend" (new) and "afterbegin" (older).
+func TestMessageDemoFragment(t *testing.T) {
+	rec := get(t, "/components/message-scroller/mensagem")
+	if rec.Code != 200 || strings.Count(rec.Body.String(), "<article") != 1 || strings.Contains(rec.Body.String(), "<html") {
+		t.Fatalf("expected one message fragment, status %d: %s", rec.Code, rec.Body.String())
+	}
+	older := get(t, "/components/message-scroller/mensagem?antes=1")
+	if strings.Count(older.Body.String(), "<article") != 3 {
+		t.Errorf("antes=1 should return a page of three older messages: %s", older.Body.String())
+	}
+}
