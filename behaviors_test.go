@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/vapulab/vapulab/malphas"
+	"github.com/vapulab/malphas"
 )
 
 // Behavior names reach the markup two ways, and both have to be scanned:

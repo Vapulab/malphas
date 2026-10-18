@@ -58,7 +58,7 @@ func OTP(props OTPProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue("otp(" + intJS(props.length()) + ")")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/otp.templ`, Line: 28, Col: 47}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/otp.templ`, Line: 28, Col: 47}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -84,7 +84,7 @@ func OTP(props OTPProps) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Name + "-label")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/otp.templ`, Line: 32, Col: 71}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/otp.templ`, Line: 32, Col: 71}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 			if templ_7745c5c3_Err != nil {
@@ -97,7 +97,7 @@ func OTP(props OTPProps) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(props.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/otp.templ`, Line: 32, Col: 87}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/otp.templ`, Line: 32, Col: 87}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -120,7 +120,7 @@ func OTP(props OTPProps) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Name + "-label")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/otp.templ`, Line: 38, Col: 43}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/otp.templ`, Line: 38, Col: 43}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 			if templ_7745c5c3_Err != nil {
@@ -158,7 +158,7 @@ func OTP(props OTPProps) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(otpDigitLabel(i+1, props.length()))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/otp.templ`, Line: 51, Col: 52}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/otp.templ`, Line: 51, Col: 52}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 			if templ_7745c5c3_Err != nil {
@@ -171,7 +171,7 @@ func OTP(props OTPProps) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(intJS(i))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/otp.templ`, Line: 52, Col: 30}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/otp.templ`, Line: 52, Col: 30}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 			if templ_7745c5c3_Err != nil {
@@ -184,7 +184,7 @@ func OTP(props OTPProps) templ.Component {
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue("onInput($event, " + intJS(i) + ")")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/otp.templ`, Line: 53, Col: 53}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/otp.templ`, Line: 53, Col: 53}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 			if templ_7745c5c3_Err != nil {
@@ -197,7 +197,7 @@ func OTP(props OTPProps) templ.Component {
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue("onKeydown($event, " + intJS(i) + ")")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/otp.templ`, Line: 54, Col: 57}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/otp.templ`, Line: 54, Col: 57}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 			if templ_7745c5c3_Err != nil {
@@ -210,7 +210,7 @@ func OTP(props OTPProps) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue("onPaste($event)")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/otp.templ`, Line: 55, Col: 43}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/otp.templ`, Line: 55, Col: 43}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 			if templ_7745c5c3_Err != nil {
@@ -228,7 +228,7 @@ func OTP(props OTPProps) templ.Component {
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/otp.templ`, Line: 60, Col: 40}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/otp.templ`, Line: 60, Col: 40}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 		if templ_7745c5c3_Err != nil {

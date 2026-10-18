@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/vapulab/vapulab/malphas/components"
+	"github.com/vapulab/malphas/components"
 )
 
 // O rodape e um marco de navegacao: <footer> sozinho ja mapeia para

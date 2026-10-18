@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/vapulab/vapulab/malphas/components"
+	"github.com/vapulab/malphas/components"
 )
 
 // The visual is a styled div, so the switch role and state have to be declared

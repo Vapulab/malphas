@@ -98,7 +98,7 @@ func Command(props CommandProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue("if ($event.detail === " + strconv.Quote(props.ID) + ") openPalette()")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 68, Col: 99}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 68, Col: 99}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -125,7 +125,7 @@ func Command(props CommandProps) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.listboxID())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 92, Col: 39}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 92, Col: 39}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
@@ -138,7 +138,7 @@ func Command(props CommandProps) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Placeholder)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 95, Col: 37}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 95, Col: 37}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 		if templ_7745c5c3_Err != nil {
@@ -151,7 +151,7 @@ func Command(props CommandProps) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.listboxID())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 102, Col: 28}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 102, Col: 28}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 		if templ_7745c5c3_Err != nil {
@@ -169,7 +169,7 @@ func Command(props CommandProps) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.groupID(g))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 111, Col: 42}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 111, Col: 42}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
 			if templ_7745c5c3_Err != nil {
@@ -182,7 +182,7 @@ func Command(props CommandProps) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(intJS(g))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 112, Col: 37}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 112, Col: 37}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 			if templ_7745c5c3_Err != nil {
@@ -195,7 +195,7 @@ func Command(props CommandProps) templ.Component {
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue("groupHasMatches(" + intJS(g) + ")")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 113, Col: 52}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 113, Col: 52}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 			if templ_7745c5c3_Err != nil {
@@ -208,7 +208,7 @@ func Command(props CommandProps) templ.Component {
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.groupID(g))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 115, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 115, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 			if templ_7745c5c3_Err != nil {
@@ -221,7 +221,7 @@ func Command(props CommandProps) templ.Component {
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(props.Groups[g].Heading)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 115, Col: 116}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 115, Col: 116}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -239,7 +239,7 @@ func Command(props CommandProps) templ.Component {
 				var templ_7745c5c3_Var11 string
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.optionID(it.index))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 121, Col: 39}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 121, Col: 39}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 				if templ_7745c5c3_Err != nil {
@@ -252,7 +252,7 @@ func Command(props CommandProps) templ.Component {
 				var templ_7745c5c3_Var12 string
 				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(intJS(it.index))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 123, Col: 45}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 123, Col: 45}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
 				if templ_7745c5c3_Err != nil {
@@ -265,7 +265,7 @@ func Command(props CommandProps) templ.Component {
 				var templ_7745c5c3_Var13 string
 				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue(it.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 124, Col: 31}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 124, Col: 31}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
 				if templ_7745c5c3_Err != nil {
@@ -283,7 +283,7 @@ func Command(props CommandProps) templ.Component {
 					var templ_7745c5c3_Var14 string
 					templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue(string(templ.URL(it.Href)))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 126, Col: 49}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 126, Col: 49}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
 					if templ_7745c5c3_Err != nil {
@@ -301,7 +301,7 @@ func Command(props CommandProps) templ.Component {
 				var templ_7745c5c3_Var15 string
 				templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue("active === " + intJS(it.index) + " ? 'true' : 'false'")
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 129, Col: 88}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 129, Col: 88}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
 				if templ_7745c5c3_Err != nil {
@@ -325,7 +325,7 @@ func Command(props CommandProps) templ.Component {
 					var templ_7745c5c3_Var16 string
 					templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.ResolveAttributeValue(it.OnClick)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 134, Col: 40}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 134, Col: 40}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var16)
 					if templ_7745c5c3_Err != nil {
@@ -343,7 +343,7 @@ func Command(props CommandProps) templ.Component {
 				var templ_7745c5c3_Var17 string
 				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue("matches(" + strJS(it.Label) + ")")
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 136, Col: 53}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 136, Col: 53}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17)
 				if templ_7745c5c3_Err != nil {
@@ -356,7 +356,7 @@ func Command(props CommandProps) templ.Component {
 				var templ_7745c5c3_Var18 string
 				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.ResolveAttributeValue("choose(" + intJS(it.index) + ")")
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 138, Col: 56}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 138, Col: 56}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var18)
 				if templ_7745c5c3_Err != nil {
@@ -369,7 +369,7 @@ func Command(props CommandProps) templ.Component {
 				var templ_7745c5c3_Var19 string
 				templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(it.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 141, Col: 26}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 141, Col: 26}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 				if templ_7745c5c3_Err != nil {
@@ -387,7 +387,7 @@ func Command(props CommandProps) templ.Component {
 					var templ_7745c5c3_Var20 string
 					templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(it.Shortcut)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 143, Col: 102}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 143, Col: 102}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 					if templ_7745c5c3_Err != nil {
@@ -415,7 +415,7 @@ func Command(props CommandProps) templ.Component {
 		var templ_7745c5c3_Var21 string
 		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(or(props.Empty, "Nenhum resultado"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/command.templ`, Line: 151, Col: 43}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/command.templ`, Line: 151, Col: 43}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 		if templ_7745c5c3_Err != nil {

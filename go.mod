@@ -1,4 +1,4 @@
-module github.com/vapulab/vapulab/malphas
+module github.com/vapulab/malphas
 
 go 1.25.0
 

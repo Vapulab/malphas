@@ -90,7 +90,7 @@ func ratingReadOnly(props RatingProps) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(ratingLabel(props.Value, props.max()))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/rating.templ`, Line: 32, Col: 52}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/rating.templ`, Line: 32, Col: 52}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
@@ -121,7 +121,7 @@ func ratingReadOnly(props RatingProps) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(templ.CSSClasses(templ_7745c5c3_Var4).String())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/rating.templ`, Line: 1, Col: 0}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/rating.templ`, Line: 1, Col: 0}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 			if templ_7745c5c3_Err != nil {
@@ -168,7 +168,7 @@ func ratingInteractive(props RatingProps) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.ResolveAttributeValue(or(props.Label, "Avaliação"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/rating.templ`, Line: 44, Col: 45}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/rating.templ`, Line: 44, Col: 45}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var7)
 		if templ_7745c5c3_Err != nil {
@@ -181,7 +181,7 @@ func ratingInteractive(props RatingProps) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue("rating(" + intJS(props.Value) + ", " + intJS(props.max()) + ")")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/rating.templ`, Line: 46, Col: 75}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/rating.templ`, Line: 46, Col: 75}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 		if templ_7745c5c3_Err != nil {
@@ -202,7 +202,7 @@ func ratingInteractive(props RatingProps) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/rating.templ`, Line: 53, Col: 40}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/rating.templ`, Line: 53, Col: 40}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var9)
 		if templ_7745c5c3_Err != nil {
@@ -215,7 +215,7 @@ func ratingInteractive(props RatingProps) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.ResolveAttributeValue(intJS(props.Value))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/rating.templ`, Line: 53, Col: 69}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/rating.templ`, Line: 53, Col: 69}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var10)
 		if templ_7745c5c3_Err != nil {
@@ -233,7 +233,7 @@ func ratingInteractive(props RatingProps) templ.Component {
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue(ratingLabel(i, props.max()))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/rating.templ`, Line: 57, Col: 44}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/rating.templ`, Line: 57, Col: 44}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 			if templ_7745c5c3_Err != nil {
@@ -246,7 +246,7 @@ func ratingInteractive(props RatingProps) templ.Component {
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.ResolveAttributeValue(ariaBool(i == props.Value))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/rating.templ`, Line: 58, Col: 45}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/rating.templ`, Line: 58, Col: 45}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var12)
 			if templ_7745c5c3_Err != nil {
@@ -259,7 +259,7 @@ func ratingInteractive(props RatingProps) templ.Component {
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.ResolveAttributeValue("value === " + intJS(i) + " ? 'true' : 'false'")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/rating.templ`, Line: 59, Col: 73}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/rating.templ`, Line: 59, Col: 73}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var13)
 			if templ_7745c5c3_Err != nil {
@@ -272,7 +272,7 @@ func ratingInteractive(props RatingProps) templ.Component {
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.ResolveAttributeValue(intJS(i - 1))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/rating.templ`, Line: 60, Col: 35}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/rating.templ`, Line: 60, Col: 35}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var14)
 			if templ_7745c5c3_Err != nil {
@@ -285,7 +285,7 @@ func ratingInteractive(props RatingProps) templ.Component {
 			var templ_7745c5c3_Var15 string
 			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue(rovingTabindex(i-1, ratingActiveIndex(props.Value)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/rating.templ`, Line: 61, Col: 66}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/rating.templ`, Line: 61, Col: 66}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
 			if templ_7745c5c3_Err != nil {
@@ -298,7 +298,7 @@ func ratingInteractive(props RatingProps) templ.Component {
 			var templ_7745c5c3_Var16 string
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.ResolveAttributeValue("tabindex(" + intJS(i-1) + ")")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/rating.templ`, Line: 62, Col: 52}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/rating.templ`, Line: 62, Col: 52}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var16)
 			if templ_7745c5c3_Err != nil {
@@ -311,7 +311,7 @@ func ratingInteractive(props RatingProps) templ.Component {
 			var templ_7745c5c3_Var17 string
 			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue("select(" + intJS(i-1) + ")")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/rating.templ`, Line: 63, Col: 45}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/rating.templ`, Line: 63, Col: 45}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17)
 			if templ_7745c5c3_Err != nil {
@@ -334,7 +334,7 @@ func ratingInteractive(props RatingProps) templ.Component {
 			var templ_7745c5c3_Var18 string
 			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.ResolveAttributeValue("value >= " + intJS(i) + " ? 'filled' : false")
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/rating.templ`, Line: 67, Col: 70}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/rating.templ`, Line: 67, Col: 70}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var18)
 			if templ_7745c5c3_Err != nil {

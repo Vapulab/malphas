@@ -108,7 +108,7 @@ func Sidebar(props SidebarProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue("sidebar(" + strJS(props.ID) + ")")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/sidebar.templ`, Line: 76, Col: 97}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/sidebar.templ`, Line: 76, Col: 97}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -129,7 +129,7 @@ func Sidebar(props SidebarProps) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.asideID())
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/sidebar.templ`, Line: 78, Col: 23}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/sidebar.templ`, Line: 78, Col: 23}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 		if templ_7745c5c3_Err != nil {
@@ -155,7 +155,7 @@ func Sidebar(props SidebarProps) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.asideID())
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/sidebar.templ`, Line: 96, Col: 38}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/sidebar.templ`, Line: 96, Col: 38}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
 			if templ_7745c5c3_Err != nil {
@@ -275,7 +275,7 @@ func sidebarNav(props SidebarProps, inDrawer bool) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.ResolveAttributeValue(or(props.Label, "Menu"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/sidebar.templ`, Line: 131, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/sidebar.templ`, Line: 131, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var8)
 		if templ_7745c5c3_Err != nil {
@@ -298,7 +298,7 @@ func sidebarNav(props SidebarProps, inDrawer bool) templ.Component {
 				var templ_7745c5c3_Var9 string
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(g.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/sidebar.templ`, Line: 135, Col: 129}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/sidebar.templ`, Line: 135, Col: 129}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {
@@ -321,7 +321,7 @@ func sidebarNav(props SidebarProps, inDrawer bool) templ.Component {
 				var templ_7745c5c3_Var10 templ.SafeURL
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(it.Href))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/sidebar.templ`, Line: 141, Col: 33}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/sidebar.templ`, Line: 141, Col: 33}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
@@ -334,7 +334,7 @@ func sidebarNav(props SidebarProps, inDrawer bool) templ.Component {
 				var templ_7745c5c3_Var11 string
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.ResolveAttributeValue(it.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/sidebar.templ`, Line: 142, Col: 24}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/sidebar.templ`, Line: 142, Col: 24}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var11)
 				if templ_7745c5c3_Err != nil {
@@ -368,7 +368,7 @@ func sidebarNav(props SidebarProps, inDrawer bool) templ.Component {
 					var templ_7745c5c3_Var12 string
 					templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(it.Icon)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/sidebar.templ`, Line: 152, Col: 76}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/sidebar.templ`, Line: 152, Col: 76}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 					if templ_7745c5c3_Err != nil {
@@ -386,7 +386,7 @@ func sidebarNav(props SidebarProps, inDrawer bool) templ.Component {
 					var templ_7745c5c3_Var13 string
 					templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(it.initial())
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/sidebar.templ`, Line: 154, Col: 143}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/sidebar.templ`, Line: 154, Col: 143}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 					if templ_7745c5c3_Err != nil {
@@ -404,7 +404,7 @@ func sidebarNav(props SidebarProps, inDrawer bool) templ.Component {
 				var templ_7745c5c3_Var14 string
 				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(it.Label)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/sidebar.templ`, Line: 156, Col: 92}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/sidebar.templ`, Line: 156, Col: 92}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 				if templ_7745c5c3_Err != nil {
@@ -422,7 +422,7 @@ func sidebarNav(props SidebarProps, inDrawer bool) templ.Component {
 					var templ_7745c5c3_Var15 string
 					templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(it.Badge)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/sidebar.templ`, Line: 158, Col: 126}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/sidebar.templ`, Line: 158, Col: 126}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 					if templ_7745c5c3_Err != nil {

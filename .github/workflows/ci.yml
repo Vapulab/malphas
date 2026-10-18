@@ -1,0 +1,23 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+      # Os *_templ.go sao commitados para o modulo compilar sem templ: o CI
+      # garante que nenhum ficou para tras de um .templ editado.
+      - name: templ generate sem diff
+        run: |
+          go run github.com/a-h/templ/cmd/templ@v0.3.1020 generate
+          git diff --exit-code
+      - run: go vet ./...
+      - run: go test ./...

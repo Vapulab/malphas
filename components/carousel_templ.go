@@ -59,7 +59,7 @@ func Carousel(props CarouselProps) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(props.Label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/carousel.templ`, Line: 27, Col: 27}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/carousel.templ`, Line: 27, Col: 27}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 			if templ_7745c5c3_Err != nil {
@@ -86,7 +86,7 @@ func Carousel(props CarouselProps) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.ResolveAttributeValue(carouselSlideLabel(i+1, len(props.Slides)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `malphas/components/carousel.templ`, Line: 42, Col: 60}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/carousel.templ`, Line: 42, Col: 60}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var3)
 			if templ_7745c5c3_Err != nil {
