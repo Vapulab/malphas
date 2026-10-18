@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/a-h/templ"
-	"github.com/darkanum/vapulab/malphas/components"
+	"github.com/vapulab/vapulab/malphas/components"
 )
 
 func attachment(state string) components.AttachmentProps {

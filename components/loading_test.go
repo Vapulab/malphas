@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/darkanum/vapulab/malphas/components"
+	"github.com/vapulab/vapulab/malphas/components"
 )
 
 // A spinner that only animates is invisible to a screen reader; it needs a

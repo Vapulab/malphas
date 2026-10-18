@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/darkanum/vapulab/malphas/components"
+	"github.com/vapulab/vapulab/malphas/components"
 )
 
 func day(y int, m time.Month, d int) time.Time { return time.Date(y, m, d, 0, 0, 0, 0, time.UTC) }

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/darkanum/vapulab/malphas/components"
+	"github.com/vapulab/vapulab/malphas/components"
 )
 
 // O rodape e um marco de navegacao: <footer> sozinho ja mapeia para
@@ -46,7 +46,7 @@ func TestFooterExternalLinksAreSafe(t *testing.T) {
 		Columns: []components.FooterColumn{{
 			Title: "Código",
 			Links: []components.FooterLink{
-				{Label: "GitHub", Href: "https://github.com/darkanum/vapulab", External: true},
+				{Label: "GitHub", Href: "https://github.com/vapulab/vapulab", External: true},
 				{Label: "Malicioso", Href: "javascript:alert(1)"},
 			},
 		}},

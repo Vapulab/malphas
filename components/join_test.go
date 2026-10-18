@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/a-h/templ"
-	"github.com/darkanum/vapulab/malphas/components"
+	"github.com/vapulab/vapulab/malphas/components"
 )
 
 // Join's whole job is squaring off the inner corners so the children read as

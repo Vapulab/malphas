@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/darkanum/vapulab/malphas/components"
+	"github.com/vapulab/vapulab/malphas/components"
 )
 
 func commandFixture() components.CommandProps {

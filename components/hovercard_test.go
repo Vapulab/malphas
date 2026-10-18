@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/a-h/templ"
-	"github.com/darkanum/vapulab/malphas/components"
+	"github.com/vapulab/vapulab/malphas/components"
 )
 
 // The card is supplemental: the trigger is a real link, so everything the card
