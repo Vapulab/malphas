@@ -42,7 +42,7 @@ func TestSidebarCollapsesAndKeepsNames(t *testing.T) {
 	}
 	// Labels are hidden visually, not removed: the link's name is intact.
 	label := eval[string](t, ctx, `(() => { const s = document.querySelector('`+sbAside+` a[aria-current] span:not([aria-hidden])'); return getComputedStyle(s).position + '|' + s.closest('a').textContent.replace(/\s+/g, ' ').trim() })()`)
-	if label != "absolute|◆ Protocolos 12" {
+	if label != "absolute|◆ Protocols 12" {
 		t.Errorf("collapsed label should be sr-only (absolute) with the name intact, got %q", label)
 	}
 }
@@ -74,7 +74,7 @@ func TestSidebarIsADrawerOnMobile(t *testing.T) {
 	click(t, ctx, `[aria-haspopup="dialog"]`)
 	settle(t, ctx)
 	links := eval[[]string](t, ctx, `[...document.querySelectorAll('[role="dialog"][aria-modal="true"] nav a')].map(a => a.textContent.replace(/\s+/g, ' ').trim())`)
-	if len(links) != 5 || links[0] != "◆ Protocolos 12" {
+	if len(links) != 5 || links[0] != "◆ Protocols 12" {
 		t.Errorf("the drawer should hold the same navigation, got %v", links)
 	}
 }

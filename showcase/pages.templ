@@ -5,10 +5,10 @@ package showcase
 
 // IndexPage lists every registered component, grouped by category.
 templ IndexPage(groups []Group) {
-	<h1 class="text-2xl font-bold text-fg">Componentes</h1>
+	<h1 class="text-2xl font-bold text-fg">Components</h1>
 	<p class="mt-1 text-muted">
-		Documentação viva do design system Malphas.
-		<a href="/components/todos" class="font-medium text-primary underline-offset-2 hover:underline">Ver todos funcionando numa página só</a>
+		Living documentation for the Malphas design system.
+		<a href="/components/todos" class="font-medium text-primary underline-offset-2 hover:underline">See them all working on a single page</a>
 	</p>
 	for _, g := range groups {
 		<section class="mt-10">
@@ -43,7 +43,7 @@ templ example(ex Example) {
 // ComponentPage is one component: its description and every example.
 templ ComponentPage(c Component) {
 	<nav class="text-sm text-muted">
-		<a href="/" class="hover:text-fg">Componentes</a>
+		<a href="/" class="hover:text-fg">Components</a>
 		<span class="mx-2">/</span>
 		<span class="text-fg">{ c.Name }</span>
 	</nav>
@@ -54,13 +54,13 @@ templ ComponentPage(c Component) {
 	}
 }
 
-// AllPage is the vitrine: every component, live, on one page — no cards,
+// AllPage is the showcase: every component, live, on one page — no cards,
 // no code, just the components themselves under a small heading, with a
 // sticky index to jump around. It reuses each component's catalog examples,
 // so a new component shows up here with no extra work.
 templ AllPage(groups []Group) {
 	<div class="lg:grid lg:grid-cols-[13rem_1fr] lg:gap-10">
-		<nav aria-label="Índice da vitrine" class="hidden lg:block">
+		<nav aria-label="Showcase index" class="hidden lg:block">
 			<div class="sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto pr-2 text-sm [scrollbar-color:rgb(var(--color-muted)/0.5)_transparent] [scrollbar-width:thin]">
 				for _, g := range groups {
 					<p class="mb-1 mt-4 text-xs font-semibold uppercase tracking-wide text-muted first:mt-0">{ g.Category }</p>
@@ -75,8 +75,8 @@ templ AllPage(groups []Group) {
 			</div>
 		</nav>
 		<div class="min-w-0">
-			<h1 class="text-2xl font-bold text-fg">Vitrine</h1>
-			<p class="mt-1 text-muted">Todos os componentes do Malphas, funcionando, numa página só.</p>
+			<h1 class="text-2xl font-bold text-fg">Showcase</h1>
+			<p class="mt-1 text-muted">Every Malphas component, working, on a single page.</p>
 			for _, g := range groups {
 				<section aria-labelledby={ "cat-" + categorySlug(g.Category) } class="mt-12">
 					<h2 id={ "cat-" + categorySlug(g.Category) } class="border-b border-border pb-2 text-sm font-semibold uppercase tracking-wide text-muted">{ g.Category }</h2>
@@ -84,7 +84,7 @@ templ AllPage(groups []Group) {
 						<section id={ "c-" + c.Slug } aria-labelledby={ "c-" + c.Slug + "-title" } class="mt-10 scroll-mt-6">
 							<h3 id={ "c-" + c.Slug + "-title" } class="mb-4 flex items-baseline gap-3 text-base font-semibold text-fg">
 								{ c.Name }
-								<a href={ templ.SafeURL("/components/" + c.Slug) } class="text-xs font-normal text-muted hover:text-primary">documentação</a>
+								<a href={ templ.SafeURL("/components/" + c.Slug) } class="text-xs font-normal text-muted hover:text-primary">docs</a>
 							</h3>
 							<div class="flex flex-col gap-6">
 								for _, ex := range c.Examples {

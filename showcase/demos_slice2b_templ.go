@@ -39,11 +39,11 @@ func demoRange() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Range(components.RangeProps{ID: "r-qual", Name: "qual", Label: "Qualidade", Min: 1, Max: 5, Value: 3, ShowValue: true, Variant: "success"}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Range(components.RangeProps{ID: "r-qual", Name: "qual", Label: "Quality", Min: 1, Max: 5, Value: 3, ShowValue: true, Variant: "success"}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Range(components.RangeProps{ID: "r-off", Name: "off", Label: "Desabilitado", Value: 60, Disabled: true}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Range(components.RangeProps{ID: "r-off", Name: "off", Label: "Disabled", Value: 60, Disabled: true}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -81,7 +81,7 @@ func demoSwap() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Swap(components.SwapProps{
-			Label: "Reproduzir ou pausar",
+			Label: "Play or pause",
 			On:    swapPauseIcon(),
 			Off:   swapPlayIcon(),
 		}).Render(ctx, templ_7745c5c3_Buffer)
@@ -89,7 +89,7 @@ func demoSwap() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Swap(components.SwapProps{
-			Label:  "Favoritar",
+			Label:  "Favorite",
 			Active: true,
 			On:     swapStarOn(),
 			Off:    swapStarOff(),
@@ -270,7 +270,7 @@ func demoTooltip() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "Acima")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "Above")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -282,7 +282,7 @@ func demoTooltip() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Tooltip(components.TooltipProps{ID: "tip-cima", Text: "Aparece acima"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Tooltip(components.TooltipProps{ID: "tip-cima", Text: "Shows above"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -310,7 +310,7 @@ func demoTooltip() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "Abaixo")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "Below")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -322,7 +322,7 @@ func demoTooltip() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Tooltip(components.TooltipProps{ID: "tip-baixo", Text: "Aparece abaixo", Position: "bottom"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var10), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Tooltip(components.TooltipProps{ID: "tip-baixo", Text: "Shows below", Position: "bottom"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var10), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -350,7 +350,7 @@ func demoTooltip() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "Direita")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "Right")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -362,7 +362,7 @@ func demoTooltip() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Tooltip(components.TooltipProps{ID: "tip-dir", Text: "Aparece à direita", Position: "right"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var12), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Tooltip(components.TooltipProps{ID: "tip-dir", Text: "Shows on the right", Position: "right"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var12), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -395,7 +395,7 @@ func demoTooltipKeyboard() templ.Component {
 			templ_7745c5c3_Var14 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<div class=\"flex flex-col gap-3 py-8\"><p class=\"text-sm text-muted\">Navegue com Tab até o botão: a dica abre no foco, sem mouse. Escape fecha.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<div class=\"flex flex-col gap-3 py-8\"><p class=\"text-sm text-muted\">Tab to the button: the hint opens on focus, no mouse needed. Escape closes it.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -423,7 +423,7 @@ func demoTooltipKeyboard() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "Salvar")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "Save")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -435,7 +435,7 @@ func demoTooltipKeyboard() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Tooltip(components.TooltipProps{ID: "tip-teclado", Text: "Salva sem fechar o formulário"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var15), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Tooltip(components.TooltipProps{ID: "tip-teclado", Text: "Saves without closing the form"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var15), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

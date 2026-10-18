@@ -243,7 +243,7 @@ func TestFormControlsSubmitTheirValues(t *testing.T) {
 
 	for field, want := range map[string]string{
 		"toggle": "on",
-		"check":  "sim",
+		"check":  "yes",
 		"radio":  "b",
 		"rating": "3",
 	} {

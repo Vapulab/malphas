@@ -5,24 +5,24 @@ import "github.com/vapulab/malphas/components"
 templ demoSidebar() {
 	<div class="overflow-hidden rounded border border-border">
 		@components.Sidebar(components.SidebarProps{
-			ID: "sb-app", Label: "Navegação do laboratório", Collapsible: true,
+			ID: "sb-app", Label: "Lab navigation", Collapsible: true,
 			Groups: []components.SidebarGroup{
-				{Label: "Trabalho", Items: []components.SidebarItem{
-					{Label: "Protocolos", Href: "/components/sidebar", Icon: "◆", Current: true, Badge: "12"},
-					{Label: "Resultados", Href: "/components/sidebar?r=1", Icon: "▲"},
-					{Label: "Agenda", Href: "/components/sidebar?r=2", Icon: "●"},
+				{Label: "Work", Items: []components.SidebarItem{
+					{Label: "Protocols", Href: "/components/sidebar", Icon: "◆", Current: true, Badge: "12"},
+					{Label: "Results", Href: "/components/sidebar?r=1", Icon: "▲"},
+					{Label: "Schedule", Href: "/components/sidebar?r=2", Icon: "●"},
 				}},
-				{Label: "Conta", Items: []components.SidebarItem{
-					{Label: "Equipe", Href: "/components/sidebar?r=3", Icon: "◎"},
-					{Label: "Configurações", Href: "/components/sidebar?r=4", Icon: "✦"},
+				{Label: "Account", Items: []components.SidebarItem{
+					{Label: "Team", Href: "/components/sidebar?r=3", Icon: "◎"},
+					{Label: "Settings", Href: "/components/sidebar?r=4", Icon: "✦"},
 				}},
 			},
 		}) {
 			<div class="flex flex-col gap-2 p-6">
-				<h2 class="text-lg font-semibold text-fg">Protocolos</h2>
+				<h2 class="text-lg font-semibold text-fg">Protocols</h2>
 				<p class="text-sm text-muted">
-					Recolha a barra pelo botão no rodapé dela: a escolha fica guardada
-					neste navegador. Em telas estreitas, a barra dá lugar ao botão Menu.
+					Collapse the bar with the button at its bottom: the choice is remembered
+					in this browser. On narrow screens, the bar gives way to the Menu button.
 				</p>
 			</div>
 		}
@@ -39,21 +39,21 @@ templ demoResizablePane(title, body string) {
 templ demoResizable() {
 	<div class="flex flex-col gap-6">
 		<p class="text-sm text-muted">
-			Arraste a divisória ou foque nela com Tab e use as setas (Shift para passos de 1%),
-			Home e End. O tamanho do primeiro exemplo fica guardado neste navegador.
+			Drag the divider, or Tab to it and use the arrows (Shift for 1% steps),
+			Home and End. The first example's size is remembered in this browser.
 		</p>
 		<div class="h-56 overflow-hidden rounded border border-border">
 			@components.Resizable(components.ResizableProps{
-				ID: "rz-editor", Label: "Largura da lista de etapas", DefaultSize: 35, Min: 20, Max: 70,
-				First:  demoResizablePane("Etapas", "1. Preparar amostras · 2. Extrair RNA · 3. PCR"),
-				Second: demoResizablePane("Editor", "Detalhes da etapa selecionada."),
+				ID: "rz-editor", Label: "Step list width", DefaultSize: 35, Min: 20, Max: 70,
+				First:  demoResizablePane("Steps", "1. Prepare samples · 2. Extract RNA · 3. PCR"),
+				Second: demoResizablePane("Editor", "Details of the selected step."),
 			})
 		</div>
 		<div class="h-72 overflow-hidden rounded border border-border">
 			@components.Resizable(components.ResizableProps{
-				ID: "rz-vertical", Label: "Altura do registro", Vertical: true, DefaultSize: 60,
-				First:  demoResizablePane("Gráfico", "Curva de amplificação."),
-				Second: demoResizablePane("Registro", "Ciclo 32: limiar atingido."),
+				ID: "rz-vertical", Label: "Log height", Vertical: true, DefaultSize: 60,
+				First:  demoResizablePane("Chart", "Amplification curve."),
+				Second: demoResizablePane("Log", "Cycle 32: threshold reached."),
 			})
 		</div>
 	</div>

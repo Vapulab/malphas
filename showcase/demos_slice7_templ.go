@@ -47,23 +47,23 @@ func demoSidebar() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"flex flex-col gap-2 p-6\"><h2 class=\"text-lg font-semibold text-fg\">Protocolos</h2><p class=\"text-sm text-muted\">Recolha a barra pelo botão no rodapé dela: a escolha fica guardada neste navegador. Em telas estreitas, a barra dá lugar ao botão Menu.</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"flex flex-col gap-2 p-6\"><h2 class=\"text-lg font-semibold text-fg\">Protocols</h2><p class=\"text-sm text-muted\">Collapse the bar with the button at its bottom: the choice is remembered in this browser. On narrow screens, the bar gives way to the Menu button.</p></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
 		templ_7745c5c3_Err = components.Sidebar(components.SidebarProps{
-			ID: "sb-app", Label: "Navegação do laboratório", Collapsible: true,
+			ID: "sb-app", Label: "Lab navigation", Collapsible: true,
 			Groups: []components.SidebarGroup{
-				{Label: "Trabalho", Items: []components.SidebarItem{
-					{Label: "Protocolos", Href: "/components/sidebar", Icon: "◆", Current: true, Badge: "12"},
-					{Label: "Resultados", Href: "/components/sidebar?r=1", Icon: "▲"},
-					{Label: "Agenda", Href: "/components/sidebar?r=2", Icon: "●"},
+				{Label: "Work", Items: []components.SidebarItem{
+					{Label: "Protocols", Href: "/components/sidebar", Icon: "◆", Current: true, Badge: "12"},
+					{Label: "Results", Href: "/components/sidebar?r=1", Icon: "▲"},
+					{Label: "Schedule", Href: "/components/sidebar?r=2", Icon: "●"},
 				}},
-				{Label: "Conta", Items: []components.SidebarItem{
-					{Label: "Equipe", Href: "/components/sidebar?r=3", Icon: "◎"},
-					{Label: "Configurações", Href: "/components/sidebar?r=4", Icon: "✦"},
+				{Label: "Account", Items: []components.SidebarItem{
+					{Label: "Team", Href: "/components/sidebar?r=3", Icon: "◎"},
+					{Label: "Settings", Href: "/components/sidebar?r=4", Icon: "✦"},
 				}},
 			},
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
@@ -154,14 +154,14 @@ func demoResizable() templ.Component {
 			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"flex flex-col gap-6\"><p class=\"text-sm text-muted\">Arraste a divisória ou foque nela com Tab e use as setas (Shift para passos de 1%), Home e End. O tamanho do primeiro exemplo fica guardado neste navegador.</p><div class=\"h-56 overflow-hidden rounded border border-border\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"flex flex-col gap-6\"><p class=\"text-sm text-muted\">Drag the divider, or Tab to it and use the arrows (Shift for 1% steps), Home and End. The first example's size is remembered in this browser.</p><div class=\"h-56 overflow-hidden rounded border border-border\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Resizable(components.ResizableProps{
-			ID: "rz-editor", Label: "Largura da lista de etapas", DefaultSize: 35, Min: 20, Max: 70,
-			First:  demoResizablePane("Etapas", "1. Preparar amostras · 2. Extrair RNA · 3. PCR"),
-			Second: demoResizablePane("Editor", "Detalhes da etapa selecionada."),
+			ID: "rz-editor", Label: "Step list width", DefaultSize: 35, Min: 20, Max: 70,
+			First:  demoResizablePane("Steps", "1. Prepare samples · 2. Extract RNA · 3. PCR"),
+			Second: demoResizablePane("Editor", "Details of the selected step."),
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -171,9 +171,9 @@ func demoResizable() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Resizable(components.ResizableProps{
-			ID: "rz-vertical", Label: "Altura do registro", Vertical: true, DefaultSize: 60,
-			First:  demoResizablePane("Gráfico", "Curva de amplificação."),
-			Second: demoResizablePane("Registro", "Ciclo 32: limiar atingido."),
+			ID: "rz-vertical", Label: "Log height", Vertical: true, DefaultSize: 60,
+			First:  demoResizablePane("Chart", "Amplification curve."),
+			Second: demoResizablePane("Log", "Cycle 32: threshold reached."),
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

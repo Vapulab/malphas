@@ -33,7 +33,7 @@ func IndexPage(groups []Group) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<h1 class=\"text-2xl font-bold text-fg\">Componentes</h1><p class=\"mt-1 text-muted\">Documentação viva do design system Malphas. <a href=\"/components/todos\" class=\"font-medium text-primary underline-offset-2 hover:underline\">Ver todos funcionando numa página só</a></p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<h1 class=\"text-2xl font-bold text-fg\">Components</h1><p class=\"mt-1 text-muted\">Living documentation for the Malphas design system. <a href=\"/components/todos\" class=\"font-medium text-primary underline-offset-2 hover:underline\">See them all working on a single page</a></p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -204,7 +204,7 @@ func ComponentPage(c Component) templ.Component {
 			templ_7745c5c3_Var9 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<nav class=\"text-sm text-muted\"><a href=\"/\" class=\"hover:text-fg\">Componentes</a> <span class=\"mx-2\">/</span> <span class=\"text-fg\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "<nav class=\"text-sm text-muted\"><a href=\"/\" class=\"hover:text-fg\">Components</a> <span class=\"mx-2\">/</span> <span class=\"text-fg\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -257,7 +257,7 @@ func ComponentPage(c Component) templ.Component {
 	})
 }
 
-// AllPage is the vitrine: every component, live, on one page — no cards,
+// AllPage is the showcase: every component, live, on one page — no cards,
 // no code, just the components themselves under a small heading, with a
 // sticky index to jump around. It reuses each component's catalog examples,
 // so a new component shows up here with no extra work.
@@ -282,7 +282,7 @@ func AllPage(groups []Group) templ.Component {
 			templ_7745c5c3_Var13 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<div class=\"lg:grid lg:grid-cols-[13rem_1fr] lg:gap-10\"><nav aria-label=\"Índice da vitrine\" class=\"hidden lg:block\"><div class=\"sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto pr-2 text-sm [scrollbar-color:rgb(var(--color-muted)/0.5)_transparent] [scrollbar-width:thin]\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<div class=\"lg:grid lg:grid-cols-[13rem_1fr] lg:gap-10\"><nav aria-label=\"Showcase index\" class=\"hidden lg:block\"><div class=\"sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto pr-2 text-sm [scrollbar-color:rgb(var(--color-muted)/0.5)_transparent] [scrollbar-width:thin]\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -341,7 +341,7 @@ func AllPage(groups []Group) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</div></nav><div class=\"min-w-0\"><h1 class=\"text-2xl font-bold text-fg\">Vitrine</h1><p class=\"mt-1 text-muted\">Todos os componentes do Malphas, funcionando, numa página só.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</div></nav><div class=\"min-w-0\"><h1 class=\"text-2xl font-bold text-fg\">Showcase</h1><p class=\"mt-1 text-muted\">Every Malphas component, working, on a single page.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -455,7 +455,7 @@ func AllPage(groups []Group) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "\" class=\"text-xs font-normal text-muted hover:text-primary\">documentação</a></h3><div class=\"flex flex-col gap-6\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "\" class=\"text-xs font-normal text-muted hover:text-primary\">docs</a></h3><div class=\"flex flex-col gap-6\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

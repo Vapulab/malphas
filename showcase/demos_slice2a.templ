@@ -4,23 +4,23 @@ import "github.com/vapulab/malphas/components"
 
 templ demoToggle() {
 	<div class="flex flex-col gap-4">
-		@components.Toggle(components.ToggleProps{ID: "t-notif", Name: "notif", Label: "Notificações por email"})
-		@components.Toggle(components.ToggleProps{ID: "t-beta", Name: "beta", Label: "Recursos beta", Checked: true})
-		@components.Toggle(components.ToggleProps{ID: "t-off", Name: "off", Label: "Indisponível no seu plano", Disabled: true})
+		@components.Toggle(components.ToggleProps{ID: "t-notif", Name: "notif", Label: "Email notifications"})
+		@components.Toggle(components.ToggleProps{ID: "t-beta", Name: "beta", Label: "Beta features", Checked: true})
+		@components.Toggle(components.ToggleProps{ID: "t-off", Name: "off", Label: "Not available on your plan", Disabled: true})
 	</div>
 }
 
 templ demoCheckbox() {
 	<div class="flex flex-col gap-3">
-		@components.Checkbox(components.CheckboxProps{ID: "c-termos", Name: "termos", Value: "sim", Label: "Aceito os termos de uso"})
-		@components.Checkbox(components.CheckboxProps{ID: "c-news", Name: "news", Label: "Quero receber novidades", Checked: true})
-		@components.Checkbox(components.CheckboxProps{ID: "c-off", Name: "off", Label: "Desabilitado", Disabled: true})
+		@components.Checkbox(components.CheckboxProps{ID: "c-termos", Name: "termos", Value: "yes", Label: "I accept the terms of use"})
+		@components.Checkbox(components.CheckboxProps{ID: "c-news", Name: "news", Label: "Send me product updates", Checked: true})
+		@components.Checkbox(components.CheckboxProps{ID: "c-off", Name: "off", Label: "Disabled", Disabled: true})
 	</div>
 }
 
 templ demoCheckboxIndeterminate() {
 	<div class="flex flex-col gap-3">
-		@components.Checkbox(components.CheckboxProps{ID: "c-todos", Name: "todos", Label: "Selecionar todos", Indeterminate: true})
+		@components.Checkbox(components.CheckboxProps{ID: "c-todos", Name: "todos", Label: "Select all", Indeterminate: true})
 		<div class="ml-6 flex flex-col gap-3">
 			@components.Checkbox(components.CheckboxProps{ID: "c-a", Name: "item", Value: "a", Label: "Item A", Checked: true})
 			@components.Checkbox(components.CheckboxProps{ID: "c-b", Name: "item", Value: "b", Label: "Item B"})
@@ -31,10 +31,10 @@ templ demoCheckboxIndeterminate() {
 templ demoRadio() {
 	@components.Radio(components.RadioProps{
 		Name:  "plano",
-		Label: "Plano",
+		Label: "Plan",
 		Value: "pro",
 		Options: []components.RadioOption{
-			{Label: "Grátis", Value: "free"},
+			{Label: "Free", Value: "free"},
 			{Label: "Pro", Value: "pro"},
 			{Label: "Enterprise", Value: "ent", Disabled: true},
 		},
@@ -44,13 +44,13 @@ templ demoRadio() {
 templ demoRadioVertical() {
 	@components.Radio(components.RadioProps{
 		Name:     "entrega",
-		Label:    "Forma de entrega",
+		Label:    "Delivery method",
 		Value:    "normal",
 		Vertical: true,
 		Options: []components.RadioOption{
-			{Label: "Retirar na loja", Value: "loja"},
-			{Label: "Entrega padrão", Value: "normal"},
-			{Label: "Entrega expressa", Value: "express"},
+			{Label: "Pick up in store", Value: "loja"},
+			{Label: "Standard delivery", Value: "normal"},
+			{Label: "Express delivery", Value: "express"},
 		},
 	})
 }
@@ -65,7 +65,7 @@ templ demoRating() {
 templ demoRatingReadOnly() {
 	<div class="flex items-center gap-3">
 		@components.Rating(components.RatingProps{Value: 4, ReadOnly: true})
-		<span class="text-sm text-muted">4 de 5 — 128 avaliações</span>
+		<span class="text-sm text-muted">4 out of 5 — 128 reviews</span>
 	</div>
 }
 
@@ -74,7 +74,7 @@ templ demoRatingReadOnly() {
 templ demoFormSubmit() {
 	<form method="get" action="/components/toggle" class="flex flex-col items-start gap-4">
 		@components.Toggle(components.ToggleProps{ID: "f-toggle", Name: "toggle", Label: "Toggle"})
-		@components.Checkbox(components.CheckboxProps{ID: "f-check", Name: "check", Value: "sim", Label: "Checkbox"})
+		@components.Checkbox(components.CheckboxProps{ID: "f-check", Name: "check", Value: "yes", Label: "Checkbox"})
 		@components.Radio(components.RadioProps{
 			Name:  "radio",
 			Label: "Radio",
@@ -86,7 +86,7 @@ templ demoFormSubmit() {
 		})
 		@components.Rating(components.RatingProps{Name: "rating", Value: 3})
 		@components.Button(components.ButtonProps{Type: "submit", Size: "sm"}) {
-			Enviar
+			Submit
 		}
 	</form>
 }

@@ -35,15 +35,15 @@ func demoToggle() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Toggle(components.ToggleProps{ID: "t-notif", Name: "notif", Label: "Notificações por email"}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Toggle(components.ToggleProps{ID: "t-notif", Name: "notif", Label: "Email notifications"}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Toggle(components.ToggleProps{ID: "t-beta", Name: "beta", Label: "Recursos beta", Checked: true}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Toggle(components.ToggleProps{ID: "t-beta", Name: "beta", Label: "Beta features", Checked: true}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Toggle(components.ToggleProps{ID: "t-off", Name: "off", Label: "Indisponível no seu plano", Disabled: true}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Toggle(components.ToggleProps{ID: "t-off", Name: "off", Label: "Not available on your plan", Disabled: true}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -80,15 +80,15 @@ func demoCheckbox() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "c-termos", Name: "termos", Value: "sim", Label: "Aceito os termos de uso"}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "c-termos", Name: "termos", Value: "yes", Label: "I accept the terms of use"}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "c-news", Name: "news", Label: "Quero receber novidades", Checked: true}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "c-news", Name: "news", Label: "Send me product updates", Checked: true}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "c-off", Name: "off", Label: "Desabilitado", Disabled: true}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "c-off", Name: "off", Label: "Disabled", Disabled: true}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -125,7 +125,7 @@ func demoCheckboxIndeterminate() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "c-todos", Name: "todos", Label: "Selecionar todos", Indeterminate: true}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "c-todos", Name: "todos", Label: "Select all", Indeterminate: true}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -172,10 +172,10 @@ func demoRadio() templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = components.Radio(components.RadioProps{
 			Name:  "plano",
-			Label: "Plano",
+			Label: "Plan",
 			Value: "pro",
 			Options: []components.RadioOption{
-				{Label: "Grátis", Value: "free"},
+				{Label: "Free", Value: "free"},
 				{Label: "Pro", Value: "pro"},
 				{Label: "Enterprise", Value: "ent", Disabled: true},
 			},
@@ -210,13 +210,13 @@ func demoRadioVertical() templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = components.Radio(components.RadioProps{
 			Name:     "entrega",
-			Label:    "Forma de entrega",
+			Label:    "Delivery method",
 			Value:    "normal",
 			Vertical: true,
 			Options: []components.RadioOption{
-				{Label: "Retirar na loja", Value: "loja"},
-				{Label: "Entrega padrão", Value: "normal"},
-				{Label: "Entrega expressa", Value: "express"},
+				{Label: "Pick up in store", Value: "loja"},
+				{Label: "Standard delivery", Value: "normal"},
+				{Label: "Express delivery", Value: "express"},
 			},
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -296,7 +296,7 @@ func demoRatingReadOnly() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<span class=\"text-sm text-muted\">4 de 5 — 128 avaliações</span></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<span class=\"text-sm text-muted\">4 out of 5 — 128 reviews</span></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -335,7 +335,7 @@ func demoFormSubmit() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "f-check", Name: "check", Value: "sim", Label: "Checkbox"}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "f-check", Name: "check", Value: "yes", Label: "Checkbox"}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -367,7 +367,7 @@ func demoFormSubmit() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "Enviar")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "Submit")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

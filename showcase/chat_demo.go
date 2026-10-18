@@ -6,18 +6,18 @@ import "strconv"
 // endpoint is stateless, so "new" and "older" messages are just more lines.
 
 var chatLines = []string{
-	"A curva do ciclo 32 saiu acima do limiar.",
-	"Repito a corrida amanhã cedo?",
-	"Repete, e separa uma alíquota de controle.",
-	"Os primers chegaram, estão na geladeira 2.",
-	"Alguém viu o termociclador livre à tarde?",
-	"Reservei das 14h às 16h.",
-	"Anotei os desvios no protocolo.",
-	"O controle negativo ficou limpo.",
+	"The curve for cycle 32 came out above the threshold.",
+	"Should I rerun it first thing tomorrow?",
+	"Rerun it, and set aside a control aliquot.",
+	"The primers arrived, they are in fridge 2.",
+	"Is the thermocycler free this afternoon?",
+	"I booked it from 2 to 4 pm.",
+	"I logged the deviations in the protocol.",
+	"The negative control came out clean.",
 }
 
 var chatAuthors = []struct{ Name, Initials string }{
-	{"Ana Lima", "AL"}, {"Bruno Reis", "BR"}, {"Carla Souza", "CS"},
+	{"Amara Okafor", "AO"}, {"Ben Carter", "BC"}, {"Chloé Martin", "CM"},
 }
 
 // ChatMessage is message number n of the demo conversation.
@@ -34,7 +34,7 @@ func DemoChatMessage(n int) ChatMessage {
 	m := ChatMessage{Author: a.Name, Initials: a.Initials, Text: chatLines[n%len(chatLines)]}
 	m.Time = "14:" + pad2((n*3)%60)
 	if n%4 == 2 {
-		m.Author, m.Initials, m.Mine = "Você", "VC", true
+		m.Author, m.Initials, m.Mine = "You", "ME", true
 	}
 	return m
 }

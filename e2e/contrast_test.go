@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-// relativeLuminance implementa a fórmula de luminância relativa da WCAG 2.x:
+// relativeLuminance implements the WCAG 2.x relative luminance formula:
 // https://www.w3.org/TR/WCAG21/#dfn-relative-luminance
 func relativeLuminance(r, g, b int) float64 {
 	channel := func(c int) float64 {
@@ -21,9 +21,9 @@ func relativeLuminance(r, g, b int) float64 {
 	return 0.2126*channel(r) + 0.7152*channel(g) + 0.0722*channel(b)
 }
 
-// contrastRatio segue a mesma norma: (L1+0.05)/(L2+0.05), L1 sendo a cor mais
-// clara. É simétrica de propósito — o par (texto, fundo) dá a mesma razão que
-// o par (fundo, texto), então não importa qual das duas cores é qual.
+// contrastRatio follows the same spec: (L1+0.05)/(L2+0.05), L1 being the
+// lighter color. It is symmetric on purpose — (text, background) gives the same
+// ratio as (background, text), so it does not matter which color is which.
 func contrastRatio(a, b [3]int) float64 {
 	la, lb := relativeLuminance(a[0], a[1], a[2]), relativeLuminance(b[0], b[1], b[2])
 	if la < lb {
@@ -32,37 +32,37 @@ func contrastRatio(a, b [3]int) float64 {
 	return (la + 0.05) / (lb + 0.05)
 }
 
-// parseRGB lê o formato que getComputedStyle devolve: "rgb(r, g, b)" ou
-// "rgba(r, g, b, a)". O canal alfa, quando presente, é ignorado de propósito —
-// os elementos que este arquivo mede (texto, preenchimento sólido) são opacos;
-// mediar alfa exigiria compor contra o fundo real, que é mais do que o teste
-// precisa provar.
+// parseRGB reads the format getComputedStyle returns: "rgb(r, g, b)" or
+// "rgba(r, g, b, a)". The alpha channel, when present, is ignored on purpose —
+// the elements this file measures (text, solid fills) are opaque; handling
+// alpha would mean compositing against the real background, which is more than
+// the test needs to prove.
 func parseRGB(t *testing.T, s string) [3]int {
 	t.Helper()
 	inner := strings.TrimSuffix(strings.TrimPrefix(strings.TrimPrefix(s, "rgba("), "rgb("), ")")
 	parts := strings.Split(inner, ",")
 	if len(parts) < 3 {
-		t.Fatalf("não foi possível interpretar a cor %q", s)
+		t.Fatalf("could not parse the color %q", s)
 	}
 	var out [3]int
 	for i := 0; i < 3; i++ {
 		n, err := strconv.Atoi(strings.TrimSpace(parts[i]))
 		if err != nil {
-			t.Fatalf("não foi possível interpretar a cor %q: %v", s, err)
+			t.Fatalf("could not parse the color %q: %v", s, err)
 		}
 		out[i] = n
 	}
 	return out
 }
 
-// openPageForcedDark abre path com o tema explicitamente escuro, gravado em
-// localStorage antes da navegação — não com prefers-color-scheme emulado.
-// Um dado explícito em localStorage vence o SO nos dois sentidos (ver
-// TestExplicitThemeBeatsTheOperatingSystem em theme_test.go), então isso
-// funciona não importa o que outro teste tenha deixado no mesmo perfil de
-// Chrome, ou qual seja o esquema de cores da máquina que roda a suíte.
-// t.Cleanup remove a chave depois: sem isso, todo teste que rodasse depois
-// herdaria tema escuro silenciosamente.
+// openPageForcedDark opens path with the theme explicitly dark, written to
+// localStorage before navigating — not with an emulated prefers-color-scheme.
+// An explicit value in localStorage beats the OS both ways (see
+// TestExplicitThemeBeatsTheOperatingSystem in theme_test.go), so this works
+// whatever another test left in the same Chrome profile, and whatever the
+// color scheme of the machine running the suite.
+// t.Cleanup removes the key afterwards: without it, every test that ran later
+// would silently inherit the dark theme.
 func openPageForcedDark(t *testing.T, path string) context.Context {
 	t.Helper()
 	ctx := openPage(t, "/components")
@@ -73,23 +73,23 @@ func openPageForcedDark(t *testing.T, path string) context.Context {
 	navigate(t, ctx, path)
 	settle(t, ctx)
 	if got := eval[string](t, ctx, `document.documentElement.dataset.theme || ''`); got != "dark" {
-		t.Fatalf("não foi possível forçar o tema escuro: data-theme=%q", got)
+		t.Fatalf("could not force the dark theme: data-theme=%q", got)
 	}
 	return ctx
 }
 
-// minAA é o piso da WCAG 2.x para texto normal (nível AA). Textos grandes e
-// limites de UI têm piso 3:1, mas medir pelo mais exigente cobre os dois.
+// minAA is the WCAG 2.x floor for normal text (level AA). Large text and UI
+// boundaries have a 3:1 floor, but measuring against the stricter one covers
+// both.
 const minAA = 4.5
 
-// TestDarkThemePrimaryTextMeetsAA guarda o contraste que rendering_test.go
-// nunca cobriu: nunca em tema escuro, e nunca como razão de verdade — só
-// cores comparadas entre si (mixed !== plain), o que não pega uma cor que
-// contrasta tecnicamente diferente mas ainda ilegível. --color-primary no
-// bloco escuro de tokens.css não tinha override antes desta correção: o valor
-// claro (indigo-700) dá ~2.2:1 sobre a superfície escura, bem abaixo do piso
-// AA. O índice do catálogo tem um link text-primary logo no topo, então ele
-// já basta.
+// TestDarkThemePrimaryTextMeetsAA guards the contrast rendering_test.go never
+// covered: never in the dark theme, and never as an actual ratio — only colors
+// compared with each other (mixed !== plain), which does not catch a color that
+// is technically different but still unreadable. --color-primary had no
+// override in the dark block of tokens.css before this fix: the light value
+// (indigo-700) gives ~2.2:1 on the dark surface, well below the AA floor. The
+// catalog index has a text-primary link right at the top, so it is enough.
 func TestDarkThemePrimaryTextMeetsAA(t *testing.T) {
 	ctx := openPageForcedDark(t, "/components")
 
@@ -98,18 +98,18 @@ func TestDarkThemePrimaryTextMeetsAA(t *testing.T) {
 
 	ratio := contrastRatio(parseRGB(t, textColor), parseRGB(t, bgColor))
 	if ratio < minAA {
-		t.Errorf("text-primary sobre a superfície escura: %.2f:1, abaixo do piso AA de %.1f:1 (texto %s, fundo %s)",
+		t.Errorf("text-primary on the dark surface: %.2f:1, below the AA floor of %.1f:1 (text %s, background %s)",
 			ratio, minAA, textColor, bgColor)
 	}
 }
 
-// TestDarkThemePrimaryFillMeetsAA cobre o outro lado da mesma armadilha: subir
-// --color-primary sozinho conserta text-primary e quebra todo preenchimento
-// bg-primary text-primary-fg (Button, Badge sólido, Pagination, Steps done,
-// Checkbox, Toggle) — o branco original cairia para ~2.9:1 sobre o azul mais
-// claro. --color-primary-fg tem de andar junto, nos mesmos blocos de
-// tokens.css. /components/button renderiza um Button de variante "primary"
-// (bg-primary text-primary-fg) na primeira demo da página.
+// TestDarkThemePrimaryFillMeetsAA covers the other side of the same trap:
+// raising --color-primary alone fixes text-primary and breaks every
+// bg-primary text-primary-fg fill (Button, solid Badge, Pagination, done Steps,
+// Checkbox, Toggle) — the original white would drop to ~2.9:1 on the lighter
+// blue. --color-primary-fg has to move with it, in the same tokens.css blocks.
+// /components/button renders a "primary" Button (bg-primary text-primary-fg)
+// in the page's first demo.
 func TestDarkThemePrimaryFillMeetsAA(t *testing.T) {
 	ctx := openPageForcedDark(t, "/components/button")
 
@@ -118,14 +118,14 @@ func TestDarkThemePrimaryFillMeetsAA(t *testing.T) {
 
 	ratio := contrastRatio(parseRGB(t, textColor), parseRGB(t, bgColor))
 	if ratio < minAA {
-		t.Errorf("text-primary-fg sobre bg-primary: %.2f:1, abaixo do piso AA de %.1f:1 (texto %s, fundo %s)",
+		t.Errorf("text-primary-fg on bg-primary: %.2f:1, below the AA floor of %.1f:1 (text %s, background %s)",
 			ratio, minAA, textColor, bgColor)
 	}
 }
 
-// O mesmo buraco do primário, agora no danger: o bloco escuro não tinha
-// override, e o vermelho claro (red-600) dá ~3.9:1 sobre a superfície escura.
-// O erro do Field é texto que a pessoa precisa ler para corrigir o campo.
+// The same gap as primary, now in danger: the dark block had no override, and
+// the light red (red-600) gives ~3.9:1 on the dark surface. The Field error is
+// text the person has to read to fix the field.
 func TestDarkThemeDangerTextMeetsAA(t *testing.T) {
 	ctx := openPageForcedDark(t, "/components/field")
 
@@ -134,13 +134,14 @@ func TestDarkThemeDangerTextMeetsAA(t *testing.T) {
 
 	ratio := contrastRatio(parseRGB(t, textColor), parseRGB(t, bgColor))
 	if ratio < minAA {
-		t.Errorf("text-danger sobre a superfície escura: %.2f:1, abaixo do piso AA de %.1f:1 (texto %s, fundo %s)",
+		t.Errorf("text-danger on the dark surface: %.2f:1, below the AA floor of %.1f:1 (text %s, background %s)",
 			ratio, minAA, textColor, bgColor)
 	}
 }
 
-// E o outro lado, como no primário: clarear --color-danger sozinho quebraria o
-// branco do Button danger. /components/button tem um Button "danger".
+// And the other side, as with primary: lightening --color-danger alone would
+// break the white on the danger Button. /components/button has a "danger"
+// Button.
 func TestDarkThemeDangerFillMeetsAA(t *testing.T) {
 	ctx := openPageForcedDark(t, "/components/button")
 
@@ -149,7 +150,7 @@ func TestDarkThemeDangerFillMeetsAA(t *testing.T) {
 
 	ratio := contrastRatio(parseRGB(t, textColor), parseRGB(t, bgColor))
 	if ratio < minAA {
-		t.Errorf("text-danger-fg sobre bg-danger: %.2f:1, abaixo do piso AA de %.1f:1 (texto %s, fundo %s)",
+		t.Errorf("text-danger-fg on bg-danger: %.2f:1, below the AA floor of %.1f:1 (text %s, background %s)",
 			ratio, minAA, textColor, bgColor)
 	}
 }

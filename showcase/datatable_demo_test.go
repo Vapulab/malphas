@@ -27,8 +27,8 @@ func TestDemoProtocolsSortsFiltersAndPages(t *testing.T) {
 			t.Errorf("row %q does not match pcr", row.Nome)
 		}
 	}
-	if showcase.DemoProtocols("nome", "asc", "celula", 1, 8).Total == 0 {
-		t.Error("\"celula\" should find \"Célula\" (accents ignored)")
+	if showcase.DemoProtocols("nome", "asc", "chloe", 1, 8).Total == 0 {
+		t.Error("\"chloe\" should find \"Chloé\" (accents ignored)")
 	}
 }
 
@@ -45,7 +45,7 @@ func TestDemoProtocolsClampsBadInput(t *testing.T) {
 	if showcase.DemoProtocols("nome", "asc", "", -3, 8).Page != 1 {
 		t.Error("a negative page should clamp to 1")
 	}
-	empty := showcase.DemoProtocols("nome", "asc", "nada-casa-isto", 1, 8)
+	empty := showcase.DemoProtocols("nome", "asc", "nothing-matches-this", 1, 8)
 	if empty.Total != 0 || empty.Page != 1 || len(empty.Rows) != 0 {
 		t.Errorf("no match: %+v", empty)
 	}

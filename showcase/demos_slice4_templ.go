@@ -47,7 +47,7 @@ func demoLabel() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "Nome")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "Name")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -108,8 +108,8 @@ func demoField() templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		ok := components.FieldProps{ID: "f-email", Label: "Email", Description: "Usado para entrar na conta.", Required: true}
-		bad := components.FieldProps{ID: "f-site", Label: "Site", Description: "Comece com https://", Error: "Endereço inválido."}
+		ok := components.FieldProps{ID: "f-email", Label: "Email", Description: "Used to sign in to your account.", Required: true}
+		bad := components.FieldProps{ID: "f-site", Label: "Website", Description: "Start with https://", Error: "Invalid address."}
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"flex max-w-sm flex-col gap-6\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -193,20 +193,20 @@ func demoTextarea() templ.Component {
 		}
 		templ_7745c5c3_Err = components.Textarea(components.TextareaProps{
 			ID: "ta-bio", Name: "bio", Label: "Bio", MaxLength: 160,
-			Placeholder: "Conte em poucas palavras quem você é.",
+			Placeholder: "Tell us who you are in a few words.",
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Textarea(components.TextareaProps{
-			ID: "ta-nota", Name: "nota", Label: "Nota salva", Rows: 3,
-			Value: "\nComeça com uma linha em branco.",
+			ID: "ta-nota", Name: "nota", Label: "Saved note", Rows: 3,
+			Value: "\nStarts with a blank line.",
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Textarea(components.TextareaProps{
-			ID: "ta-off", Name: "off", Label: "Observações", Value: "Campo bloqueado.", Disabled: true,
+			ID: "ta-off", Name: "off", Label: "Notes", Value: "Locked field.", Disabled: true,
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -227,7 +227,7 @@ func demoTextarea() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "Limpar")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "Clear")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -271,22 +271,22 @@ func demoInputGroup() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.InputGroup(components.InputGroupProps{
-			ID: "ig-preco", Name: "preco", Label: "Preço",
-			Prefix: components.InputGroupText("R$"),
+			ID: "ig-preco", Name: "preco", Label: "Price",
+			Prefix: components.InputGroupText("$"),
 			Attrs:  templ.Attributes{"inputmode": "decimal"},
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.InputGroup(components.InputGroupProps{
-			ID: "ig-usuario", Name: "usuario", Label: "Email corporativo",
+			ID: "ig-usuario", Name: "usuario", Label: "Work email",
 			Suffix: components.InputGroupText("@vapulab.com"),
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.InputGroup(components.InputGroupProps{
-			ID: "ig-busca", Name: "q", Label: "Busca", Type: "search", Placeholder: "Buscar componentes…",
+			ID: "ig-busca", Name: "q", Label: "Search", Type: "search", Placeholder: "Search components…",
 			Suffix: demoInputGroupButton(),
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -321,7 +321,7 @@ func demoInputGroupButton() templ.Component {
 			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<button type=\"button\" class=\"h-full px-3 text-sm font-medium text-primary hover:bg-muted/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50\">Buscar</button>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<button type=\"button\" class=\"h-full px-3 text-sm font-medium text-primary hover:bg-muted/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50\">Search</button>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -372,7 +372,7 @@ func demoToggleButton() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.ToggleButton(components.ToggleButtonProps{ID: "tb-fav", Name: "favorito", Label: "Favorito"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var12), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.ToggleButton(components.ToggleButtonProps{ID: "tb-fav", Name: "favorito", Label: "Favorite"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var12), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -394,7 +394,7 @@ func demoToggleButton() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.ToggleButton(components.ToggleButtonProps{ID: "tb-bold", Name: "negrito", Pressed: true, Label: "Negrito"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.ToggleButton(components.ToggleButtonProps{ID: "tb-bold", Name: "negrito", Pressed: true, Label: "Bold"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -410,7 +410,7 @@ func demoToggleButton() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "Bloqueado")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "Locked")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -449,16 +449,16 @@ func demoToggleGroup() templ.Component {
 			templ_7745c5c3_Var15 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<form class=\"flex flex-col gap-4\" x-on:submit.prevent><p class=\"text-sm text-muted\">Tab entra no grupo pelo item pressionado; ← → ↑ ↓ andam entre os itens sem mudar o que está pressionado. Espaço ou Enter alternam.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<form class=\"flex flex-col gap-4\" x-on:submit.prevent><p class=\"text-sm text-muted\">Tab enters the group at the pressed item; ← → ↑ ↓ move between items without changing what is pressed. Space or Enter toggles.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.ToggleGroup(components.ToggleGroupProps{
-			Name: "alinhamento", Label: "Alinhamento",
+			Name: "alinhamento", Label: "Alignment",
 			Items: []components.ToggleGroupItem{
-				{Label: "Esquerda", Value: "esq"},
-				{Label: "Centro", Value: "centro"},
-				{Label: "Direita", Value: "dir"},
+				{Label: "Left", Value: "esq"},
+				{Label: "Center", Value: "centro"},
+				{Label: "Right", Value: "dir"},
 			},
 			Value: []string{"centro"},
 		}).Render(ctx, templ_7745c5c3_Buffer)
@@ -466,12 +466,12 @@ func demoToggleGroup() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.ToggleGroup(components.ToggleGroupProps{
-			Name: "formato", Label: "Formatação", Type: "multiple",
+			Name: "formato", Label: "Formatting", Type: "multiple",
 			Items: []components.ToggleGroupItem{
-				{Label: "Negrito", Value: "negrito"},
-				{Label: "Itálico", Value: "italico"},
-				{Label: "Sublinhado", Value: "sublinhado", Disabled: true},
-				{Label: "Tachado", Value: "tachado"},
+				{Label: "Bold", Value: "negrito"},
+				{Label: "Italic", Value: "italico"},
+				{Label: "Underline", Value: "sublinhado", Disabled: true},
+				{Label: "Strikethrough", Value: "tachado"},
 			},
 			Value: []string{"italico"},
 		}).Render(ctx, templ_7745c5c3_Buffer)
@@ -605,20 +605,20 @@ func demoScrollArea() templ.Component {
 				return templ_7745c5c3_Err
 			}
 			for i := 1; i <= 12; i++ {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<p>Cláusula ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<p>Clause ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var21 string
 				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(intToString(i))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `showcase/demos_slice4.templ`, Line: 132, Col: 34}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `showcase/demos_slice4.templ`, Line: 132, Col: 31}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, ": o uso do serviço implica a aceitação destes termos, que podem mudar com aviso prévio.</p>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, ": using the service means accepting these terms, which may change with prior notice.</p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -629,7 +629,7 @@ func demoScrollArea() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.ScrollArea(components.ScrollAreaProps{Label: "Termos de uso", Class: "max-h-48 border border-border"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var20), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.ScrollArea(components.ScrollAreaProps{Label: "Terms of use", Class: "max-h-48 border border-border"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var20), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -741,7 +741,7 @@ func demoEmpty() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "Novo projeto")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "New project")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -754,8 +754,8 @@ func demoEmpty() templ.Component {
 			return nil
 		})
 		templ_7745c5c3_Err = components.Empty(components.EmptyProps{
-			Title:       "Nenhum projeto ainda",
-			Description: "Projetos guardam seus protocolos e resultados. Crie o primeiro para começar.",
+			Title:       "No projects yet",
+			Description: "Projects hold your protocols and results. Create the first one to get started.",
 			Icon:        templ.Raw("&#9671;"),
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var26), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -786,7 +786,7 @@ func demoItemAction() templ.Component {
 			templ_7745c5c3_Var28 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<button type=\"button\" id=\"item-baixar\" x-data x-on:click=\"$el.textContent = 'Baixado'\" class=\"rounded px-2 py-1 text-sm font-medium text-primary hover:bg-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50\">Baixar</button>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "<button type=\"button\" id=\"item-baixar\" x-data x-on:click=\"$el.textContent = 'Downloaded'\" class=\"rounded px-2 py-1 text-sm font-medium text-primary hover:bg-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50\">Download</button>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -820,7 +820,7 @@ func demoItem() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Item(components.ItemProps{
-			Title: "Relatório trimestral", Description: "PDF · 2,4 MB · atualizado ontem",
+			Title: "Quarterly report", Description: "PDF · 2.4 MB · updated yesterday",
 			Href: "/components/item", Variant: "outline",
 			Media:   components.Avatar(components.AvatarProps{Initials: "RT"}),
 			Actions: demoItemAction(),
@@ -829,10 +829,10 @@ func demoItem() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.ItemGroup(components.ItemGroupProps{
-			Label: "Arquivos recentes",
+			Label: "Recent files",
 			Items: []components.ItemProps{
-				{Title: "protocolo-v2.pdf", Description: "Enviado por Lincoln", Size: "sm"},
-				{Title: "resultados.csv", Description: "Gerado automaticamente", Size: "sm"},
+				{Title: "protocol-v2.pdf", Description: "Uploaded by Lincoln", Size: "sm"},
+				{Title: "results.csv", Description: "Generated automatically", Size: "sm"},
 			},
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -879,7 +879,7 @@ func demoProse() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<h2>Como funciona o protocolo</h2><p>O vapulab registra cada etapa do experimento. Veja a <a href=\"/components\">lista de componentes</a> para montar a sua tela.</p><ul><li>Planeje as etapas</li><li>Execute e <strong>anote</strong> os desvios</li></ul><blockquote>Medir duas vezes, cortar uma.</blockquote><p>Rode <code>task dev</code> para subir tudo localmente.</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<h2>How the protocol works</h2><p>vapulab records every step of the experiment. See the <a href=\"/components\">component list</a> to build your own screen.</p><ul><li>Plan the steps</li><li>Run them and <strong>log</strong> the deviations</li></ul><blockquote>Measure twice, cut once.</blockquote><p>Run <code>task dev</code> to bring everything up locally.</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

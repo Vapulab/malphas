@@ -33,7 +33,7 @@ func demoDrawer() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col gap-3\"><p class=\"text-sm text-muted\">Abra e tente sair com Tab: o foco circula dentro. Escape fecha e devolve o foco ao botão. Enquanto aberto, a página atrás não rola.</p><div x-data class=\"flex gap-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col gap-3\"><p class=\"text-sm text-muted\">Open it and try to Tab out: focus cycles inside. Escape closes it and returns focus to the button. While it is open, the page behind does not scroll.</p><div x-data class=\"flex gap-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -49,7 +49,7 @@ func demoDrawer() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "Abrir à esquerda")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "Open on the left")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -71,7 +71,7 @@ func demoDrawer() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Abrir à direita")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Open on the right")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -98,17 +98,17 @@ func demoDrawer() templ.Component {
 			}
 			ctx = templ.InitializeContext(ctx)
 			templ_7745c5c3_Err = components.Menu(components.MenuProps{Entries: []components.MenuEntry{
-				{Label: "Início", Href: "/", Current: true},
-				{Label: "Componentes", Href: "/"},
+				{Label: "Home", Href: "/", Current: true},
+				{Label: "Components", Href: "/"},
 				components.MenuDivider(),
-				{Label: "Todos", Href: "/todos"},
+				{Label: "All", Href: "/todos"},
 			}}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Drawer(components.DrawerProps{ID: "demo-drawer-left", Title: "Navegação"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var4), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Drawer(components.DrawerProps{ID: "demo-drawer-left", Title: "Navigation"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var4), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -128,11 +128,11 @@ func demoDrawer() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "d-ativo", Name: "ativo", Label: "Somente ativos"}).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "d-ativo", Name: "ativo", Label: "Active only"}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "d-arq", Name: "arq", Label: "Incluir arquivados"}).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "d-arq", Name: "arq", Label: "Include archived"}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -148,7 +148,7 @@ func demoDrawer() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "Aplicar")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "Apply")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -164,7 +164,7 @@ func demoDrawer() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Drawer(components.DrawerProps{ID: "demo-drawer-right", Title: "Filtros", Side: "right"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Drawer(components.DrawerProps{ID: "demo-drawer-right", Title: "Filters", Side: "right"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -173,7 +173,7 @@ func demoDrawer() templ.Component {
 }
 
 // The action entry dispatches an event; nothing listened to it, so clicking
-// "Sair" did nothing and the whole component looked broken. The wrapper now
+// "Sign out" did nothing and the whole component looked broken. The wrapper now
 // listens and shows the result.
 func demoMenu() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -196,19 +196,19 @@ func demoMenu() templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"flex flex-col gap-4\" x-data=\"{ saiu: false }\" x-on:demo-logout=\"saiu = true\"><p class=\"text-sm text-muted\">O Menu é navegação, não widget: os links navegam e o Tab passa por eles, sem setas. O item atual leva <code class=\"text-fg\">aria-current</code>, o divisor não recebe foco, e a última entrada é um botão que dispara um evento em vez de navegar.</p><div class=\"max-w-xs rounded border border-border bg-surface p-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"flex flex-col gap-4\" x-data=\"{ saiu: false }\" x-on:demo-logout=\"saiu = true\"><p class=\"text-sm text-muted\">Menu is navigation, not a widget: the links navigate and Tab moves through them, no arrows. The current item carries <code class=\"text-fg\">aria-current</code>, the divider takes no focus, and the last entry is a button that fires an event instead of navigating.</p><div class=\"max-w-xs rounded border border-border bg-surface p-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Menu(components.MenuProps{
 			Landmark: true,
-			Label:    "Exemplo",
+			Label:    "Example",
 			Entries: []components.MenuEntry{
-				{Label: "Início", Href: "/", Current: true},
-				{Label: "Componentes", Href: "/"},
-				{Label: "Todos", Href: "/todos"},
+				{Label: "Home", Href: "/", Current: true},
+				{Label: "Components", Href: "/"},
+				{Label: "All", Href: "/todos"},
 				components.MenuDivider(),
-				{Label: "Sair", OnClick: "$dispatch('demo-logout')"},
+				{Label: "Sign out", OnClick: "$dispatch('demo-logout')"},
 			},
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -230,7 +230,7 @@ func demoMenu() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<span>Evento <code>demo-logout</code> recebido — a entrada de ação funciona.</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<span>Event <code>demo-logout</code> received — the action entry works.</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -309,8 +309,8 @@ func demoNavbar() templ.Component {
 			Brand:    "Vapulab",
 			DrawerID: "demo-navbar-drawer",
 			Entries: []components.MenuEntry{
-				{Label: "Componentes", Href: "/", Current: true},
-				{Label: "Todos", Href: "/todos"},
+				{Label: "Components", Href: "/", Current: true},
+				{Label: "All", Href: "/todos"},
 			},
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var10), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -329,8 +329,8 @@ func demoNavbar() templ.Component {
 			}
 			ctx = templ.InitializeContext(ctx)
 			templ_7745c5c3_Err = components.Menu(components.MenuProps{Entries: []components.MenuEntry{
-				{Label: "Componentes", Href: "/", Current: true},
-				{Label: "Todos", Href: "/todos"},
+				{Label: "Components", Href: "/", Current: true},
+				{Label: "All", Href: "/todos"},
 			}}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -341,7 +341,7 @@ func demoNavbar() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<p class=\"mt-3 text-sm text-muted\">O botão de menu só aparece em telas estreitas — reduza a janela para vê-lo. Ele existe apenas porque um DrawerID foi informado.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<p class=\"mt-3 text-sm text-muted\">The menu button only appears on narrow screens — shrink the window to see it. It exists only because a DrawerID was given.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

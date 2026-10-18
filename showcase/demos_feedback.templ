@@ -7,10 +7,10 @@ import "github.com/vapulab/malphas/components"
 templ demoToast() {
 	<div x-data="{ shown: false }">
 		@components.Button(components.ButtonProps{Variant: "secondary", Attrs: templ.Attributes{"x-on:click": "shown = true; setTimeout(() => shown = false, 3200)"}}) {
-			Mostrar toast
+			Show toast
 		}
 		<template x-if="shown">
-			@components.Toast(components.ToastProps{Message: "Alterações salvas", Variant: "success"})
+			@components.Toast(components.ToastProps{Message: "Changes saved", Variant: "success"})
 		</template>
 	</div>
 }
@@ -18,10 +18,10 @@ templ demoToast() {
 templ demoToastError() {
 	<div x-data="{ shown: false }">
 		@components.Button(components.ButtonProps{Variant: "secondary", Attrs: templ.Attributes{"x-on:click": "shown = true; setTimeout(() => shown = false, 3200)"}}) {
-			Mostrar erro
+			Show error
 		}
 		<template x-if="shown">
-			@components.Toast(components.ToastProps{Message: "Não foi possível salvar", Variant: "error"})
+			@components.Toast(components.ToastProps{Message: "Could not save", Variant: "error"})
 		</template>
 	</div>
 }

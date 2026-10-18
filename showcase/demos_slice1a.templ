@@ -5,16 +5,16 @@ import "github.com/vapulab/malphas/components"
 templ demoAlertVariants() {
 	<div class="flex flex-col gap-3">
 		@components.Alert(components.AlertProps{Variant: "info"}) {
-			<span>Uma migration nova está disponível.</span>
+			<span>A new migration is available.</span>
 		}
 		@components.Alert(components.AlertProps{Variant: "success"}) {
-			<span>Deploy concluído com sucesso.</span>
+			<span>Deploy finished successfully.</span>
 		}
 		@components.Alert(components.AlertProps{Variant: "warning"}) {
-			<span>Seu token expira em 3 dias.</span>
+			<span>Your token expires in 3 days.</span>
 		}
 		@components.Alert(components.AlertProps{Variant: "error"}) {
-			<span>Não foi possível conectar ao banco.</span>
+			<span>Could not connect to the database.</span>
 		}
 	</div>
 }
@@ -28,13 +28,13 @@ templ demoBadgeSolid() {
 			Primary
 		}
 		@components.Badge(components.BadgeProps{Variant: "success"}) {
-			Ativo
+			Active
 		}
 		@components.Badge(components.BadgeProps{Variant: "warning"}) {
-			Pendente
+			Pending
 		}
 		@components.Badge(components.BadgeProps{Variant: "danger"}) {
-			Falhou
+			Failed
 		}
 		@components.Badge(components.BadgeProps{Variant: "info"}) {
 			Info
@@ -48,7 +48,7 @@ templ demoBadgeOutline() {
 			Primary
 		}
 		@components.Badge(components.BadgeProps{Variant: "success", Outline: true}) {
-			Ativo
+			Active
 		}
 		@components.Badge(components.BadgeProps{Variant: "danger", Outline: true, Size: "sm"}) {
 			Small
@@ -65,34 +65,34 @@ templ demoKbd() {
 		@components.Kbd(components.KbdProps{}) {
 			K
 		}
-		<span class="ml-4">para buscar</span>
+		<span class="ml-4">to search</span>
 	</div>
 }
 
 templ demoLink() {
 	<div class="flex flex-col items-start gap-2">
 		@components.Link(components.LinkProps{Href: "/todos"}) {
-			Link interno
+			Internal link
 		}
 		@components.Link(components.LinkProps{Href: "/", Variant: "muted"}) {
-			Discreto
+			Subtle
 		}
 		@components.Link(components.LinkProps{Href: "https://templ.guide", External: true, Underline: true}) {
-			templ.guide (nova aba)
+			templ.guide (new tab)
 		}
 	</div>
 }
 
 templ demoDivider() {
 	<div>
-		<p class="text-muted">Acima</p>
+		<p class="text-muted">Above</p>
 		@components.Divider(components.DividerProps{})
-		<p class="text-muted">Abaixo</p>
-		@components.Divider(components.DividerProps{Label: "ou"})
+		<p class="text-muted">Below</p>
+		@components.Divider(components.DividerProps{Label: "or"})
 		<div class="flex h-12 items-center">
-			<span class="text-muted">Esquerda</span>
+			<span class="text-muted">Left</span>
 			@components.Divider(components.DividerProps{Vertical: true})
-			<span class="text-muted">Direita</span>
+			<span class="text-muted">Right</span>
 		</div>
 	</div>
 }
@@ -101,10 +101,10 @@ templ demoFooter() {
 	@components.Footer(components.FooterProps{
 		Note: "© 2026 Vapulab",
 		Columns: []components.FooterColumn{
-			{Title: "Produto", Links: []components.FooterLink{
-				{Label: "Componentes", Href: "/components"},
+			{Title: "Product", Links: []components.FooterLink{
+				{Label: "Components", Href: "/components"},
 			}},
-			{Title: "Código", Links: []components.FooterLink{
+			{Title: "Code", Links: []components.FooterLink{
 				{Label: "GitHub", Href: "https://github.com/vapulab/malphas", External: true},
 			}},
 		},

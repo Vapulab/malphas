@@ -134,7 +134,7 @@ func TestScrollerFollowsStreaming(t *testing.T) {
 func TestScrollerKeepsPlaceWhenASentinelReplacesItself(t *testing.T) {
 	ctx := openPage(t, "/components/message-scroller")
 	before := scrolledTo(t, ctx, 150)
-	eval[bool](t, ctx, `(() => { const first = `+chatContent+`.firstElementChild; const older = [...`+chatContent+`.querySelectorAll('article')].slice(0, 3).map(a => a.outerHTML).join(''); first.outerHTML = '<div id="sentinela">carregar</div>' + older; return true })()`)
+	eval[bool](t, ctx, `(() => { const first = `+chatContent+`.firstElementChild; const older = [...`+chatContent+`.querySelectorAll('article')].slice(0, 3).map(a => a.outerHTML).join(''); first.outerHTML = '<div id="sentinela">load</div>' + older; return true })()`)
 	settle(t, ctx)
 	if d := movedBy(t, ctx, before); d > 1 || d < -1 {
 		t.Errorf("the message being read moved by %.1fpx when the sentinel swapped", d)
@@ -156,11 +156,11 @@ func TestScrollerPrependAndAppendInOneBatch(t *testing.T) {
 	}
 }
 
-// Only messages count as new: a "Gerando resposta…" marker does not.
+// Only messages count as new: a "Generating a reply…" marker does not.
 func TestScrollerCountsOnlyMessages(t *testing.T) {
 	ctx := openPage(t, "/components/message-scroller")
 	scrolledTo(t, ctx, 150)
-	eval[bool](t, ctx, `(() => { const m = document.createElement('div'); m.setAttribute('role', 'status'); m.textContent = 'Gerando resposta…'; `+chatContent+`.append(m); return true })()`)
+	eval[bool](t, ctx, `(() => { const m = document.createElement('div'); m.setAttribute('role', 'status'); m.textContent = 'Generating a reply…'; `+chatContent+`.append(m); return true })()`)
 	settle(t, ctx)
 	if eval[bool](t, ctx, `/\(\d/.test(`+chatJump+`.innerText)`) { // innerText: the hidden counter span always holds text
 		t.Errorf("a marker was counted as a new message: %q", eval[string](t, ctx, chatJump+`.innerText`))

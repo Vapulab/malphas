@@ -9,7 +9,10 @@ import (
 	"strings"
 	"testing"
 
+	"slices"
+
 	"github.com/a-h/templ"
+	"github.com/vapulab/malphas"
 	"github.com/vapulab/malphas/layout"
 	"github.com/vapulab/malphas/showcase"
 )
@@ -150,7 +153,7 @@ func postAnswer(t *testing.T, form url.Values, htmx bool) *httptest.ResponseReco
 func TestQuestionnaireAnswerReturnsTheNextStepFragment(t *testing.T) {
 	rec := postAnswer(t, url.Values{"atual": {"experiencia"}, "nav": {"next"}, "a.experiencia": {"sim"}}, true)
 	body := rec.Body.String()
-	if rec.Code != http.StatusOK || !strings.Contains(body, "Em quais áreas?") {
+	if rec.Code != http.StatusOK || !strings.Contains(body, "In which areas?") {
 		t.Fatalf("status %d, body: %s", rec.Code, body)
 	}
 	if strings.Contains(body, "<html") {
@@ -163,7 +166,7 @@ func TestQuestionnaireAnswerReturnsTheNextStepFragment(t *testing.T) {
 func TestQuestionnaireAnswerWorksWithoutJavaScript(t *testing.T) {
 	rec := postAnswer(t, url.Values{"atual": {"experiencia"}, "nav": {"next"}, "a.experiencia": {"nao"}}, false)
 	body := rec.Body.String()
-	if rec.Code != http.StatusOK || !strings.Contains(body, "<html") || !strings.Contains(body, "Qual o objetivo do próximo experimento?") {
+	if rec.Code != http.StatusOK || !strings.Contains(body, "<html") || !strings.Contains(body, "What is the goal of your next experiment?") {
 		t.Fatalf("expected the full page at the objetivo step; status %d", rec.Code)
 	}
 }
@@ -187,12 +190,12 @@ func TestVitrineRendersEveryComponent(t *testing.T) {
 	body := rec.Body.String()
 	for _, c := range showcase.All() {
 		if !strings.Contains(body, `id="c-`+c.Slug+`"`) {
-			t.Errorf("component %q has no section on the vitrine", c.Slug)
+			t.Errorf("component %q has no section on the showcase", c.Slug)
 		}
 	}
 	// Live demos, not cards or code: no example code blocks on this page.
 	if strings.Contains(body, "<pre") {
-		t.Error("the vitrine shows components, not their code")
+		t.Error("the showcase shows components, not their code")
 	}
 }
 
@@ -223,5 +226,30 @@ func TestMessageDemoFragment(t *testing.T) {
 	older := get(t, "/components/message-scroller/mensagem?antes=1")
 	if strings.Count(older.Body.String(), "<article") != 3 {
 		t.Errorf("antes=1 should return a page of three older messages: %s", older.Body.String())
+	}
+}
+
+// The catalog is the technical material: English even when the host serves
+// its own pages in another language and puts that language in the context.
+func TestCatalogIsAlwaysEnglish(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/components/modal", nil)
+	req = req.WithContext(malphas.WithLocale(req.Context(), malphas.RU))
+	html := serve(t, req).Body.String()
+	if !strings.Contains(html, `aria-label="Close"`) || strings.Contains(html, "Закрыть") {
+		t.Errorf("the catalog should render its components in English")
+	}
+	if !strings.Contains(html, `<html lang="en">`) {
+		t.Errorf("the catalog page is English: %s", html[:120])
+	}
+}
+
+func TestCategoriesAreEnglish(t *testing.T) {
+	var got []string
+	for _, g := range showcase.ByCategory() {
+		got = append(got, g.Category)
+	}
+	want := []string{"Actions", "Data display", "Data input", "Navigation", "Feedback", "Layout & utilities"}
+	if !slices.Equal(got, want) {
+		t.Errorf("categories = %v, want %v", got, want)
 	}
 }

@@ -76,19 +76,19 @@ func carouselSlideClass(variant string) string {
 	}[variant]
 }
 
-// demoEstados is long enough that scrolling it would be a chore — the case
+// demoCities is long enough that scrolling it would be a chore — the case
 // Combobox exists for — and full of accents to show the filter ignoring them.
-func demoEstados() []components.SelectOption {
+// The values are IATA city codes.
+func demoCities() []components.SelectOption {
 	names := [][2]string{
-		{"AC", "Acre"}, {"AL", "Alagoas"}, {"AP", "Amapá"}, {"AM", "Amazonas"},
-		{"BA", "Bahia"}, {"CE", "Ceará"}, {"DF", "Distrito Federal"},
-		{"ES", "Espírito Santo"}, {"GO", "Goiás"}, {"MA", "Maranhão"},
-		{"MT", "Mato Grosso"}, {"MS", "Mato Grosso do Sul"}, {"MG", "Minas Gerais"},
-		{"PA", "Pará"}, {"PB", "Paraíba"}, {"PR", "Paraná"}, {"PE", "Pernambuco"},
-		{"PI", "Piauí"}, {"RJ", "Rio de Janeiro"}, {"RN", "Rio Grande do Norte"},
-		{"RS", "Rio Grande do Sul"}, {"RO", "Rondônia"}, {"RR", "Roraima"},
-		{"SC", "Santa Catarina"}, {"SP", "São Paulo"}, {"SE", "Sergipe"},
-		{"TO", "Tocantins"},
+		{"AMS", "Amsterdam"}, {"BCN", "Barcelona"}, {"BER", "Berlin"}, {"BOG", "Bogotá"},
+		{"BSB", "Brasília"}, {"BUE", "Buenos Aires"}, {"CAI", "Cairo"}, {"COR", "Córdoba"},
+		{"DUS", "Düsseldorf"}, {"IST", "Istanbul"}, {"KRK", "Kraków"}, {"LOS", "Lagos"},
+		{"LIS", "Lisbon"}, {"LON", "London"}, {"AGP", "Málaga"}, {"MLE", "Malé"},
+		{"MMX", "Malmö"}, {"MEX", "Mexico City"}, {"YMQ", "Montréal"}, {"BOM", "Mumbai"},
+		{"NBO", "Nairobi"}, {"NYC", "New York"}, {"PAR", "Paris"}, {"YQB", "Québec City"},
+		{"REK", "Reykjavík"}, {"SAO", "São Paulo"}, {"SEL", "Seoul"}, {"SYD", "Sydney"},
+		{"TYO", "Tokyo"}, {"ZRH", "Zürich"},
 	}
 	opts := make([]components.SelectOption, len(names))
 	for i, n := range names {

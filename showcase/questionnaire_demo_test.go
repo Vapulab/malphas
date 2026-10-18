@@ -22,7 +22,7 @@ func TestQuestionnaireBranches(t *testing.T) {
 	}
 	nao := showcase.QuestionnaireNext(form("atual", "experiencia", "nav", "next", "a.experiencia", "nao"))
 	if nao.Question.Key != "objetivo" || nao.Step != 2 || nao.Total != 3 {
-		t.Errorf("\"não\" should skip areas, landing on objetivo (2 of 3), got %s (%d of %d)", nao.Question.Key, nao.Step, nao.Total)
+		t.Errorf("\"nao\" should skip areas, landing on objetivo (2 of 3), got %s (%d of %d)", nao.Question.Key, nao.Step, nao.Total)
 	}
 }
 
@@ -41,7 +41,7 @@ func TestQuestionnaireValidatesOnlyForward(t *testing.T) {
 }
 
 func TestQuestionnaireSkipOnlyWhenAllowed(t *testing.T) {
-	skipped := showcase.QuestionnaireNext(form("atual", "objetivo", "nav", "skip", "a.experiencia", "nao", "a.objetivo", "rascunho"))
+	skipped := showcase.QuestionnaireNext(form("atual", "objetivo", "nav", "skip", "a.experiencia", "nao", "a.objetivo", "draft"))
 	if skipped.Question.Key != "prazo" {
 		t.Errorf("skip on objetivo should advance to prazo, got %s", skipped.Question.Key)
 	}

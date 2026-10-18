@@ -10,10 +10,10 @@ type demoRow struct {
 }
 
 var demoRows = []demoRow{
-	{"vapulab-api", "produção", "Ativo", "success"},
-	{"vapulab-web", "produção", "Ativo", "success"},
-	{"vapulab-jobs", "staging", "Degradado", "warning"},
-	{"vapulab-etl", "staging", "Parado", "danger"},
+	{"vapulab-api", "production", "Active", "success"},
+	{"vapulab-web", "production", "Active", "success"},
+	{"vapulab-jobs", "staging", "Degraded", "warning"},
+	{"vapulab-etl", "staging", "Stopped", "danger"},
 }
 
 templ demoTableRows() {
@@ -38,10 +38,10 @@ templ demoTableHead() {
 	@components.THead() {
 		@components.TR() {
 			@components.TH(components.THProps{}) {
-				Serviço
+				Service
 			}
 			@components.TH(components.THProps{}) {
-				Ambiente
+				Environment
 			}
 			@components.TH(components.THProps{}) {
 				Status
@@ -70,16 +70,16 @@ templ demoTableZebraCompact() {
 
 templ demoHero() {
 	@components.Hero(components.HeroProps{Class: "border border-border bg-primary/5"}) {
-		<h1 class="text-3xl font-bold text-fg">Construa em Go, sem npm</h1>
+		<h1 class="text-3xl font-bold text-fg">Build in Go, without npm</h1>
 		<p class="mt-3 text-muted">
-			chi, templ, Tailwind, HTMX e Alpine — com um design system próprio e reaproveitável.
+			chi, templ, Tailwind, HTMX and Alpine — with a design system of your own that you can reuse.
 		</p>
 		<div class="mt-6 flex justify-center gap-3">
 			@components.Button(components.ButtonProps{}) {
-				Começar
+				Get started
 			}
 			@components.Button(components.ButtonProps{Variant: "secondary"}) {
-				Documentação
+				Documentation
 			}
 		</div>
 	}

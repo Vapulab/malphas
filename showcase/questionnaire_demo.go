@@ -15,35 +15,35 @@ import (
 var demoQuestions = []components.QuestionnaireQuestion{
 	{
 		Key: "experiencia", Kind: "single", Required: true,
-		Title: "Você já conduziu um experimento com protocolo escrito?",
+		Title: "Have you ever run an experiment from a written protocol?",
 		Options: []components.QuestionnaireOption{
-			{Label: "Sim", Value: "sim"},
-			{Label: "Não", Value: "nao"},
+			{Label: "Yes", Value: "sim"},
+			{Label: "No", Value: "nao"},
 		},
 	},
 	{
 		Key: "areas", Kind: "multiple", Required: true,
-		Title:       "Em quais áreas?",
-		Description: "Marque todas que se aplicam.",
+		Title:       "In which areas?",
+		Description: "Check all that apply.",
 		Options: []components.QuestionnaireOption{
-			{Label: "Genética", Value: "genetica"},
-			{Label: "Imunologia", Value: "imunologia"},
-			{Label: "Bioquímica", Value: "bioquimica"},
-			{Label: "Neurociência", Value: "neurociencia"},
+			{Label: "Genetics", Value: "genetica"},
+			{Label: "Immunology", Value: "imunologia"},
+			{Label: "Biochemistry", Value: "bioquimica"},
+			{Label: "Neuroscience", Value: "neurociencia"},
 		},
 	},
 	{
 		Key: "objetivo", Kind: "text",
-		Title:       "Qual o objetivo do próximo experimento?",
-		Description: "Uma frase basta. Pode pular.",
+		Title:       "What is the goal of your next experiment?",
+		Description: "One sentence is enough. You can skip this one.",
 	},
 	{
 		Key: "prazo", Kind: "single", Required: true,
-		Title: "Para quando você precisa dos resultados?",
+		Title: "When do you need the results?",
 		Options: []components.QuestionnaireOption{
-			{Label: "Esta semana", Value: "1s"},
-			{Label: "Este mês", Value: "1m"},
-			{Label: "Sem pressa", Value: "livre"},
+			{Label: "This week", Value: "1s"},
+			{Label: "This month", Value: "1m"},
+			{Label: "No rush", Value: "livre"},
 		},
 	},
 }
@@ -166,9 +166,9 @@ func QuestionnaireNext(form url.Values) QuestionnaireState {
 		visible = visibleQuestions(answers)
 	default:
 		if q.Required && len(answers[q.Key]) == 0 {
-			msg := "Escolha uma opção para continuar."
+			msg := "Choose an option to continue."
 			if q.Kind == "multiple" {
-				msg = "Escolha ao menos uma opção para continuar."
+				msg = "Choose at least one option to continue."
 			}
 			return stateAt(visible, i, answers, msg)
 		}

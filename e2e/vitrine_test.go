@@ -28,14 +28,14 @@ func TestVitrineLoadsWithoutErrors(t *testing.T) {
 	navigate(t, ctx, "/components/todos")
 	sleep(t, ctx, 800)
 	if len(errs) != 0 {
-		t.Errorf("the vitrine logged %d error(s)/warning(s): %v", len(errs), errs)
+		t.Errorf("the showcase logged %d error(s)/warning(s): %v", len(errs), errs)
 	}
 	if n := eval[int](t, ctx, `document.querySelectorAll('main section[id^="c-"]').length`); n < 70 {
 		t.Errorf("expected every component on the page, found %d sections", n)
 	}
 }
 
-// The server-driven demos find their regions by id; on the vitrine they must
+// The server-driven demos find their regions by id; on the showcase they must
 // still swap in place rather than navigate away.
 func TestVitrineServerDrivenDemosWork(t *testing.T) {
 	ctx := openPage(t, "/components/todos")
@@ -46,13 +46,13 @@ func TestVitrineServerDrivenDemosWork(t *testing.T) {
 		t.Fatalf("unexpected navigation to %q", loc)
 	}
 	if !eval[bool](t, ctx, `!!document.querySelector('#c-data-table th[aria-sort="ascending"] #dt-protocolos-sort-etapas')`) {
-		t.Error("sorting the Data Table on the vitrine did not swap its region in place")
+		t.Error("sorting the Data Table on the showcase did not swap its region in place")
 	}
 
 	click(t, ctx, `#cal-entrega-next`)
 	sleep(t, ctx, 600)
 	if !eval[bool](t, ctx, `!!document.querySelector('#c-calendar #cal-entrega-title')`) {
-		t.Fatal("the Calendar left the vitrine")
+		t.Fatal("the Calendar left the showcase")
 	}
 }
 
@@ -61,23 +61,23 @@ func TestVitrineInteractiveDemosWork(t *testing.T) {
 
 	focus(t, ctx, "#cb-estado")
 	eval[bool](t, ctx, `(document.querySelector('#cb-estado').select(), true)`)
-	press(t, ctx, "goi")
+	press(t, ctx, "zur")
 	settle(t, ctx)
 	press(t, ctx, kb.Enter)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, `document.querySelector('input[name="estado"]').value`); got != "go" {
-		t.Errorf("the Combobox on the vitrine picked %q, want go", got)
+	if got := eval[string](t, ctx, `document.querySelector('input[name="city"]').value`); got != "zrh" {
+		t.Errorf("the Combobox on the showcase picked %q, want zrh", got)
 	}
 
 	click(t, ctx, `[aria-controls="pop-filtros-panel"]`)
 	settle(t, ctx)
 	if got := eval[string](t, ctx, `document.activeElement.id`); got != "pop-autor" {
-		t.Errorf("the Popover on the vitrine did not take focus in: %q", got)
+		t.Errorf("the Popover on the showcase did not take focus in: %q", got)
 	}
 	press(t, ctx, kb.Escape)
 	settle(t, ctx)
 
-	links := eval[string](t, ctx, `[...document.querySelectorAll('nav[aria-label="Índice da vitrine"] a')].length + ''`)
+	links := eval[string](t, ctx, `[...document.querySelectorAll('nav[aria-label="Showcase index"] a')].length + ''`)
 	if !strings.HasPrefix(links, "7") {
 		t.Errorf("the index should list every component, has %s links", links)
 	}

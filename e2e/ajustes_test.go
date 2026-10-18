@@ -64,7 +64,7 @@ func TestScrollContainersUseTheThemedScrollbar(t *testing.T) {
 func TestHoverCardSentenceKeepsItsSpaces(t *testing.T) {
 	ctx := openPage(t, "/components/hover-card")
 	got := eval[string](t, ctx, `document.querySelector('[x-data^="hoverCard"]').closest('p').innerText.replace(/\s+/g, ' ').trim()`)
-	if !strings.HasPrefix(got, "Protocolo revisado por @lincoln ontem às 18h.") {
+	if !strings.HasPrefix(got, "Protocol reviewed by @lincoln yesterday at 6 pm.") {
 		t.Errorf("the sentence lost its spaces: %q", got)
 	}
 }
@@ -72,7 +72,7 @@ func TestHoverCardSentenceKeepsItsSpaces(t *testing.T) {
 // Bubbles are shown as a conversation, inside a chat box.
 func TestBubbleDemoSitsInAConversation(t *testing.T) {
 	ctx := openPage(t, "/components/bubble")
-	if !eval[bool](t, ctx, `(b => !!b && getComputedStyle(b).borderTopStyle !== 'none')(document.querySelector('[aria-label="Conversa de exemplo"]'))`) {
+	if !eval[bool](t, ctx, `(b => !!b && getComputedStyle(b).borderTopStyle !== 'none')(document.querySelector('[aria-label="Sample conversation"]'))`) {
 		t.Error("the bubbles should sit inside a bordered conversation box")
 	}
 }

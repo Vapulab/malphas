@@ -31,7 +31,7 @@ func demoBubble() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div role=\"group\" aria-label=\"Conversa de exemplo\" class=\"flex max-w-md flex-col gap-1 rounded-lg border border-border bg-surface p-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div role=\"group\" aria-label=\"Sample conversation\" class=\"flex max-w-md flex-col gap-1 rounded-lg border border-border bg-surface p-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -47,7 +47,7 @@ func demoBubble() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "A curva do ciclo 32 saiu acima do limiar.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "The curve for cycle 32 came out above the threshold.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -69,13 +69,13 @@ func demoBubble() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Repito a corrida amanhã cedo?")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Should I rerun it first thing tomorrow?")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Bubble(components.BubbleProps{Group: "last", Reactions: []components.BubbleReaction{{Emoji: "👀", Label: "Vendo", Count: 2}}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Bubble(components.BubbleProps{Group: "last", Reactions: []components.BubbleReaction{{Emoji: "👀", Label: "Looking", Count: 2}}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -91,7 +91,7 @@ func demoBubble() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "Repete, e separa uma alíquota de controle.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "Rerun it, and set aside a control aliquot.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -113,7 +113,7 @@ func demoBubble() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "Citação: \"separa uma alíquota de controle\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "Quote: \"set aside a control aliquot\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -168,7 +168,7 @@ func demoMarker() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "Ontem")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "Yesterday")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -190,7 +190,7 @@ func demoMarker() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "Ana Lima entrou na conversa")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "Amara Okafor joined the conversation")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -212,7 +212,7 @@ func demoMarker() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "Gerando o resumo do protocolo…")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "Generating the protocol summary…")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -251,7 +251,7 @@ func demoMessage() templ.Component {
 			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div role=\"group\" aria-label=\"Conversa de exemplo\" class=\"flex max-w-lg flex-col rounded-lg border border-border bg-surface p-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div role=\"group\" aria-label=\"Sample conversation\" class=\"flex max-w-lg flex-col rounded-lg border border-border bg-surface p-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -267,13 +267,13 @@ func demoMessage() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "A curva do ciclo 32 saiu acima do limiar.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "The curve for cycle 32 came out above the threshold.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Message(components.MessageProps{Author: "Ana Lima", Initials: "AL", Time: "14:02", Datetime: "2026-10-10T14:02", Group: "first"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var11), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Message(components.MessageProps{Author: "Amara Okafor", Initials: "AO", Time: "14:02", Datetime: "2026-10-10T14:02", Group: "first"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var11), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -289,13 +289,13 @@ func demoMessage() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "Repito a corrida amanhã cedo?")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "Should I rerun it first thing tomorrow?")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Message(components.MessageProps{Author: "Ana Lima", Initials: "AL", Time: "14:02", Datetime: "2026-10-10T14:02", Group: "last"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var12), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Message(components.MessageProps{Author: "Amara Okafor", Initials: "AO", Time: "14:02", Datetime: "2026-10-10T14:02", Group: "last"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var12), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -311,13 +311,13 @@ func demoMessage() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "Repete, e separa uma alíquota de controle.")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "Rerun it, and set aside a control aliquot.")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Message(components.MessageProps{Author: "Você", Initials: "VC", Time: "14:05", Datetime: "2026-10-10T14:05", Align: "end", Reactions: []components.BubbleReaction{{Emoji: "👍", Label: "Curtir", Count: 1}}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Message(components.MessageProps{Author: "You", Initials: "ME", Time: "14:05", Datetime: "2026-10-10T14:05", Align: "end", Reactions: []components.BubbleReaction{{Emoji: "👍", Label: "Like", Count: 1}}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -355,9 +355,9 @@ func demoAttachmentRemove(name string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var15 string
-		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue("Remover " + name)
+		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.ResolveAttributeValue("Remove " + name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `showcase/demos_slice8.templ`, Line: 51, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `showcase/demos_slice8.templ`, Line: 51, Col: 52}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var15)
 		if templ_7745c5c3_Err != nil {
@@ -397,15 +397,15 @@ func demoAttachmentRetry(name string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var17 string
-		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue("Tentar de novo: " + name)
+		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.ResolveAttributeValue("Try again: " + name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `showcase/demos_slice8.templ`, Line: 55, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `showcase/demos_slice8.templ`, Line: 55, Col: 56}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var17)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\" class=\"rounded px-2 py-1 text-xs font-medium text-primary hover:bg-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50\">Tentar de novo</button>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\" class=\"rounded px-2 py-1 text-xs font-medium text-primary hover:bg-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50\">Try again</button>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -435,12 +435,12 @@ func demoAttachment() templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = components.AttachmentGroup(components.AttachmentGroupProps{
-			Label: "Anexos da mensagem",
+			Label: "Message attachments",
 			Items: []components.AttachmentProps{
-				{Name: "protocolo-v2.pdf", Meta: "PDF · 2,4 MB", State: "done", Href: "/components/attachment", Actions: demoAttachmentRemove("protocolo-v2.pdf")},
-				{Name: "curva-ciclo-32.png", Meta: "PNG · 840 KB", State: "uploading", Progress: 45, Actions: demoAttachmentRemove("curva-ciclo-32.png")},
-				{Name: "resultados.csv", Meta: "CSV · 12 KB", State: "processing"},
-				{Name: "amostras.xlsx", Meta: "XLSX · 1,1 MB", State: "error", Error: "Falha na conexão.", Actions: demoAttachmentRetry("amostras.xlsx")},
+				{Name: "protocol-v2.pdf", Meta: "PDF · 2.4 MB", State: "done", Href: "/components/attachment", Actions: demoAttachmentRemove("protocol-v2.pdf")},
+				{Name: "cycle-32-curve.png", Meta: "PNG · 840 KB", State: "uploading", Progress: 45, Actions: demoAttachmentRemove("cycle-32-curve.png")},
+				{Name: "results.csv", Meta: "CSV · 12 KB", State: "processing"},
+				{Name: "samples.xlsx", Meta: "XLSX · 1.1 MB", State: "error", Error: "Connection failed.", Actions: demoAttachmentRetry("samples.xlsx")},
 			},
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -529,7 +529,7 @@ func demoMessageScroller() templ.Component {
 			templ_7745c5c3_Var22 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div class=\"flex flex-col gap-3\" x-data><p class=\"text-sm text-muted\">Role para cima e peça novas mensagens: sua posição fica, e o botão conta o que chegou. \"Carregar anteriores\" entra no topo sem empurrar o que você lê.</p><div class=\"flex flex-wrap gap-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div class=\"flex flex-col gap-3\" x-data><p class=\"text-sm text-muted\">Scroll up and ask for new messages: your position stays put, and the button counts what arrived. \"Load earlier\" adds to the top without pushing what you are reading.</p><div class=\"flex flex-wrap gap-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -545,7 +545,7 @@ func demoMessageScroller() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "Receber mensagem")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "Receive a message")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -569,7 +569,7 @@ func demoMessageScroller() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "Carregar anteriores")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "Load earlier")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -595,7 +595,7 @@ func demoMessageScroller() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "Simular streaming")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "Simulate streaming")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -605,7 +605,7 @@ func demoMessageScroller() templ.Component {
 			"id": "chat-stream",
 			// The streaming message is aria-busy while it grows, so a screen
 			// reader announces it once, complete, instead of word by word.
-			"x-on:click": "const m = [...document.querySelectorAll('#chat-demo-content [data-message]')].at(-1); if (m) { const b = m.querySelector('[data-bubble-content]'); m.setAttribute('aria-busy', 'true'); let i = 0; const t = setInterval(() => { b.append(' palavra'); if (++i >= 30) { clearInterval(t); m.removeAttribute('aria-busy') } }, 60) }",
+			"x-on:click": "const m = [...document.querySelectorAll('#chat-demo-content [data-message]')].at(-1); if (m) { const b = m.querySelector('[data-bubble-content]'); m.setAttribute('aria-busy', 'true'); let i = 0; const t = setInterval(() => { b.append(' word'); if (++i >= 30) { clearInterval(t); m.removeAttribute('aria-busy') } }, 60) }",
 		}}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var25), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -638,7 +638,7 @@ func demoMessageScroller() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "Hoje")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "Today")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -656,7 +656,7 @@ func demoMessageScroller() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.MessageScroller(components.MessageScrollerProps{ID: "chat-demo", Label: "Conversa do laboratório"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var26), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.MessageScroller(components.MessageScrollerProps{ID: "chat-demo", Label: "Lab conversation"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var26), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

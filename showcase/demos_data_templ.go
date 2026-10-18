@@ -43,7 +43,7 @@ func demoCard() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<h3 class=\"mb-1 font-semibold text-fg\">Título do card</h3><p class=\"text-muted\">Um contêiner para agrupar conteúdo relacionado.</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<h3 class=\"mb-1 font-semibold text-fg\">Card title</h3><p class=\"text-muted\">A container that groups related content.</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -90,7 +90,7 @@ func demoCardWithActions() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<h3 class=\"mb-1 font-semibold text-fg\">Plano Pro</h3><p class=\"mb-4 text-muted\">Tudo do plano gratuito, sem limites.</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<h3 class=\"mb-1 font-semibold text-fg\">Pro plan</h3><p class=\"mb-4 text-muted\">Everything in the free plan, with no limits.</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -106,7 +106,7 @@ func demoCardWithActions() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Assinar")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Subscribe")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -156,7 +156,7 @@ func demoInput() templ.Component {
 			Name:        "email",
 			Label:       "Email",
 			Type:        "email",
-			Placeholder: "voce@exemplo.com",
+			Placeholder: "you@example.com",
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -197,7 +197,7 @@ func demoInputWithValue() templ.Component {
 		templ_7745c5c3_Err = components.Input(components.InputProps{
 			ID:    "demo-nome",
 			Name:  "nome",
-			Label: "Nome",
+			Label: "Name",
 			Value: "Lincoln",
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {

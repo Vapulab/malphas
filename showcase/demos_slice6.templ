@@ -8,14 +8,14 @@ import (
 )
 
 templ demoDatePicker() {
-	{{ f := components.FieldProps{ID: "dp-entrega", Label: "Entrega do relatório", Description: "Entre hoje e o fim do ano.", Required: true} }}
+	{{ f := components.FieldProps{ID: "dp-entrega", Label: "Report due date", Description: "Between today and the end of the year.", Required: true} }}
 	<div class="flex max-w-xs flex-col gap-6">
 		@components.Field(f) {
 			@components.DatePicker(components.DatePickerProps{
 				ID: f.ID, Name: "entrega", Min: "2026-10-10", Max: "2026-12-31", Attrs: f.ControlAttrs(),
 			})
 		}
-		@components.DatePicker(components.DatePickerProps{ID: "dp-off", Name: "off", Label: "Início (bloqueado)", Value: "2026-10-01", Disabled: true})
+		@components.DatePicker(components.DatePickerProps{ID: "dp-off", Name: "off", Label: "Start (locked)", Value: "2026-10-01", Disabled: true})
 	</div>
 }
 
@@ -31,13 +31,13 @@ templ demoCalendar() {
 	{{ focus := QueryDate(ctx, "focus", time.Time{}) }}
 	<div class="flex flex-col gap-6">
 		<p class="text-sm text-muted">
-			Setas andam por dia e semana, Home/End vão aos extremos da semana,
-			PageUp/PageDown trocam o mês (com Shift, o ano). Andar além do mês carrega
-			o mês vizinho e mantém o foco no dia. Enter ou Espaço escolhem.
+			Arrows move by day and week, Home/End go to the ends of the week,
+			PageUp/PageDown change the month (with Shift, the year). Moving past the month loads
+			the neighboring month and keeps focus on the day. Enter or Space picks.
 		</p>
 		<div class="flex flex-wrap items-start gap-6">
 			<div class="flex flex-col gap-2">
-				<p class="text-sm font-medium text-fg">Entrega (a partir de 5/10/2026)</p>
+				<p class="text-sm font-medium text-fg">Delivery (from Oct 5, 2026)</p>
 				@components.Calendar(components.CalendarProps{
 					ID: "cal-entrega", Month: month, Name: "entrega", Focus: focus, Today: today,
 					Selected: QueryDate(ctx, "entrega", time.Time{}),
@@ -46,7 +46,7 @@ templ demoCalendar() {
 				})
 			</div>
 			<div class="flex flex-col gap-2">
-				<p class="text-sm font-medium text-fg">Período do experimento</p>
+				<p class="text-sm font-medium text-fg">Experiment period</p>
 				@components.Calendar(components.CalendarProps{
 					ID: "cal-periodo", Month: month, Mode: "range", Focus: focus, Today: today,
 					StartName: "inicio", EndName: "fim",
@@ -67,15 +67,15 @@ templ demoDataTable() {
 	@components.DataTable(components.DataTableProps{
 		ID: "dt-protocolos", URL: "/components/data-table",
 		Columns: []components.DataTableColumn{
-			{Key: "nome", Label: "Protocolo", Sortable: true},
-			{Key: "area", Label: "Área", Sortable: true},
-			{Key: "responsavel", Label: "Responsável", Sortable: true},
-			{Key: "etapas", Label: "Etapas", Sortable: true, Align: "end"},
+			{Key: "nome", Label: "Protocol", Sortable: true},
+			{Key: "area", Label: "Area", Sortable: true},
+			{Key: "responsavel", Label: "Owner", Sortable: true},
+			{Key: "etapas", Label: "Steps", Sortable: true, Align: "end"},
 		},
 		Sort: r.Sort, Dir: r.Dir, Query: QueryString(ctx, "q", ""),
 		Page: r.Page, TotalPages: r.TotalPages, Total: r.Total,
-		Searchable: true, SearchLabel: "Buscar protocolos", SearchPlaceholder: "Buscar por protocolo, área ou pessoa…",
-		Empty: "Nenhum protocolo encontrado.",
+		Searchable: true, SearchLabel: "Search protocols", SearchPlaceholder: "Search by protocol, area or person…",
+		Empty: "No protocols found.",
 	}) {
 		for _, row := range r.Rows {
 			<tr>
@@ -101,8 +101,8 @@ const questionnaireAction = "/components/questionnaire/responder"
 templ demoQuestionnaire() {
 	<div class="flex flex-col gap-4">
 		<p class="text-sm text-muted">
-			Teclas 1–9 escolhem; Enter avança. "Não" na primeira pergunta pula a das áreas.
-			<a href="/components/questionnaire?retomar=1" class="text-primary underline">Retomar respostas salvas</a>
+			Keys 1–9 choose; Enter advances. "No" on the first question skips the one about areas.
+			<a href="/components/questionnaire?retomar=1" class="text-primary underline">Resume saved answers</a>
 		</p>
 		@QuestionnaireView(questionnaireFrom(ctx), false)
 	</div>
@@ -121,7 +121,7 @@ templ QuestionnaireView(s QuestionnaireState, focus bool) {
 			}
 			class="flex max-w-lg flex-col gap-4 rounded border border-border bg-surface p-6 focus:outline-none"
 		>
-			<h2 class="text-lg font-semibold text-fg">Respostas enviadas</h2>
+			<h2 class="text-lg font-semibold text-fg">Answers submitted</h2>
 			<dl class="flex flex-col gap-3 text-sm">
 				for _, pair := range QuestionnaireSummary(s.Answers) {
 					<div>
@@ -131,7 +131,7 @@ templ QuestionnaireView(s QuestionnaireState, focus bool) {
 				}
 			</dl>
 			@components.Link(components.LinkProps{Href: "/components/questionnaire"}) {
-				Recomeçar
+				Start over
 			}
 		</section>
 	} else {
