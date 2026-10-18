@@ -96,7 +96,7 @@ templ Sidebar(props SidebarProps) {
 							aria-controls={ props.asideID() }
 							aria-expanded="true"
 							x-bind:aria-expanded="collapsed ? 'false' : 'true'"
-							aria-label="Menu lateral"
+							aria-label={ msg(ctx).SideMenu }
 							x-on:click="toggle()"
 							class="flex w-full items-center justify-center rounded px-2 py-1.5 text-sm text-muted hover:bg-muted/10 hover:text-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 						>
@@ -115,10 +115,10 @@ templ Sidebar(props SidebarProps) {
 				"aria-haspopup": "dialog",
 			}}) {
 				<span aria-hidden="true">&#9776;</span>
-				<span class="ml-2">Menu</span>
+				<span class="ml-2">{ msg(ctx).Menu }</span>
 			}
 		</div>
-		@Drawer(DrawerProps{ID: props.drawerID(), Title: or(props.Label, "Menu")}) {
+		@Drawer(DrawerProps{ID: props.drawerID(), Title: or(props.Label, msg(ctx).Menu)}) {
 			@sidebarNav(props, true)
 		}
 		<div class="min-w-0 flex-1">
@@ -128,7 +128,7 @@ templ Sidebar(props SidebarProps) {
 }
 
 templ sidebarNav(props SidebarProps, inDrawer bool) {
-	<nav aria-label={ or(props.Label, "Menu") } class="flex flex-col gap-4">
+	<nav aria-label={ or(props.Label, msg(ctx).Menu) } class="flex flex-col gap-4">
 		for _, g := range props.Groups {
 			<div class="flex flex-col gap-1">
 				if g.Label != "" {

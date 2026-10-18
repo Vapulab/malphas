@@ -1,28 +1,40 @@
 package showcase
 
 import (
+	"context"
 	"net/http"
 	"time"
 
 	"github.com/a-h/templ"
+	"github.com/vapulab/malphas"
 )
 
 // Frame wraps a catalog page in the host's chrome: layout.Base plus whatever
 // navigation the host wants. wide asks for room for a side index, which only
-// the vitrine uses.
+// the showcase uses.
 type Frame func(title string, wide bool, body templ.Component) templ.Component
 
-// Handler serves the catalog. The demos link to /components/..., and two of
+// Handler serves the catalog, always in English: it is the technical
+// material, read by people of every language, even inside a host that serves
+// its own pages in another one. The demos link to /components/..., and two of
 // them post to or fetch from endpoints below it, so the handler expects to see
 // the full path: mount it at /components and /components/ without stripping
 // the prefix.
 func Handler(frame Frame) http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /components", func(w http.ResponseWriter, r *http.Request) {
-		render(w, r, frame("Componentes", false, IndexPage(ByCategory())))
+		render(w, r, frame("Components", false, IndexPage(ByCategory())))
 	})
+	mux.HandleFunc("GET /components/all", func(w http.ResponseWriter, r *http.Request) {
+		render(w, r, frame("Showcase", true, AllPage(ByCategory())))
+	})
+	// The showcase page used to live at /components/todos; old links keep working.
 	mux.HandleFunc("GET /components/todos", func(w http.ResponseWriter, r *http.Request) {
-		render(w, r, frame("Vitrine", true, AllPage(ByCategory())))
+		target := "/components/all"
+		if r.URL.RawQuery != "" {
+			target += "?" + r.URL.RawQuery
+		}
+		http.Redirect(w, r, target, http.StatusMovedPermanently)
 	})
 	mux.HandleFunc("GET /components/{slug}", func(w http.ResponseWriter, r *http.Request) {
 		c, ok := BySlug(r.PathValue("slug"))
@@ -42,8 +54,10 @@ func Handler(frame Frame) http.Handler {
 // the URL (Pagination, Data Table, Calendar) read it from there.
 func render(w http.ResponseWriter, r *http.Request, page templ.Component) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	_ = page.Render(WithQuery(r.Context(), r), w)
+	_ = page.Render(WithQuery(english(r.Context()), r), w)
 }
+
+func english(ctx context.Context) context.Context { return malphas.WithLocale(ctx, malphas.EN) }
 
 // questionnaireAnswer answers one step of the Questionnaire demo. With HTMX
 // it returns just the next step, swapped in place; a plain POST (no
@@ -52,17 +66,17 @@ func render(w http.ResponseWriter, r *http.Request, page templ.Component) {
 func questionnaireAnswer(frame Frame) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
-			http.Error(w, "formulário inválido", http.StatusBadRequest)
+			http.Error(w, "invalid form", http.StatusBadRequest)
 			return
 		}
 		state := QuestionnaireNext(r.PostForm)
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		if r.Header.Get("HX-Request") == "true" {
-			_ = QuestionnaireView(state, true).Render(r.Context(), w)
+			_ = QuestionnaireView(state, true).Render(english(r.Context()), w)
 			return
 		}
 		c, _ := BySlug("questionnaire")
-		ctx := WithQuestionnaire(WithQuery(r.Context(), r), state)
+		ctx := WithQuestionnaire(WithQuery(english(r.Context()), r), state)
 		_ = frame(c.Name, false, ComponentPage(c)).Render(ctx, w)
 	}
 }
@@ -78,6 +92,6 @@ func messageDemo(w http.ResponseWriter, r *http.Request) {
 		count = 3
 	}
 	for i := 0; i < count; i++ {
-		_ = ChatMessageView(DemoChatMessage(n+i)).Render(r.Context(), w)
+		_ = ChatMessageView(DemoChatMessage(n+i)).Render(english(r.Context()), w)
 	}
 }

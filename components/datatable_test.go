@@ -12,12 +12,12 @@ func dataTableFixture() components.DataTableProps {
 	return components.DataTableProps{
 		ID: "dt", URL: "/protocolos",
 		Columns: []components.DataTableColumn{
-			{Key: "nome", Label: "Nome", Sortable: true},
-			{Key: "area", Label: "Área", Sortable: true},
-			{Key: "notas", Label: "Notas"},
+			{Key: "nome", Label: "Name", Sortable: true},
+			{Key: "area", Label: "Area", Sortable: true},
+			{Key: "notas", Label: "Notes"},
 		},
 		Sort: "nome", Dir: "asc", Query: "pcr", Page: 2, TotalPages: 3, Total: 25,
-		Searchable: true, SearchLabel: "Buscar protocolos",
+		Searchable: true, SearchLabel: "Search protocols",
 	}
 }
 
@@ -33,10 +33,10 @@ func TestDataTableAriaSortAndLinks(t *testing.T) {
 		`hx-target="#dt-region"`,
 		`id="dt-region"`,
 		`type="search"`,
-		`aria-label="Buscar protocolos"`,
+		`aria-label="Search protocols"`,
 		`value="pcr"`,
 		`hx-select-oob="#dt-state"`,
-		`25 resultados`,
+		`25 results`,
 	} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)
@@ -46,9 +46,9 @@ func TestDataTableAriaSortAndLinks(t *testing.T) {
 		t.Errorf("the other sortable column is aria-sort=none; got %d", n)
 	}
 	// A column that cannot be sorted has no link and no aria-sort.
-	notas := html[strings.Index(html, ">Notas<")-200 : strings.Index(html, ">Notas<")]
+	notas := html[strings.Index(html, ">Notes<")-200 : strings.Index(html, ">Notes<")]
 	if strings.Contains(notas, "<a") || strings.Contains(notas, "aria-sort") {
-		t.Errorf("Notas is not sortable: %s", notas)
+		t.Errorf("Notes is not sortable: %s", notas)
 	}
 	// Pagination keeps sort, dir and q, with the page last.
 	if !strings.Contains(html, `href="/protocolos?dir=asc&amp;q=pcr&amp;sort=nome&amp;page=3"`) {
@@ -66,12 +66,12 @@ func TestDataTableHrefEncodes(t *testing.T) {
 
 func TestDataTableEmpty(t *testing.T) {
 	p := dataTableFixture()
-	p.Total, p.TotalPages, p.Empty = 0, 0, "Nenhum protocolo encontrado."
+	p.Total, p.TotalPages, p.Empty = 0, 0, "No protocols found."
 	html := renderWithChildren(t, components.DataTable(p), templ.Raw(""))
-	if !strings.Contains(html, "Nenhum protocolo encontrado.") || !strings.Contains(html, `colspan="3"`) {
+	if !strings.Contains(html, "No protocols found.") || !strings.Contains(html, `colspan="3"`) {
 		t.Errorf("expected the empty message across all columns: %s", html)
 	}
-	if strings.Contains(html, `aria-label="Paginação"`) {
+	if strings.Contains(html, `aria-label="Pagination"`) {
 		t.Errorf("no pages, no pagination: %s", html)
 	}
 }

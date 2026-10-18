@@ -31,7 +31,7 @@ func demoPopover() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col gap-4\"><p class=\"text-sm text-muted\">O foco entra no painel ao abrir. Escape fecha e devolve o foco ao botão; Tab percorre o conteúdo e segue para a página, fechando o painel.</p><div class=\"flex flex-wrap gap-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col gap-4\"><p class=\"text-sm text-muted\">Focus moves into the panel when it opens. Escape closes it and returns focus to the button; Tab goes through the content and on to the page, closing the panel.</p><div class=\"flex flex-wrap gap-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -51,11 +51,11 @@ func demoPopover() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.Input(components.InputProps{ID: "pop-autor", Name: "autor", Label: "Autor"}).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = components.Input(components.InputProps{ID: "pop-autor", Name: "autor", Label: "Author"}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "pop-recentes", Name: "recentes", Label: "Só os últimos 30 dias"}).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = components.Checkbox(components.CheckboxProps{ID: "pop-recentes", Name: "recentes", Label: "Last 30 days only"}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -65,7 +65,7 @@ func demoPopover() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Popover(components.PopoverProps{ID: "pop-filtros", Label: "Filtros", Title: "Filtros da busca"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Popover(components.PopoverProps{ID: "pop-filtros", Label: "Filters", Title: "Search filters"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -85,7 +85,7 @@ func demoPopover() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "Popover dentro de um modal")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "Popover inside a modal")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -113,7 +113,7 @@ func demoPopover() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<p class=\"mb-4 text-sm text-muted\">Escape com o popover aberto fecha só o popover.</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<p class=\"mb-4 text-sm text-muted\">Escape with the popover open closes only the popover.</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -129,19 +129,19 @@ func demoPopover() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<p class=\"text-sm text-fg\">O protocolo é salvo a cada etapa concluída.</p>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<p class=\"text-sm text-fg\">The protocol is saved after each completed step.</p>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				return nil
 			})
-			templ_7745c5c3_Err = components.Popover(components.PopoverProps{ID: "pop-no-modal", Label: "Ajuda"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = components.Popover(components.PopoverProps{ID: "pop-no-modal", Label: "Help"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Modal(components.ModalProps{ID: "modal-popover", Title: "Editar protocolo"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var4), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Modal(components.ModalProps{ID: "modal-popover", Title: "Edit protocol"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var4), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -174,14 +174,14 @@ func demoHoverCard() templ.Component {
 			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<p class=\"text-sm text-fg\">Protocolo revisado por")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<p class=\"text-sm text-fg\">Protocol reviewed by")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(" ")
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `showcase/demos_slice5.templ`, Line: 39, Col: 29}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `showcase/demos_slice5.templ`, Line: 39, Col: 27}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -199,7 +199,7 @@ func demoHoverCard() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<span class=\"flex flex-col gap-1\"><span class=\"text-sm font-semibold text-fg\">Lincoln Santos</span> <span class=\"text-sm text-muted\">Pesquisador · 42 protocolos publicados</span></span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<span class=\"flex flex-col gap-1\"><span class=\"text-sm font-semibold text-fg\">Lincoln Santos</span> <span class=\"text-sm text-muted\">Researcher · 42 published protocols</span></span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -218,7 +218,7 @@ func demoHoverCard() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "ontem às 18h.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "yesterday at 6 pm.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -247,7 +247,7 @@ func demoAlertDialog() templ.Component {
 			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div class=\"flex flex-col gap-4\"><p class=\"text-sm text-muted\">O foco começa em Cancelar. Clicar fora não fecha: só as duas respostas ou Escape.</p><div class=\"flex items-center gap-4\" x-data>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div class=\"flex flex-col gap-4\"><p class=\"text-sm text-muted\">Focus starts on Cancel. Clicking outside does not close it: only the two answers or Escape do.</p><div class=\"flex items-center gap-4\" x-data>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -263,7 +263,7 @@ func demoAlertDialog() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "Excluir protocolo")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "Delete protocol")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -281,10 +281,10 @@ func demoAlertDialog() templ.Component {
 		}
 		templ_7745c5c3_Err = components.AlertDialog(components.AlertDialogProps{
 			ID:           "ad-excluir",
-			Title:        "Excluir o protocolo?",
-			Description:  "As etapas e os resultados vão junto. Não dá para desfazer.",
-			ConfirmLabel: "Excluir",
-			ConfirmAttrs: templ.Attributes{"x-on:click": "document.getElementById('ad-resultado').textContent = 'excluído'"},
+			Title:        "Delete the protocol?",
+			Description:  "Its steps and results go with it. This cannot be undone.",
+			ConfirmLabel: "Delete",
+			ConfirmAttrs: templ.Attributes{"x-on:click": "document.getElementById('ad-resultado').textContent = 'deleted'"},
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -305,7 +305,7 @@ func demoAlertDialog() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "Confirmação sobre um modal")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "Confirmation over a modal")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -333,7 +333,7 @@ func demoAlertDialog() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<p class=\"mb-4 text-sm text-muted\">Escape fecha só a confirmação; o formulário continua aberto.</p><div x-data>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<p class=\"mb-4 text-sm text-muted\">Escape closes only the confirmation; the form stays open.</p><div x-data>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -349,7 +349,7 @@ func demoAlertDialog() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "Descartar alterações")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "Discard changes")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -367,13 +367,13 @@ func demoAlertDialog() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Modal(components.ModalProps{ID: "md-editar", Title: "Editar protocolo"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Modal(components.ModalProps{ID: "md-editar", Title: "Edit protocol"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.AlertDialog(components.AlertDialogProps{
-			ID: "ad-descartar", Title: "Descartar as alterações?", Description: "O que você editou neste protocolo será perdido.",
-			ConfirmLabel: "Descartar",
+			ID: "ad-descartar", Title: "Discard your changes?", Description: "What you edited in this protocol will be lost.",
+			ConfirmLabel: "Discard",
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -423,25 +423,25 @@ func demoContextMenu() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "<div class=\"flex h-32 w-full items-center justify-center rounded border border-dashed border-border text-sm text-muted\">relatorio-trimestral.pdf — clique com o botão direito</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "<div class=\"flex h-32 w-full items-center justify-center rounded border border-dashed border-border text-sm text-muted\">quarterly-report.pdf — right-click here</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
 		templ_7745c5c3_Err = components.ContextMenu(components.ContextMenuProps{
-			ID: "cm-arquivo", Label: "Ações do arquivo",
+			ID: "cm-arquivo", Label: "File actions",
 			Entries: []components.MenuEntry{
-				{Label: "Renomear", OnClick: "document.getElementById('cm-resultado').textContent = 'renomear'"},
-				{Label: "Duplicar", OnClick: "document.getElementById('cm-resultado').textContent = 'duplicar'"},
+				{Label: "Rename", OnClick: "document.getElementById('cm-resultado').textContent = 'rename'"},
+				{Label: "Duplicate", OnClick: "document.getElementById('cm-resultado').textContent = 'duplicate'"},
 				components.MenuDivider(),
-				{Label: "Excluir", OnClick: "document.getElementById('cm-resultado').textContent = 'excluir'"},
+				{Label: "Delete", OnClick: "document.getElementById('cm-resultado').textContent = 'delete'"},
 			},
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var16), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<p class=\"text-sm text-muted\">Última ação: <span id=\"cm-resultado\" aria-live=\"polite\">nenhuma</span></p></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<p class=\"text-sm text-muted\">Last action: <span id=\"cm-resultado\" aria-live=\"polite\">none</span></p></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -479,29 +479,29 @@ func demoMenubar() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Menubar(components.MenubarProps{
-			Label: "Editor de protocolo",
+			Label: "Protocol editor",
 			Menus: []components.MenubarMenu{
-				{Label: "Arquivo", Entries: []components.MenuEntry{
-					{Label: "Novo protocolo", OnClick: mbSet("novo")},
-					{Label: "Abrir…", OnClick: mbSet("abrir")},
+				{Label: "File", Entries: []components.MenuEntry{
+					{Label: "New protocol", OnClick: mbSet("new")},
+					{Label: "Open…", OnClick: mbSet("open")},
 					components.MenuDivider(),
-					{Label: "Exportar PDF", OnClick: mbSet("exportar")},
+					{Label: "Export PDF", OnClick: mbSet("export")},
 				}},
-				{Label: "Editar", Entries: []components.MenuEntry{
-					{Label: "Desfazer", OnClick: mbSet("desfazer")},
-					{Label: "Refazer", OnClick: mbSet("refazer"), Disabled: true},
-					{Label: "Duplicar etapa", OnClick: mbSet("duplicar")},
+				{Label: "Edit", Entries: []components.MenuEntry{
+					{Label: "Undo", OnClick: mbSet("undo")},
+					{Label: "Redo", OnClick: mbSet("redo"), Disabled: true},
+					{Label: "Duplicate step", OnClick: mbSet("duplicate")},
 				}},
-				{Label: "Exibir", Entries: []components.MenuEntry{
-					{Label: "Modo foco", OnClick: mbSet("foco")},
-					{Label: "Mostrar comentários", OnClick: mbSet("comentarios")},
+				{Label: "View", Entries: []components.MenuEntry{
+					{Label: "Focus mode", OnClick: mbSet("focus")},
+					{Label: "Show comments", OnClick: mbSet("comments")},
 				}},
 			},
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<p class=\"text-sm text-muted\">Última ação: <span id=\"mb-resultado\" aria-live=\"polite\">nenhuma</span></p></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "<p class=\"text-sm text-muted\">Last action: <span id=\"mb-resultado\" aria-live=\"polite\">none</span></p></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -550,7 +550,7 @@ func demoCommand() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "Abrir paleta")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "Open palette")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -562,7 +562,7 @@ func demoCommand() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<span class=\"text-sm text-muted\">ou")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<span class=\"text-sm text-muted\">or")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -614,21 +614,21 @@ func demoCommand() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</span></div><p class=\"text-sm text-muted\">Último comando: <span id=\"cmd-resultado\" aria-live=\"polite\">nenhum</span></p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</span></div><p class=\"text-sm text-muted\">Last command: <span id=\"cmd-resultado\" aria-live=\"polite\">none</span></p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Command(components.CommandProps{
-			ID: "cmd-paleta", Placeholder: "Busque um comando ou página…", Hotkey: true,
+			ID: "cmd-paleta", Placeholder: "Search for a command or page…", Hotkey: true,
 			Groups: []components.CommandGroup{
-				{Heading: "Ações", Items: []components.CommandItem{
-					{Label: "Alternar tema", OnClick: cmdSet("alternar tema"), Shortcut: "Ctrl T"},
-					{Label: "Tema do sistema", OnClick: cmdSet("tema do sistema")},
-					{Label: "Novo protocolo", OnClick: cmdSet("novo protocolo"), Shortcut: "Ctrl N"},
-					{Label: "Sair", OnClick: cmdSet("sair"), Disabled: true},
+				{Heading: "Actions", Items: []components.CommandItem{
+					{Label: "Toggle theme", OnClick: cmdSet("toggle theme"), Shortcut: "Ctrl T"},
+					{Label: "System theme", OnClick: cmdSet("system theme")},
+					{Label: "New protocol", OnClick: cmdSet("new protocol"), Shortcut: "Ctrl N"},
+					{Label: "Sign out", OnClick: cmdSet("sign out"), Disabled: true},
 				}},
-				{Heading: "Páginas", Items: []components.CommandItem{
-					{Label: "Todos os componentes", Href: "/components"},
+				{Heading: "Pages", Items: []components.CommandItem{
+					{Label: "All components", Href: "/components"},
 					{Label: "Combobox", Href: "/components/combobox"},
 				}},
 			},
@@ -681,7 +681,7 @@ func demoDrawerBottom() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "Abrir por baixo")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "Open from the bottom")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -713,7 +713,7 @@ func demoDrawerBottom() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = components.Input(components.InputProps{ID: "db-email", Name: "email", Label: "Email de quem recebe", Type: "email"}).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = components.Input(components.InputProps{ID: "db-email", Name: "email", Label: "Recipient email", Type: "email"}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -729,7 +729,7 @@ func demoDrawerBottom() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "Enviar convite")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "Send invite")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -745,7 +745,7 @@ func demoDrawerBottom() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Drawer(components.DrawerProps{ID: "demo-drawer-bottom", Title: "Compartilhar protocolo", Side: "bottom"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var24), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Drawer(components.DrawerProps{ID: "demo-drawer-bottom", Title: "Share protocol", Side: "bottom"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var24), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

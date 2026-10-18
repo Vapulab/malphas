@@ -13,17 +13,17 @@ jobs:
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: go.mod
-      # Os *_templ.go sao commitados para o modulo compilar sem templ: o CI
-      # garante que nenhum ficou para tras de um .templ editado.
-      - name: templ generate sem diff
+      # The *_templ.go files are committed so the module builds without templ:
+      # CI makes sure none was left behind after a .templ edit.
+      - name: templ generate leaves no diff
         run: |
           go run github.com/a-h/templ/cmd/templ@v0.3.1020 generate
           git diff --exit-code
       - run: go vet ./...
       - run: go test ./...
 
-  # Comportamento no browser: o catalogo servido por e2e/, num Chrome de
-  # verdade. O runner do GitHub ja traz o google-chrome.
+  # Browser behavior: the catalog served by e2e/, in a real Chrome.
+  # The GitHub runner already ships google-chrome.
   e2e:
     runs-on: ubuntu-latest
     env:
@@ -34,7 +34,7 @@ jobs:
         with:
           go-version-file: e2e/go.mod
           cache-dependency-path: e2e/go.sum
-      # Sem o app.css os testes pulam em vez de rodar.
+      # Without app.css the tests skip instead of running.
       - name: Build CSS
         working-directory: e2e
         run: |

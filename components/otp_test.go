@@ -8,7 +8,7 @@ import (
 )
 
 func TestOTPRendersOneBoxPerDigit(t *testing.T) {
-	html := renderToString(t, components.OTP(components.OTPProps{Name: "codigo", Label: "Código"}))
+	html := renderToString(t, components.OTP(components.OTPProps{Name: "codigo", Label: "Code"}))
 	if got := strings.Count(html, "data-otp-index"); got != 6 {
 		t.Errorf("expected 6 boxes by default, got %d: %s", got, html)
 	}
@@ -37,7 +37,7 @@ func TestOTPOffersTheSMSCode(t *testing.T) {
 // Six unlabelled boxes are six anonymous fields to a screen reader.
 func TestOTPBoxesAreLabelled(t *testing.T) {
 	html := renderToString(t, components.OTP(components.OTPProps{Name: "codigo", Length: 3}))
-	for _, want := range []string{"Dígito 1 de 3", "Dígito 2 de 3", "Dígito 3 de 3"} {
+	for _, want := range []string{"Digit 1 of 3", "Digit 2 of 3", "Digit 3 of 3"} {
 		if !strings.Contains(html, want) {
 			t.Errorf("expected %q, got: %s", want, html)
 		}
@@ -57,7 +57,7 @@ func TestOTPSubmitsThroughAHiddenField(t *testing.T) {
 }
 
 func TestOTPGroupIsLabelled(t *testing.T) {
-	html := renderToString(t, components.OTP(components.OTPProps{Name: "codigo", Label: "Código de verificação"}))
+	html := renderToString(t, components.OTP(components.OTPProps{Name: "codigo", Label: "Verification code"}))
 	if !strings.Contains(html, `role="group"`) || !strings.Contains(html, "aria-labelledby") {
 		t.Errorf("expected the boxes grouped under the label, got: %s", html)
 	}

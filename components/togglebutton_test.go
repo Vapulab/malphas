@@ -10,9 +10,9 @@ import (
 
 func TestToggleButtonRendersPressedState(t *testing.T) {
 	html := renderWithChildren(t,
-		components.ToggleButton(components.ToggleButtonProps{ID: "b", Pressed: true, Label: "Negrito"}),
+		components.ToggleButton(components.ToggleButtonProps{ID: "b", Pressed: true, Label: "Bold"}),
 		templ.Raw("B"))
-	for _, want := range []string{`type="button"`, `aria-pressed="true"`, `aria-label="Negrito"`, `x-data="toggleButton(true)"`} {
+	for _, want := range []string{`type="button"`, `aria-pressed="true"`, `aria-label="Bold"`, `x-data="toggleButton(true)"`} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)
 		}

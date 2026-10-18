@@ -15,12 +15,12 @@ import (
 
 // Categories in the order they should be presented.
 const (
-	CategoryActions     = "Ações"
-	CategoryDataDisplay = "Exibição de dados"
-	CategoryDataInput   = "Entrada de dados"
-	CategoryNavigation  = "Navegação"
+	CategoryActions     = "Actions"
+	CategoryDataDisplay = "Data display"
+	CategoryDataInput   = "Data input"
+	CategoryNavigation  = "Navigation"
 	CategoryFeedback    = "Feedback"
-	CategoryLayout      = "Layout e utilitários"
+	CategoryLayout      = "Layout & utilities"
 )
 
 var categoryOrder = []string{

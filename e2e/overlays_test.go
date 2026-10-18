@@ -135,7 +135,7 @@ func TestAlertDialogFocusStartsOnCancel(t *testing.T) {
 	if !eval[bool](t, ctx, adOpen) {
 		t.Fatal("the alert dialog did not open")
 	}
-	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Cancelar" {
+	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Cancel" {
 		t.Errorf("initial focus is on %q; it must be on the safe choice", got)
 	}
 }
@@ -160,7 +160,7 @@ func TestAlertDialogConfirmRunsAndCloses(t *testing.T) {
 	settle(t, ctx)
 	click(t, ctx, `[role="alertdialog"] button.bg-danger`)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, `document.getElementById('ad-resultado').textContent`); got != "excluído" {
+	if got := eval[string](t, ctx, `document.getElementById('ad-resultado').textContent`); got != "deleted" {
 		t.Errorf("the confirm action did not run: %q", got)
 	}
 	if eval[bool](t, ctx, adOpen) {
@@ -204,7 +204,7 @@ func TestContextMenuOpensAtThePointer(t *testing.T) {
 	if menu.Left < x-2 || menu.Left > x+2 || menu.Top < y-2 || menu.Top > y+2 {
 		t.Errorf("menu at %.0f,%.0f; expected at the pointer %.0f,%.0f", menu.Left, menu.Top, x, y)
 	}
-	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Renomear" {
+	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Rename" {
 		t.Errorf("focus should be on the first item, is on %q", got)
 	}
 }
@@ -249,7 +249,7 @@ func TestContextMenuOpensFromTheKeyboard(t *testing.T) {
 	if !eval[bool](t, ctx, visible(cmMenu)) {
 		t.Fatal("Shift+F10 did not open the menu")
 	}
-	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Renomear" {
+	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Rename" {
 		t.Errorf("focus should be on the first item, is on %q", got)
 	}
 
@@ -266,7 +266,7 @@ func TestContextMenuOpensFromTheKeyboard(t *testing.T) {
 // --- Menubar ----------------------------------------------------------------
 
 func mbTop(label string) string {
-	return `[role="menubar"] [data-menubar-top]` + `:is(` + `[data-menubar-top="` + map[string]string{"Arquivo": "0", "Editar": "1", "Exibir": "2"}[label] + `"])`
+	return `[role="menubar"] [data-menubar-top]` + `:is(` + `[data-menubar-top="` + map[string]string{"File": "0", "Edit": "1", "View": "2"}[label] + `"])`
 }
 
 const mbActive = `document.activeElement.textContent.trim()`
@@ -275,11 +275,11 @@ const mbOpenMenus = `[...document.querySelectorAll('[role="menubar"] [role="menu
 func TestMenubarArrowsMoveBetweenMenus(t *testing.T) {
 	ctx := openPage(t, "/components/menubar")
 
-	focus(t, ctx, mbTop("Arquivo"))
+	focus(t, ctx, mbTop("File"))
 	press(t, ctx, kb.ArrowRight)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, mbActive); got != "Editar" {
-		t.Fatalf("→ on the bar should focus Editar, focus is on %q", got)
+	if got := eval[string](t, ctx, mbActive); got != "Edit" {
+		t.Fatalf("→ on the bar should focus Edit, focus is on %q", got)
 	}
 	if got := eval[[]string](t, ctx, mbOpenMenus); len(got) != 0 {
 		t.Errorf("moving across a closed bar must not open menus, open: %v", got)
@@ -287,25 +287,25 @@ func TestMenubarArrowsMoveBetweenMenus(t *testing.T) {
 
 	press(t, ctx, kb.ArrowDown)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, mbActive); got != "Desfazer" {
-		t.Errorf("↓ should open Editar and focus its first item, focus is on %q", got)
+	if got := eval[string](t, ctx, mbActive); got != "Undo" {
+		t.Errorf("↓ should open Edit and focus its first item, focus is on %q", got)
 	}
 
 	// Inside an open menu, → carries the open state to the next menu.
 	press(t, ctx, kb.ArrowRight)
 	settle(t, ctx)
-	if got := eval[[]string](t, ctx, mbOpenMenus); len(got) != 1 || got[0] != "Exibir" {
-		t.Errorf("→ inside Editar should open Exibir, open: %v", got)
+	if got := eval[[]string](t, ctx, mbOpenMenus); len(got) != 1 || got[0] != "View" {
+		t.Errorf("→ inside Edit should open View, open: %v", got)
 	}
-	if got := eval[string](t, ctx, mbActive); got != "Modo foco" {
-		t.Errorf("focus should be on Exibir's first item, is on %q", got)
+	if got := eval[string](t, ctx, mbActive); got != "Focus mode" {
+		t.Errorf("focus should be on View's first item, is on %q", got)
 	}
 }
 
 func TestMenubarEscapeReturnsToTheTopItem(t *testing.T) {
 	ctx := openPage(t, "/components/menubar")
 
-	focus(t, ctx, mbTop("Arquivo"))
+	focus(t, ctx, mbTop("File"))
 	press(t, ctx, kb.ArrowDown)
 	settle(t, ctx)
 	press(t, ctx, kb.Escape)
@@ -313,15 +313,15 @@ func TestMenubarEscapeReturnsToTheTopItem(t *testing.T) {
 	if got := eval[[]string](t, ctx, mbOpenMenus); len(got) != 0 {
 		t.Errorf("Escape should close the menu, open: %v", got)
 	}
-	if got := eval[string](t, ctx, mbActive); got != "Arquivo" {
-		t.Errorf("focus should return to Arquivo, is on %q", got)
+	if got := eval[string](t, ctx, mbActive); got != "File" {
+		t.Errorf("focus should return to File, is on %q", got)
 	}
 }
 
 func TestMenubarTabClosesEverything(t *testing.T) {
 	ctx := openPage(t, "/components/menubar")
 
-	focus(t, ctx, mbTop("Arquivo"))
+	focus(t, ctx, mbTop("File"))
 	press(t, ctx, kb.ArrowDown)
 	settle(t, ctx)
 	press(t, ctx, kb.Tab)
@@ -337,27 +337,27 @@ func TestMenubarTabClosesEverything(t *testing.T) {
 func TestMenubarItemRunsAndCloses(t *testing.T) {
 	ctx := openPage(t, "/components/menubar")
 
-	focus(t, ctx, mbTop("Arquivo"))
+	focus(t, ctx, mbTop("File"))
 	press(t, ctx, kb.ArrowDown)
 	settle(t, ctx) // the menu opens and takes focus on the next tick
 	press(t, ctx, kb.ArrowDown)
 	settle(t, ctx)
 	press(t, ctx, kb.Enter)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, `document.getElementById('mb-resultado').textContent`); got != "abrir" {
-		t.Errorf("Enter on Abrir should run it, result is %q", got)
+	if got := eval[string](t, ctx, `document.getElementById('mb-resultado').textContent`); got != "open" {
+		t.Errorf("Enter on Open should run it, result is %q", got)
 	}
 	if got := eval[[]string](t, ctx, mbOpenMenus); len(got) != 0 {
 		t.Errorf("running an item should close the menu, open: %v", got)
 	}
-	if got := eval[string](t, ctx, mbActive); got != "Arquivo" {
-		t.Errorf("focus should return to Arquivo, is on %q", got)
+	if got := eval[string](t, ctx, mbActive); got != "File" {
+		t.Errorf("focus should return to File, is on %q", got)
 	}
 }
 
 // --- Command ----------------------------------------------------------------
 
-const cmdOpen = `!!document.querySelector('[aria-label="Paleta de comandos"]')`
+const cmdOpen = `!!document.querySelector('[aria-label="Command palette"]')`
 const cmdVisibleOptions = `[...document.querySelectorAll('[role="listbox"] [role="option"]')].filter(o => getComputedStyle(o).display !== 'none').map(o => o.dataset.label)`
 
 // pressEnterNative sends Enter as one keyDown carrying its text, which is what
@@ -401,22 +401,22 @@ func TestCommandFiltersAndRunsWithEnter(t *testing.T) {
 
 	click(t, ctx, "#abrir-cmd")
 	settle(t, ctx)
-	press(t, ctx, "tema")
+	press(t, ctx, "theme")
 	settle(t, ctx)
 	got := eval[[]string](t, ctx, cmdVisibleOptions)
-	if len(got) != 2 || got[0] != "Alternar tema" || got[1] != "Tema do sistema" {
-		t.Fatalf("filtering \"tema\" shows %v", got)
+	if len(got) != 2 || got[0] != "Toggle theme" || got[1] != "System theme" {
+		t.Fatalf("filtering \"theme\" shows %v", got)
 	}
 	// The group with no match disappears with its heading.
 	if eval[bool](t, ctx, visible(`[data-command-group="1"]`)) {
-		t.Error("the Páginas group should hide when none of its items match")
+		t.Error("the Pages group should hide when none of its items match")
 	}
 
 	press(t, ctx, kb.ArrowDown)
 	settle(t, ctx)
 	pressEnterNative(t, ctx)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, `document.getElementById('cmd-resultado').textContent`); got != "tema do sistema" {
+	if got := eval[string](t, ctx, `document.getElementById('cmd-resultado').textContent`); got != "system theme" {
 		t.Errorf("Enter should run the highlighted command, result is %q", got)
 	}
 	if eval[bool](t, ctx, cmdOpen) {
@@ -434,7 +434,7 @@ func TestCommandEnterWithNoResultsDoesNothing(t *testing.T) {
 	settle(t, ctx)
 	press(t, ctx, kb.Enter)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, `document.getElementById('cmd-resultado').textContent`); got != "nenhum" {
+	if got := eval[string](t, ctx, `document.getElementById('cmd-resultado').textContent`); got != "none" {
 		t.Errorf("Enter with no results ran %q", got)
 	}
 	if !eval[bool](t, ctx, cmdOpen) {
@@ -486,24 +486,24 @@ func TestDrawerBottomSitsAtTheBottom(t *testing.T) {
 
 // Walking the open menu around the bar must always show exactly the menu that
 // is open. Three sibling x-show panels toggled this way stopped updating after
-// a few switches — the state said Editar while Arquivo stayed on screen — and
+// a few switches — the state said Edit while File stayed on screen — and
 // the shorter tests above never switched enough times to see it.
 func TestMenubarSwitchingMenusKeepsTheScreenInStep(t *testing.T) {
 	ctx := openPage(t, "/components/menubar")
 
-	focus(t, ctx, mbTop("Arquivo"))
+	focus(t, ctx, mbTop("File"))
 	press(t, ctx, kb.ArrowDown)
 	settle(t, ctx)
 	for _, step := range []struct {
 		key  string
 		want string
 	}{
-		{kb.ArrowRight, "Editar"},
-		{kb.ArrowRight, "Exibir"},
-		{kb.ArrowRight, "Arquivo"},
-		{kb.ArrowLeft, "Exibir"},
-		{kb.ArrowLeft, "Editar"},
-		{kb.ArrowLeft, "Arquivo"},
+		{kb.ArrowRight, "Edit"},
+		{kb.ArrowRight, "View"},
+		{kb.ArrowRight, "File"},
+		{kb.ArrowLeft, "View"},
+		{kb.ArrowLeft, "Edit"},
+		{kb.ArrowLeft, "File"},
 	} {
 		press(t, ctx, step.key)
 		settle(t, ctx)
@@ -550,12 +550,12 @@ func TestMenubarFocusesTheNextMenuWhenFramesAreSlow(t *testing.T) {
 	ctx := openPage(t, "/components/menubar")
 	slowFrames(t, ctx)
 
-	focus(t, ctx, mbTop("Arquivo"))
+	focus(t, ctx, mbTop("File"))
 	for _, step := range []struct{ key, want string }{
-		{kb.ArrowDown, "Novo protocolo"},
-		{kb.ArrowRight, "Desfazer"},
-		{kb.ArrowRight, "Modo foco"},
-		{kb.ArrowRight, "Novo protocolo"},
+		{kb.ArrowDown, "New protocol"},
+		{kb.ArrowRight, "Undo"},
+		{kb.ArrowRight, "Focus mode"},
+		{kb.ArrowRight, "New protocol"},
 	} {
 		press(t, ctx, step.key)
 		// The frames are slowed on purpose; how much longer the switch takes
@@ -590,7 +590,7 @@ func TestContextMenuClampsWhenFramesAreSlow(t *testing.T) {
 	if menu.Right > vw || menu.Bottom > vh {
 		t.Errorf("menu %+v spills out of the %.0fx%.0f viewport", menu, vw, vh)
 	}
-	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Renomear" {
+	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Rename" {
 		t.Errorf("focus should be on the first item, is on %q", got)
 	}
 }
@@ -624,7 +624,7 @@ func TestContextMenuStaysOutOfTheWrappedContent(t *testing.T) {
 
 	rightClickAt(t, ctx, target.Left+20, target.Top+20)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Renomear" {
+	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Rename" {
 		t.Fatalf("opening focused %q; a roving item in the wrapped area is not a menu item", got)
 	}
 

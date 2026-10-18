@@ -86,7 +86,7 @@ func demoCountdownOnEnd() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<span x-show=\"!done\" class=\"text-sm text-muted\">Aguardando…</span> <span x-show=\"done\" style=\"display:none\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<span x-show=\"!done\" class=\"text-sm text-muted\">Waiting…</span> <span x-show=\"done\" style=\"display:none\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -102,7 +102,7 @@ func demoCountdownOnEnd() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "Tempo esgotado")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "Time is up")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -9,7 +9,7 @@ import (
 )
 
 func attachment(state string) components.AttachmentProps {
-	return components.AttachmentProps{ID: "a", Name: "protocolo.pdf", Meta: "PDF · 2,4 MB", State: state, Progress: 45, Href: "/arquivos/protocolo.pdf"}
+	return components.AttachmentProps{ID: "a", Name: "protocol.pdf", Meta: "PDF · 2.4 MB", State: state, Progress: 45, Href: "/arquivos/protocolo.pdf"}
 }
 
 func TestAttachmentStates(t *testing.T) {
@@ -17,10 +17,10 @@ func TestAttachmentStates(t *testing.T) {
 		want    []string
 		without []string
 	}{
-		"uploading":  {[]string{"Enviando 45%", `<progress`, `value="45"`}, []string{`href=`}},
-		"processing": {[]string{"Processando", `<progress`}, []string{`value=`, `href=`}},
-		"done":       {[]string{`href="/arquivos/protocolo.pdf"`, "PDF · 2,4 MB"}, []string{`<progress`}},
-		"idle":       {[]string{"protocolo.pdf"}, []string{`<progress`, `href=`}},
+		"uploading":  {[]string{"Uploading 45%", `<progress`, `value="45"`}, []string{`href=`}},
+		"processing": {[]string{"Processing", `<progress`}, []string{`value=`, `href=`}},
+		"done":       {[]string{`href="/arquivos/protocolo.pdf"`, "PDF · 2.4 MB"}, []string{`<progress`}},
+		"idle":       {[]string{"protocol.pdf"}, []string{`<progress`, `href=`}},
 	}
 	for state, c := range cases {
 		html := renderToString(t, components.Attachment(attachment(state)))
@@ -40,10 +40,10 @@ func TestAttachmentStates(t *testing.T) {
 // The error is announced, and the actions (retry) stay reachable.
 func TestAttachmentErrorIsAnAlert(t *testing.T) {
 	p := attachment("error")
-	p.Error = "Falha na conexão."
-	p.Actions = templ.Raw(`<button>Tentar de novo</button>`)
+	p.Error = "Connection failed."
+	p.Actions = templ.Raw(`<button>Try again</button>`)
 	html := renderToString(t, components.Attachment(p))
-	for _, want := range []string{`role="alert"`, "Falha na conexão.", "Tentar de novo"} {
+	for _, want := range []string{`role="alert"`, "Connection failed.", "Try again"} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)
 		}
@@ -60,9 +60,9 @@ func TestAttachmentSanitizesHref(t *testing.T) {
 
 func TestAttachmentGroupScrollsHorizontally(t *testing.T) {
 	html := renderToString(t, components.AttachmentGroup(components.AttachmentGroupProps{
-		Label: "Anexos", Items: []components.AttachmentProps{attachment("done"), attachment("uploading")},
+		Label: "Attachments", Items: []components.AttachmentProps{attachment("done"), attachment("uploading")},
 	}))
-	for _, want := range []string{`role="region"`, `aria-label="Anexos"`, "overflow-x-auto", "<ul", "<li"} {
+	for _, want := range []string{`role="region"`, `aria-label="Attachments"`, "overflow-x-auto", "<ul", "<li"} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)
 		}

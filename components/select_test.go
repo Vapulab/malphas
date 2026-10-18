@@ -9,9 +9,9 @@ import (
 
 func selectFixture() components.SelectProps {
 	return components.SelectProps{
-		ID: "plano", Name: "plano", Label: "Plano", Value: "pro",
+		ID: "plano", Name: "plano", Label: "Plan", Value: "pro",
 		Options: []components.SelectOption{
-			{Label: "Grátis", Value: "free"},
+			{Label: "Free", Value: "free"},
 			{Label: "Pro", Value: "pro"},
 			{Label: "Enterprise", Value: "ent", Disabled: true},
 		},
@@ -52,7 +52,7 @@ func TestSelectLabelIsBound(t *testing.T) {
 func TestSelectPlaceholderIsDisabled(t *testing.T) {
 	props := selectFixture()
 	props.Value = ""
-	props.Placeholder = "Escolha…"
+	props.Placeholder = "Choose…"
 	html := renderToString(t, components.Select(props))
 	if !strings.Contains(html, `<option value="" disabled`) {
 		t.Errorf("expected a disabled placeholder option, got: %s", html)

@@ -18,10 +18,10 @@ type demoRow struct {
 }
 
 var demoRows = []demoRow{
-	{"vapulab-api", "produção", "Ativo", "success"},
-	{"vapulab-web", "produção", "Ativo", "success"},
-	{"vapulab-jobs", "staging", "Degradado", "warning"},
-	{"vapulab-etl", "staging", "Parado", "danger"},
+	{"vapulab-api", "production", "Active", "success"},
+	{"vapulab-web", "production", "Active", "success"},
+	{"vapulab-jobs", "staging", "Degraded", "warning"},
+	{"vapulab-etl", "staging", "Stopped", "danger"},
 }
 
 func demoTableRows() templ.Component {
@@ -233,7 +233,7 @@ func demoTableHead() templ.Component {
 						}()
 					}
 					ctx = templ.InitializeContext(ctx)
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Serviço")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "Service")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -259,7 +259,7 @@ func demoTableHead() templ.Component {
 						}()
 					}
 					ctx = templ.InitializeContext(ctx)
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "Ambiente")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "Environment")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -490,7 +490,7 @@ func demoHero() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<h1 class=\"text-3xl font-bold text-fg\">Construa em Go, sem npm</h1><p class=\"mt-3 text-muted\">chi, templ, Tailwind, HTMX e Alpine — com um design system próprio e reaproveitável.</p><div class=\"mt-6 flex justify-center gap-3\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<h1 class=\"text-3xl font-bold text-fg\">Build in Go, without npm</h1><p class=\"mt-3 text-muted\">chi, templ, Tailwind, HTMX and Alpine — with a design system of your own that you can reuse.</p><div class=\"mt-6 flex justify-center gap-3\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -506,7 +506,7 @@ func demoHero() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "Começar")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "Get started")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -528,7 +528,7 @@ func demoHero() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "Documentação")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "Documentation")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

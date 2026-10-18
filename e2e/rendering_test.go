@@ -19,7 +19,7 @@ import (
 func TestCheckboxMixedStateIsVisible(t *testing.T) {
 	ctx := openPage(t, "/components/checkbox")
 
-	const mixedBox = `label[for="c-todos"] [role="checkbox"]`
+	const mixedBox = `label[for="c-all"] [role="checkbox"]`
 	const plainBox = `label[for="c-termos"] [role="checkbox"]`
 
 	mixed := eval[string](t, ctx, `getComputedStyle(document.querySelector('`+mixedBox+`')).backgroundColor`)

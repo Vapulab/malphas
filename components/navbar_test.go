@@ -13,8 +13,8 @@ func navbarFixture(drawerID string) components.NavbarProps {
 		Brand:    "Vapulab",
 		DrawerID: drawerID,
 		Entries: []components.MenuEntry{
-			{Label: "Componentes", Href: "/", Current: true},
-			{Label: "Todos", Href: "/todos"},
+			{Label: "Components", Href: "/", Current: true},
+			{Label: "All", Href: "/todos"},
 		},
 	}
 }
@@ -54,7 +54,7 @@ func TestNavbarMenuButtonOnlyWithADrawer(t *testing.T) {
 	if !strings.Contains(with, `open-drawer`) || !strings.Contains(with, `mobile-nav`) {
 		t.Errorf("expected the button to target the given drawer, got: %s", with)
 	}
-	if !strings.Contains(with, `aria-label="Abrir menu"`) {
+	if !strings.Contains(with, `aria-label="Open menu"`) {
 		t.Errorf("a hamburger glyph needs a label, got: %s", with)
 	}
 	if !strings.Contains(with, `aria-haspopup="dialog"`) {

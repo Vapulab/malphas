@@ -1000,9 +1000,10 @@ document.addEventListener("alpine:init", () => {
   // The APG date grid over a server-rendered month. Dates travel as ISO
   // strings (YYYY-MM-DD), which compare correctly as plain strings and never
   // pick up a time zone. When a key lands outside the rendered month, the
-  // next month is fetched (htmx) with foco=, and the grid that comes back
-  // focuses that day itself (data-autofocus, see init).
-  Alpine.data("calendar", (mode = "single", navURL = "") => ({
+  // next month is fetched (htmx) with focus=, and the grid that comes back
+  // focuses that day itself (data-autofocus, see init). weekStart is the
+  // first day of the week in the page's language (0 = Sunday), for Home/End.
+  Alpine.data("calendar", (mode = "single", navURL = "", weekStart = 0) => ({
     mode,
     value: "",
     start: "",
@@ -1078,7 +1079,7 @@ document.addEventListener("alpine:init", () => {
         values[input.name] = input.value;
       }
       const sep = navURL.includes("?") ? "&" : "?";
-      htmx.ajax("GET", `${navURL}${sep}mes=${iso.slice(0, 7)}&foco=${iso}`, {
+      htmx.ajax("GET", `${navURL}${sep}month=${iso.slice(0, 7)}&focus=${iso}`, {
         target: "#" + this.$root.id,
         select: "#" + this.$root.id,
         swap: "outerHTML",
@@ -1091,7 +1092,8 @@ document.addEventListener("alpine:init", () => {
       if (!el) return;
       const [y, m, d] = el.dataset.date.split("-").map(Number);
       const date = new Date(Date.UTC(y, m - 1, d));
-      const weekday = date.getUTCDay();
+      // Days since the week's first day, in the page's language.
+      const intoWeek = (date.getUTCDay() - weekStart + 7) % 7;
       // Month and year steps keep the day, clamped to the target month's
       // length: 31 Jan + 1 month is 28/29 Feb, not 3 March.
       const addMonths = (n) => {
@@ -1106,8 +1108,8 @@ document.addEventListener("alpine:init", () => {
         ArrowRight: () => addDays(1),
         ArrowUp: () => addDays(-7),
         ArrowDown: () => addDays(7),
-        Home: () => addDays(-weekday),
-        End: () => addDays(6 - weekday),
+        Home: () => addDays(-intoWeek),
+        End: () => addDays(6 - intoWeek),
         PageUp: () => addMonths(e.shiftKey ? -12 : -1),
         PageDown: () => addMonths(e.shiftKey ? 12 : 1),
       }[e.key];
@@ -1131,7 +1133,7 @@ document.addEventListener("alpine:init", () => {
   }));
 
   // Number keys pick an option — but never while typing an answer, where
-  // "2 semanas" must stay "2 semanas". A question that arrives as a response
+  // "2 weeks" must stay "2 weeks". A question that arrives as a response
   // takes focus on its title (data-autofocus), so it is read out; on first
   // page load nothing is focused for the user.
   Alpine.data("questionnaire", () => ({
@@ -1275,6 +1277,21 @@ document.addEventListener("alpine:init", () => {
   Alpine.data("messageScroller", () => ({
     atBottom: true,
     unread: 0,
+
+    // The counter's words come from the server, one per plural category
+    // ({"one": "(%d new)", "other": …}), with the language they are in;
+    // Intl.PluralRules picks which, so Russian gets its three forms with no
+    // rules here. Without Intl, or with a tag it rejects, the counter falls
+    // back to one/other rather than disappearing.
+    unreadLabel() {
+      const el = this.$root.querySelector("[data-unread-forms]");
+      const forms = el ? JSON.parse(el.dataset.unreadForms) : {};
+      let cat = this.unread === 1 ? "one" : "other";
+      try {
+        cat = new Intl.PluralRules(el?.dataset.unreadLang || "en").select(this.unread);
+      } catch {}
+      return (forms[cat] || forms.other || "(%d)").replace("%d", this.unread);
+    },
     // Set by toEnd(): the reader asked for the end, so the end keeps being
     // followed through a smooth scroll until they move away themselves.
     _following: false,
@@ -1345,7 +1362,7 @@ document.addEventListener("alpine:init", () => {
         }
         if (wasAtBottom) continue;
         for (const n of r.addedNodes) {
-          // Only messages are news; a marker ("Gerando resposta…") or a
+          // Only messages are news; a marker ("Generating a reply…") or a
           // sentinel is not. Rows landing above the anchor are history.
           if (n.nodeType !== Node.ELEMENT_NODE || !n.matches("[data-message]")) continue;
           const anchor = this._anchor?.isConnected ? this._anchor : this._backup;

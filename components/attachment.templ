@@ -1,11 +1,11 @@
 package components
 
-import "strconv"
+import "context"
 
 type AttachmentProps struct {
 	ID       string
 	Name     string
-	Meta     string // type and size, e.g. "PDF · 2,4 MB"
+	Meta     string // type and size, e.g. "PDF · 2.4 MB"
 	Kind     string // file | image (default file)
 	Src      string // image preview, for Kind image
 	Href     string // where the finished file opens
@@ -18,12 +18,12 @@ type AttachmentProps struct {
 
 func (p AttachmentProps) state() string { return or(p.State, "idle") }
 
-func (p AttachmentProps) statusText() string {
+func (p AttachmentProps) statusText(ctx context.Context) string {
 	switch p.state() {
 	case "uploading":
-		return "Enviando " + strconv.Itoa(clampInt(p.Progress, 0, 100)) + "%"
+		return msg(ctx).UploadingStatus(clampInt(p.Progress, 0, 100))
 	case "processing":
-		return "Processando…"
+		return msg(ctx).ProcessingStatus
 	}
 	return ""
 }
@@ -31,7 +31,7 @@ func (p AttachmentProps) statusText() string {
 // Attachment is a file or image in a composer, a message or an upload list,
 // with its upload state.
 //
-// The state is text, not just a bar: "Enviando 45%" and "Processando…" live in
+// The state is text, not just a bar: "Uploading 45%" and "Processing…" live in
 // role="status", an error in role="alert", so they are announced as they
 // change. The name only becomes a link once the file is done — a link to a
 // half-uploaded file is a dead end. Actions (remove, retry) stay reachable in
@@ -62,17 +62,17 @@ templ Attachment(props AttachmentProps) {
 			}
 			switch props.state() {
 				case "uploading":
-					@Progress(ProgressProps{Value: clampInt(props.Progress, 0, 100), Attrs: templ.Attributes{"aria-label": "Envio de " + props.Name}})
+					@Progress(ProgressProps{Value: clampInt(props.Progress, 0, 100), Attrs: templ.Attributes{"aria-label": msg(ctx).UploadOf(props.Name)}})
 				case "processing":
-					@Progress(ProgressProps{Indeterminate: true, Attrs: templ.Attributes{"aria-label": "Processamento de " + props.Name}})
+					@Progress(ProgressProps{Indeterminate: true, Attrs: templ.Attributes{"aria-label": msg(ctx).ProcessingOf(props.Name)}})
 				case "error":
-					<p role="alert" class="text-xs text-danger">{ or(props.Error, "Não foi possível enviar.") }</p>
+					<p role="alert" class="text-xs text-danger">{ or(props.Error, msg(ctx).SendFailed) }</p>
 			}
 			// Present in every state, empty when there is nothing to say: a live
 			// region born together with its text is often not announced, so the
 			// region must already exist when the text changes. Callers updating
 			// a card in place should swap its contents, not the whole card.
-			<p role="status" class="text-xs text-muted empty:hidden">{ props.statusText() }</p>
+			<p role="status" class="text-xs text-muted empty:hidden">{ props.statusText(ctx) }</p>
 		</div>
 		if props.Actions != nil {
 			<div class="flex shrink-0 items-center gap-1">
@@ -91,7 +91,7 @@ type AttachmentGroupProps struct {
 // AttachmentGroup is a row of attachments that scrolls sideways, inside a
 // ScrollArea so the keyboard can scroll it too.
 templ AttachmentGroup(props AttachmentGroupProps) {
-	@ScrollArea(ScrollAreaProps{Label: or(props.Label, "Anexos"), Horizontal: true, Attrs: props.Attrs}) {
+	@ScrollArea(ScrollAreaProps{Label: or(props.Label, msg(ctx).Attachments), Horizontal: true, Attrs: props.Attrs}) {
 		<ul class="flex w-max gap-2 p-1">
 			for _, it := range props.Items {
 				<li>

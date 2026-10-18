@@ -9,7 +9,7 @@ type ComboboxProps struct {
 	Value       string
 	Disabled    bool
 	Required    bool
-	// Empty is shown when the filter matches nothing (default "Nenhum resultado").
+	// Empty is shown when the filter matches nothing (default: "No results" in the request's language).
 	Empty string
 	// Error is shown under the field and tied to it, as in Field.
 	Error string
@@ -88,7 +88,7 @@ templ Combobox(props ComboboxProps) {
 			<button
 				type="button"
 				tabindex="-1"
-				aria-label="Mostrar opções"
+				aria-label={ msg(ctx).ShowOptions }
 				aria-controls={ props.listboxID() }
 				disabled?={ props.Disabled }
 				x-on:mousedown.prevent
@@ -152,7 +152,7 @@ templ Combobox(props ComboboxProps) {
 				style="display:none"
 				class="absolute left-0 top-full z-40 mt-1 w-full rounded border border-border bg-surface px-3 py-2 text-sm text-muted shadow-lg"
 			>
-				{ or(props.Empty, "Nenhum resultado") }
+				{ or(props.Empty, msg(ctx).NoResults) }
 			</p>
 		</div>
 		if props.Error != "" {

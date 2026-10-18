@@ -16,7 +16,7 @@ func calDay(cal, iso string) string { return cal + ` button[data-date="` + iso +
 const focusedDate = `document.activeElement.dataset.date || ''`
 
 func TestCalendarArrowsMoveFocusWithinTheMonth(t *testing.T) {
-	ctx := openPage(t, "/components/calendar?mes=2026-10")
+	ctx := openPage(t, "/components/calendar?month=2026-10")
 
 	focus(t, ctx, calDay(calEntrega, "2026-10-15"))
 	for _, step := range []struct{ key, want string }{
@@ -41,12 +41,12 @@ func TestCalendarArrowsMoveFocusWithinTheMonth(t *testing.T) {
 // Walking off the month fetches the neighbouring one from the server, and the
 // new grid puts focus on the day the key was heading for.
 func TestCalendarArrowAcrossTheMonthLoadsItAndKeepsFocus(t *testing.T) {
-	ctx := openPage(t, "/components/calendar?mes=2026-10")
+	ctx := openPage(t, "/components/calendar?month=2026-10")
 
 	focus(t, ctx, calDay(calEntrega, "2026-10-01"))
 	press(t, ctx, kb.ArrowLeft)
 	sleep(t, ctx, 600)
-	if got := eval[string](t, ctx, `document.querySelector('#cal-entrega-title').textContent.trim()`); got != "setembro de 2026" {
+	if got := eval[string](t, ctx, `document.querySelector('#cal-entrega-title').textContent.trim()`); got != "September 2026" {
 		t.Fatalf("the previous month did not load: title %q", got)
 	}
 	if got := eval[string](t, ctx, focusedDate); got != "2026-09-30" {
@@ -55,7 +55,7 @@ func TestCalendarArrowAcrossTheMonthLoadsItAndKeepsFocus(t *testing.T) {
 }
 
 func TestCalendarPageDownGoesToNextMonth(t *testing.T) {
-	ctx := openPage(t, "/components/calendar?mes=2026-10")
+	ctx := openPage(t, "/components/calendar?month=2026-10")
 
 	focus(t, ctx, calDay(calEntrega, "2026-10-31"))
 	press(t, ctx, kb.PageDown)
@@ -67,7 +67,7 @@ func TestCalendarPageDownGoesToNextMonth(t *testing.T) {
 }
 
 func TestCalendarSelectsAndSubmits(t *testing.T) {
-	ctx := openPage(t, "/components/calendar?mes=2026-10")
+	ctx := openPage(t, "/components/calendar?month=2026-10")
 
 	focus(t, ctx, calDay(calEntrega, "2026-10-20"))
 	press(t, ctx, kb.Enter)
@@ -99,7 +99,7 @@ func TestCalendarSelectsAndSubmits(t *testing.T) {
 
 // The second pick before the first still makes a forward period.
 func TestCalendarRangeOrdersItsEnds(t *testing.T) {
-	ctx := openPage(t, "/components/calendar?mes=2026-10")
+	ctx := openPage(t, "/components/calendar?month=2026-10")
 
 	click(t, ctx, calDay(`#cal-periodo`, "2026-10-20"))
 	click(t, ctx, calDay(`#cal-periodo`, "2026-10-10"))
@@ -125,8 +125,8 @@ func TestDataTableSortsByHeader(t *testing.T) {
 
 	click(t, ctx, `#dt-protocolos-sort-etapas`)
 	sleep(t, ctx, 500)
-	if got := eval[string](t, ctx, `document.querySelector('th[aria-sort="ascending"]').textContent.trim()`); !strings.HasPrefix(got, "Etapas") {
-		t.Fatalf("Etapas should be ascending, aria-sort is on %q", got)
+	if got := eval[string](t, ctx, `document.querySelector('th[aria-sort="ascending"]').textContent.trim()`); !strings.HasPrefix(got, "Steps") {
+		t.Fatalf("Steps should be ascending, aria-sort is on %q", got)
 	}
 	asc := eval[string](t, ctx, `[...document.querySelectorAll('#dt-protocolos-region tbody tr td:last-child')].map(td => td.textContent.trim()).join(',')`)
 
@@ -180,7 +180,7 @@ func TestDataTablePaginatesAndKeepsKeyboardPlace(t *testing.T) {
 	ctx := openPage(t, "/components/data-table")
 	first := eval[string](t, ctx, dtFirstRow)
 
-	click(t, ctx, `#dt-protocolos-region nav a[aria-label="Página 2"]`)
+	click(t, ctx, `#dt-protocolos-region nav a[aria-label="Page 2"]`)
 	sleep(t, ctx, 500)
 	if got := eval[string](t, ctx, `document.querySelector('#dt-protocolos-region [aria-current="page"]').textContent.trim()`); got != "2" {
 		t.Errorf("aria-current should be on page 2, is on %q", got)
@@ -199,7 +199,7 @@ func TestDataTableSurvivesBadQuery(t *testing.T) {
 	ctx := openPage(t, "/components/data-table?sort=xx&dir=up&page=999")
 
 	if !eval[bool](t, ctx, `!!document.querySelector('#dt-protocolos-sort-nome').closest('th[aria-sort="ascending"]')`) {
-		t.Error("an unknown sort should fall back to Protocolo ascending")
+		t.Error("an unknown sort should fall back to Protocol ascending")
 	}
 	if got := eval[string](t, ctx, `document.querySelector('#dt-protocolos-region [aria-current="page"]').textContent.trim()`); got != "5" {
 		t.Errorf("page 999 should clamp to the last page, aria-current is on %q", got)
@@ -214,11 +214,11 @@ func TestQuestionnaireAdvancesAndBranches(t *testing.T) {
 	ctx := openPage(t, "/components/questionnaire")
 
 	focus(t, ctx, `#qn-demo input[data-option-number="1"]`)
-	press(t, ctx, "1") // Sim
+	press(t, ctx, "1") // Yes
 	pressEnterNative(t, ctx)
 	sleep(t, ctx, 500)
-	if got := eval[string](t, ctx, qnTitle); got != "Em quais áreas?" {
-		t.Fatalf("\"Sim\" should lead to the areas question, shows %q", got)
+	if got := eval[string](t, ctx, qnTitle); got != "In which areas?" {
+		t.Fatalf("\"Yes\" should lead to the areas question, shows %q", got)
 	}
 	// The new question takes focus, so it is read out.
 	if got := eval[string](t, ctx, `document.activeElement.tagName`); got != "LEGEND" {
@@ -233,10 +233,10 @@ func TestQuestionnaireAdvancesAndBranches(t *testing.T) {
 	click(t, ctx, `#qn-demo input[value="nao"]`)
 	click(t, ctx, `#qn-demo button[value="next"]`)
 	sleep(t, ctx, 500)
-	if got := eval[string](t, ctx, qnTitle); got != "Qual o objetivo do próximo experimento?" {
-		t.Errorf("\"Não\" should skip the areas question, shows %q", got)
+	if got := eval[string](t, ctx, qnTitle); got != "What is the goal of your next experiment?" {
+		t.Errorf("\"No\" should skip the areas question, shows %q", got)
 	}
-	if got := eval[string](t, ctx, `document.querySelector('#qn-demo p.text-xs').textContent`); got != "Pergunta 2 de 3" {
+	if got := eval[string](t, ctx, `document.querySelector('#qn-demo p.text-xs').textContent`); got != "Question 2 of 3" {
 		t.Errorf("progress should count the shorter path: %q", got)
 	}
 }
@@ -266,17 +266,17 @@ func TestQuestionnaireDigitInTextAnswerIsText(t *testing.T) {
 	ctx := openPage(t, "/components/questionnaire?retomar=1")
 
 	focus(t, ctx, `#qn-demo input[type="text"]`)
-	press(t, ctx, "2 semanas")
+	press(t, ctx, "2 weeks")
 	settle(t, ctx)
-	if got := eval[string](t, ctx, `document.querySelector('#qn-demo input[type="text"]').value`); got != "2 semanas" {
-		t.Errorf("the answer field holds %q, want \"2 semanas\"", got)
+	if got := eval[string](t, ctx, `document.querySelector('#qn-demo input[type="text"]').value`); got != "2 weeks" {
+		t.Errorf("the answer field holds %q, want \"2 weeks\"", got)
 	}
 }
 
 func TestQuestionnaireResumesAndFinishes(t *testing.T) {
 	ctx := openPage(t, "/components/questionnaire?retomar=1")
 
-	if got := eval[string](t, ctx, `document.querySelector('#qn-demo p.text-xs').textContent`); got != "Pergunta 3 de 4" {
+	if got := eval[string](t, ctx, `document.querySelector('#qn-demo p.text-xs').textContent`); got != "Question 3 of 4" {
 		t.Fatalf("resume should open at question 3 of 4, shows %q", got)
 	}
 	click(t, ctx, `#qn-demo button[value="skip"]`)
@@ -285,7 +285,7 @@ func TestQuestionnaireResumesAndFinishes(t *testing.T) {
 	click(t, ctx, `#qn-demo button[value="next"]`)
 	sleep(t, ctx, 500)
 	summary := eval[string](t, ctx, `document.querySelector('#qn-demo dl')?.textContent || ''`)
-	for _, want := range []string{"Sim", "Genética, Imunologia", "—", "Este mês"} {
+	for _, want := range []string{"Yes", "Genetics, Immunology", "—", "This month"} {
 		if !strings.Contains(summary, want) {
 			t.Errorf("summary is missing %q: %s", want, summary)
 		}

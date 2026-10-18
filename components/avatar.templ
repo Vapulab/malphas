@@ -1,5 +1,7 @@
 package components
 
+import "context"
+
 type AvatarProps struct {
 	Src      string
 	Alt      string
@@ -33,11 +35,12 @@ func (p AvatarProps) statusClasses() string {
 	}[p.Status]
 }
 
-func (p AvatarProps) statusLabel() string {
+func (p AvatarProps) statusLabel(ctx context.Context) string {
+	m := msg(ctx)
 	return map[string]string{
-		"online":  "Online",
-		"offline": "Offline",
-		"busy":    "Ocupado",
+		"online":  m.StatusOnline,
+		"offline": m.StatusOffline,
+		"busy":    m.StatusBusy,
 	}[p.Status]
 }
 
@@ -62,7 +65,7 @@ templ Avatar(props AvatarProps) {
 		}
 		if props.Status != "" {
 			<span class={ "absolute bottom-0 right-0 size-2.5 rounded-full ring-2 ring-surface", props.statusClasses() }></span>
-			<span class="sr-only">{ props.statusLabel() }</span>
+			<span class="sr-only">{ props.statusLabel(ctx) }</span>
 		}
 	</span>
 }

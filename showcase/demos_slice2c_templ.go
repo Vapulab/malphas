@@ -47,13 +47,13 @@ func demoCollapse() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<p>chi, templ, Tailwind, HTMX e Alpine, com Postgres via pgx e sqlc.</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<p>chi, templ, Tailwind, HTMX and Alpine, with Postgres through pgx and sqlc.</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Collapse(components.CollapseProps{ID: "col-1", Title: "O que vem no boilerplate?"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Collapse(components.CollapseProps{ID: "col-1", Title: "What comes in the boilerplate?"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -69,13 +69,13 @@ func demoCollapse() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<p>O estado inicial vem do servidor, então não pisca ao carregar.</p>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<p>The initial state comes from the server, so it does not flicker on load.</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Collapse(components.CollapseProps{ID: "col-2", Title: "Já começa aberto", Open: true}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Collapse(components.CollapseProps{ID: "col-2", Title: "Starts open", Open: true}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -115,9 +115,9 @@ func demoAccordion() templ.Component {
 		templ_7745c5c3_Err = components.Accordion(components.AccordionProps{
 			ID: "faq",
 			Items: []components.AccordionItem{
-				{Title: "Precisa de Node?", Content: accordionNode()},
-				{Title: "Dá para usar o design system em outro projeto?", Content: accordionReuse(), Open: true},
-				{Title: "Funciona sem JavaScript?", Content: accordionNoJS()},
+				{Title: "Does it need Node?", Content: accordionNode()},
+				{Title: "Can I use the design system in another project?", Content: accordionReuse(), Open: true},
+				{Title: "Does it work without JavaScript?", Content: accordionNoJS()},
 			},
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -160,9 +160,9 @@ func demoAccordionExclusive() templ.Component {
 			ID:        "faq-x",
 			Exclusive: true,
 			Items: []components.AccordionItem{
-				{Title: "Primeiro", Content: accordionExclusiveNote()},
-				{Title: "Segundo", Content: accordionExclusiveNote()},
-				{Title: "Terceiro", Content: accordionExclusiveNote()},
+				{Title: "First", Content: accordionExclusiveNote()},
+				{Title: "Second", Content: accordionExclusiveNote()},
+				{Title: "Third", Content: accordionExclusiveNote()},
 			},
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -197,7 +197,7 @@ func accordionNode() templ.Component {
 			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<p>Não. O Tailwind roda pelo binário standalone, e HTMX e Alpine são vendorizados.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<p>No. Tailwind runs from the standalone binary, and HTMX and Alpine are vendored.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -226,7 +226,7 @@ func accordionReuse() templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<p>Sim — é um módulo Go independente, versionável por tag.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<p>Yes — it is a standalone Go module, versioned by tag.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -255,7 +255,7 @@ func accordionNoJS() templ.Component {
 			templ_7745c5c3_Var8 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<p>O HTML é renderizado no servidor, mas os componentes desta fatia dependem de Alpine para interagir.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<p>The HTML is rendered on the server, but these components rely on Alpine for interaction.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -284,7 +284,7 @@ func accordionExclusiveNote() templ.Component {
 			templ_7745c5c3_Var9 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<p>Abrir este painel fecha os outros.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<p>Opening this panel closes the others.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -315,11 +315,11 @@ func demoTabs() templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = components.Tabs(components.TabsProps{
 			ID:    "conta",
-			Label: "Configurações da conta",
+			Label: "Account settings",
 			Items: []components.Tab{
-				{Label: "Perfil", Content: tabsPerfil()},
-				{Label: "Segurança", Content: tabsSeguranca()},
-				{Label: "Faturamento", Content: tabsFaturamento(), Disabled: true},
+				{Label: "Profile", Content: tabsPerfil()},
+				{Label: "Security", Content: tabsSeguranca()},
+				{Label: "Billing", Content: tabsFaturamento(), Disabled: true},
 			},
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -350,11 +350,11 @@ func tabsPerfil() templ.Component {
 			templ_7745c5c3_Var11 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div class=\"flex max-w-sm flex-col gap-4\"><p class=\"text-muted\">Navegue entre as abas com as setas ← →. Home e End vão para as pontas, e a aba desabilitada é pulada.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "<div class=\"flex max-w-sm flex-col gap-4\"><p class=\"text-muted\">Move between tabs with the ← → arrows. Home and End go to the ends, and the disabled tab is skipped.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Input(components.InputProps{ID: "tab-nome", Name: "nome", Label: "Nome", Value: "Lincoln"}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Input(components.InputProps{ID: "tab-nome", Name: "nome", Label: "Name", Value: "Lincoln"}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -391,11 +391,11 @@ func tabsSeguranca() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Toggle(components.ToggleProps{ID: "tab-2fa", Name: "2fa", Label: "Autenticação em dois fatores", Checked: true}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Toggle(components.ToggleProps{ID: "tab-2fa", Name: "2fa", Label: "Two-factor authentication", Checked: true}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Input(components.InputProps{ID: "tab-senha", Name: "senha", Type: "password", Label: "Nova senha"}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Input(components.InputProps{ID: "tab-senha", Name: "senha", Type: "password", Label: "New password"}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -428,7 +428,7 @@ func tabsFaturamento() templ.Component {
 			templ_7745c5c3_Var13 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<p class=\"text-muted\">Disponível apenas no plano Pro.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<p class=\"text-muted\">Available on the Pro plan only.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

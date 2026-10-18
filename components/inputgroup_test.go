@@ -10,7 +10,7 @@ import (
 
 func TestInputGroupPlacesAddonsAroundTheInput(t *testing.T) {
 	html := renderToString(t, components.InputGroup(components.InputGroupProps{
-		ID: "preco", Name: "preco", Label: "Preço",
+		ID: "preco", Name: "preco", Label: "Price",
 		Prefix: components.InputGroupText("R$"),
 		Suffix: components.InputGroupText(",00"),
 		Attrs:  templ.Attributes{"inputmode": "numeric"},

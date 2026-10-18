@@ -180,7 +180,7 @@ func TestSelectSubmitsItsValue(t *testing.T) {
 
 const (
 	cbEstado     = `#cb-estado`
-	cbEstadoSent = `document.querySelector('input[name="estado"]').value`
+	cbEstadoSent = `document.querySelector('input[name="city"]').value`
 	cbPlano      = `#cb-plano`
 	cbPlanoSent  = `document.querySelector('input[name="plano"]').value`
 )
@@ -197,20 +197,20 @@ func retype(t *testing.T, ctx context.Context, selector, text string) {
 func TestComboboxFiltersIgnoringAccentsAndEnterPicks(t *testing.T) {
 	ctx := openPage(t, "/components/combobox")
 
-	retype(t, ctx, cbEstado, "para")
+	retype(t, ctx, cbEstado, "mal")
 	visible := eval[[]string](t, ctx,
 		`[...document.querySelectorAll('#cb-estado-listbox [role="option"]')].filter(o => o.style.display !== 'none').map(o => o.dataset.label)`)
-	want := []string{"Pará", "Paraíba", "Paraná"}
+	want := []string{"Málaga", "Malé", "Malmö"}
 	if strings.Join(visible, ",") != strings.Join(want, ",") {
-		t.Fatalf("filter for \"para\" showed %v, want %v", visible, want)
+		t.Fatalf("filter for \"mal\" showed %v, want %v", visible, want)
 	}
 
 	press(t, ctx, kb.Enter)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, cbEstadoSent); got != "pa" {
+	if got := eval[string](t, ctx, cbEstadoSent); got != "agp" {
 		t.Errorf("Enter should pick the top match; form would send %q", got)
 	}
-	if got := eval[string](t, ctx, `document.querySelector('`+cbEstado+`').value`); got != "Pará" {
+	if got := eval[string](t, ctx, `document.querySelector('`+cbEstado+`').value`); got != "Málaga" {
 		t.Errorf("the field should show the picked label, shows %q", got)
 	}
 	if got := eval[string](t, ctx, `document.querySelector('`+cbEstado+`').getAttribute('aria-expanded')`); got != "false" {
@@ -231,7 +231,7 @@ func TestComboboxArrowsSkipDisabledAndKeepFocus(t *testing.T) {
 		settle(t, ctx)
 		seen = append(seen, eval[string](t, ctx, activeLabel))
 	}
-	if strings.Join(seen, ",") != "Grátis,Pro,Grátis" {
+	if strings.Join(seen, ",") != "Free,Pro,Free" {
 		t.Errorf("↓ ↓ ↓ highlighted %v; want to wrap past the disabled Enterprise", seen)
 	}
 	if got := eval[string](t, ctx, `document.activeElement.id`); got != "cb-plano" {
@@ -247,19 +247,19 @@ func TestComboboxBlurRevertsFreeTextAndEmptyClears(t *testing.T) {
 	retype(t, ctx, cbEstado, "xyz")
 	focus(t, ctx, cbPlano)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, `document.querySelector('`+cbEstado+`').value`); got != "São Paulo" {
+	if got := eval[string](t, ctx, `document.querySelector('`+cbEstado+`').value`); got != "Montréal" {
 		t.Errorf("free text should revert to the selection, field shows %q", got)
 	}
-	if got := eval[string](t, ctx, cbEstadoSent); got != "sp" {
+	if got := eval[string](t, ctx, cbEstadoSent); got != "ymq" {
 		t.Errorf("free text changed the submitted value to %q", got)
 	}
 
 	// An exact label, typed without accents, counts as choosing it.
-	retype(t, ctx, cbEstado, "goias")
+	retype(t, ctx, cbEstado, "zurich")
 	press(t, ctx, kb.Escape)
 	focus(t, ctx, cbPlano)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, cbEstadoSent); got != "go" {
+	if got := eval[string](t, ctx, cbEstadoSent); got != "zrh" {
 		t.Errorf("typing a full label should select it; form would send %q", got)
 	}
 
@@ -286,7 +286,7 @@ func TestComboboxEscapeClosesThenClears(t *testing.T) {
 	if got := eval[string](t, ctx, `document.querySelector('`+cbEstado+`').getAttribute('aria-expanded')`); got != "false" {
 		t.Error("the first Escape should close the list")
 	}
-	if got := eval[string](t, ctx, cbEstadoSent); got != "sp" {
+	if got := eval[string](t, ctx, cbEstadoSent); got != "ymq" {
 		t.Errorf("closing must not touch the value, now %q", got)
 	}
 
@@ -305,12 +305,12 @@ func TestComboboxRetypingTheSelectionKeepsIt(t *testing.T) {
 	focus(t, ctx, cbEstado)
 	eval[bool](t, ctx, `(document.querySelector('`+cbEstado+`').setSelectionRange(99, 99), true)`)
 	press(t, ctx, kb.Backspace)
-	press(t, ctx, "o")
+	press(t, ctx, "l")
 	settle(t, ctx)
 	press(t, ctx, kb.Enter)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, cbEstadoSent); got != "sp" {
-		t.Errorf("retyping \"São Paulo\" and pressing Enter changed the value to %q", got)
+	if got := eval[string](t, ctx, cbEstadoSent); got != "ymq" {
+		t.Errorf("retyping \"Montréal\" and pressing Enter changed the value to %q", got)
 	}
 }
 
@@ -318,14 +318,14 @@ func TestComboboxRetypingTheSelectionKeepsIt(t *testing.T) {
 func TestComboboxTabTakesTheHighlightedOption(t *testing.T) {
 	ctx := openPage(t, "/components/combobox")
 
-	retype(t, ctx, cbEstado, "para")
+	retype(t, ctx, cbEstado, "mal")
 	press(t, ctx, kb.ArrowDown)
 	press(t, ctx, kb.ArrowDown)
 	settle(t, ctx)
 	press(t, ctx, kb.Tab)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, cbEstadoSent); got != "pr" {
-		t.Errorf("Tab on the highlighted Paraná should select it; form would send %q", got)
+	if got := eval[string](t, ctx, cbEstadoSent); got != "mmx" {
+		t.Errorf("Tab on the highlighted Malmö should select it; form would send %q", got)
 	}
 }
 
@@ -337,7 +337,7 @@ func TestComboboxEnterWithoutHighlightCommitsBeforeSubmit(t *testing.T) {
 	retype(t, ctx, cbEstado, "xyz")
 	press(t, ctx, kb.Enter)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, `document.querySelector('`+cbEstado+`').value`); got != "São Paulo" {
+	if got := eval[string](t, ctx, `document.querySelector('`+cbEstado+`').value`); got != "Montréal" {
 		t.Errorf("Enter should revert unmatched text before submitting; field shows %q", got)
 	}
 }
@@ -363,10 +363,10 @@ func TestComboboxEscapeDoesNotReachWindow(t *testing.T) {
 func TestCarouselMovesWithArrowKeys(t *testing.T) {
 	ctx := openPage(t, "/components/carousel")
 
-	const pos = `document.querySelector('[aria-roledescription="carrossel"] [tabindex="0"]').scrollLeft`
+	const pos = `document.querySelector('[aria-roledescription="carousel"] [tabindex="0"]').scrollLeft`
 
 	before := eval[float64](t, ctx, pos)
-	focus(t, ctx, `[aria-roledescription="carrossel"] [tabindex="0"]`)
+	focus(t, ctx, `[aria-roledescription="carousel"] [tabindex="0"]`)
 	press(t, ctx, kb.ArrowRight)
 	sleep(t, ctx, 700)
 

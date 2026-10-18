@@ -78,3 +78,19 @@ func TestBaseRendersTitleAndStylesheet(t *testing.T) {
 		}
 	}
 }
+
+// The page's lang follows the request's language, so screen readers pick the
+// right voice and browsers the right hyphenation.
+func TestBaseLangFollowsLocale(t *testing.T) {
+	if html := renderBase(t, layout.BaseProps{Title: "x"}); !strings.Contains(html, `<html lang="en">`) {
+		t.Errorf("without a locale the page is English: %s", html[:120])
+	}
+	var sb strings.Builder
+	ctx := malphas.WithLocale(context.Background(), malphas.ZH)
+	if err := layout.Base(layout.BaseProps{Title: "x"}).Render(ctx, &sb); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(sb.String(), `<html lang="zh-Hans">`) {
+		t.Errorf("a Chinese request renders lang=zh-Hans: %s", sb.String()[:120])
+	}
+}

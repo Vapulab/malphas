@@ -29,7 +29,7 @@ templ Rating(props RatingProps) {
 templ ratingReadOnly(props RatingProps) {
 	<div
 		class="inline-flex items-center gap-0.5"
-		aria-label={ ratingLabel(props.Value, props.max()) }
+		aria-label={ msg(ctx).RatingOf(props.Value, props.max()) }
 		{ props.Attrs... }
 	>
 		for i := 1; i <= props.max(); i++ {
@@ -41,7 +41,7 @@ templ ratingReadOnly(props RatingProps) {
 templ ratingInteractive(props RatingProps) {
 	<div
 		role="radiogroup"
-		aria-label={ or(props.Label, "Avaliação") }
+		aria-label={ or(props.Label, msg(ctx).Rating) }
 		class="inline-flex items-center gap-0.5"
 		x-data={ "rating(" + intJS(props.Value) + ", " + intJS(props.max()) + ")" }
 		x-on:keydown="onKeydown"
@@ -54,7 +54,7 @@ templ ratingInteractive(props RatingProps) {
 		for i := 1; i <= props.max(); i++ {
 			<span
 				role="radio"
-				aria-label={ ratingLabel(i, props.max()) }
+				aria-label={ msg(ctx).RatingOf(i, props.max()) }
 				aria-checked={ ariaBool(i == props.Value) }
 				x-bind:aria-checked={ "value === " + intJS(i) + " ? 'true' : 'false'" }
 				data-roving-item={ intJS(i - 1) }

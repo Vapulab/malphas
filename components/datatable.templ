@@ -29,9 +29,9 @@ type DataTableProps struct {
 	URL string
 
 	Searchable        bool
-	SearchLabel       string // accessible name for the search field (default "Buscar")
+	SearchLabel       string // accessible name for the search field (default: "Search" in the request's language)
 	SearchPlaceholder string
-	Empty             string // shown when Total is 0 (default "Nenhum resultado")
+	Empty             string // shown when Total is 0 (default: "No results" in the request's language)
 	Attrs             templ.Attributes
 }
 
@@ -105,12 +105,6 @@ func dataTableAlign(col DataTableColumn) string {
 	return "text-left"
 }
 
-func resultsLabel(n int) string {
-	if n == 1 {
-		return "1 resultado"
-	}
-	return strconv.Itoa(n) + " resultados"
-}
 
 // DataTable is a table whose sorting, search and paging happen on the server.
 // The component renders the controls and their HTMX wiring; the caller's
@@ -137,7 +131,7 @@ templ DataTable(props DataTableProps) {
 					type="search"
 					name="q"
 					value={ props.Query }
-					aria-label={ or(props.SearchLabel, "Buscar") }
+					aria-label={ or(props.SearchLabel, msg(ctx).Search) }
 					aria-controls={ props.regionID() }
 					placeholder={ props.SearchPlaceholder }
 					hx-get={ props.URL }
@@ -167,7 +161,7 @@ templ DataTable(props DataTableProps) {
 			hx-swap="outerHTML"
 			class="flex flex-col gap-3"
 		>
-			<p id={ props.ID + "-status" } tabindex="-1" class="text-sm text-muted focus:outline-none">{ resultsLabel(props.Total) }</p>
+			<p id={ props.ID + "-status" } tabindex="-1" class="text-sm text-muted focus:outline-none">{ msg(ctx).Results(props.Total) }</p>
 			@Table(TableProps{}) {
 				@THead() {
 					<tr>
@@ -194,7 +188,7 @@ templ DataTable(props DataTableProps) {
 				@TBody() {
 					if props.Total == 0 {
 						<tr>
-							<td colspan={ strconv.Itoa(len(props.Columns)) } class="py-10 text-center text-sm text-muted">{ or(props.Empty, "Nenhum resultado") }</td>
+							<td colspan={ strconv.Itoa(len(props.Columns)) } class="py-10 text-center text-sm text-muted">{ or(props.Empty, msg(ctx).NoResults) }</td>
 						</tr>
 					} else {
 						{ children... }

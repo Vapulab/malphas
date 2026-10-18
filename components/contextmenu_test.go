@@ -10,11 +10,11 @@ import (
 
 func contextMenuFixture() components.ContextMenuProps {
 	return components.ContextMenuProps{
-		ID: "arquivo", Label: "Ações do arquivo",
+		ID: "arquivo", Label: "File actions",
 		Entries: []components.MenuEntry{
-			{Label: "Renomear", OnClick: "$dispatch('renomear')"},
+			{Label: "Rename", OnClick: "$dispatch('renomear')"},
 			components.MenuDivider(),
-			{Label: "Excluir", OnClick: "$dispatch('excluir')"},
+			{Label: "Delete", OnClick: "$dispatch('excluir')"},
 		},
 	}
 }
@@ -22,7 +22,7 @@ func contextMenuFixture() components.ContextMenuProps {
 // A right-click menu is invisible to keyboard users unless the target can be
 // focused and says how to open it.
 func TestContextMenuTargetIsReachable(t *testing.T) {
-	html := renderWithChildren(t, components.ContextMenu(contextMenuFixture()), templ.Raw("<p>relatorio.pdf</p>"))
+	html := renderWithChildren(t, components.ContextMenu(contextMenuFixture()), templ.Raw("<p>report.pdf</p>"))
 	for _, want := range []string{
 		`tabindex="0"`,
 		`aria-describedby="arquivo-hint"`,
@@ -30,7 +30,7 @@ func TestContextMenuTargetIsReachable(t *testing.T) {
 		`Shift+F10`,
 		`x-data="contextMenu"`,
 		`role="menu"`,
-		`aria-label="Ações do arquivo"`,
+		`aria-label="File actions"`,
 		`role="separator"`,
 	} {
 		if !strings.Contains(html, want) {

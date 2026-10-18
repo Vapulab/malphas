@@ -1,10 +1,12 @@
 package components_test
 
 import (
+	"context"
 	"strings"
 	"testing"
 	"time"
 
+	"github.com/vapulab/malphas"
 	"github.com/vapulab/malphas/components"
 )
 
@@ -33,7 +35,7 @@ func TestCalendarGridStartsOnSunday(t *testing.T) {
 	if n := strings.Count(html[first:oct1], `role="gridcell"`); n != 5 {
 		t.Errorf("1 Oct 2026 is a Thursday: it should be the 5th cell, is the %dth", n)
 	}
-	for _, wd := range []string{"Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"} {
+	for _, wd := range []string{"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"} {
 		if !strings.Contains(html, ">"+wd+"<") {
 			t.Errorf("missing weekday %s", wd)
 		}
@@ -46,8 +48,8 @@ func TestCalendarGridARIA(t *testing.T) {
 		`role="grid"`,
 		`aria-labelledby="cal-title"`,
 		`id="cal-title"`,
-		`outubro de 2026`,
-		`aria-label="terça-feira, 20 de outubro de 2026"`,
+		`October 2026`,
+		`aria-label="Tuesday, October 20, 2026"`,
 		`<input type="hidden" name="entrega" value="2026-10-20"`,
 		`aria-current="date"`,
 	} {
@@ -73,8 +75,8 @@ func TestCalendarGridARIA(t *testing.T) {
 func TestCalendarNavLinksCarryTheMonth(t *testing.T) {
 	html := renderToString(t, components.Calendar(calendarFixture()))
 	for _, want := range []string{
-		`href="/components/calendar?mes=2026-09"`,
-		`href="/components/calendar?mes=2026-11"`,
+		`href="/components/calendar?month=2026-09"`,
+		`href="/components/calendar?month=2026-11"`,
 		`hx-select="#cal"`,
 		`hx-target="#cal"`,
 	} {
@@ -93,7 +95,7 @@ func TestCalendarRangeMarksTheSpan(t *testing.T) {
 	if n := strings.Count(html, `aria-selected="true"`); n != 5 {
 		t.Errorf("10 to 14 inclusive is 5 selected days, got %d", n)
 	}
-	for _, want := range []string{`name="inicio" value="2026-10-10"`, `name="fim" value="2026-10-14"`, `href="/x?a=1&amp;mes=2026-09"`} {
+	for _, want := range []string{`name="inicio" value="2026-10-10"`, `name="fim" value="2026-10-14"`, `href="/x?a=1&amp;month=2026-09"`} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)
 		}
@@ -146,5 +148,32 @@ func TestCalendarSingleWithoutNameKeepsItsValue(t *testing.T) {
 	html := renderToString(t, components.Calendar(props))
 	if !strings.Contains(html, `data-cal="value"`) || strings.Contains(html, `name=""`) {
 		t.Errorf("expected an unnamed hidden input carrying the value: %s", html)
+	}
+}
+
+// The query names are part of the public interface every host reads: English,
+// like the rest of the API.
+func TestCalendarNavURLUsesEnglishParams(t *testing.T) {
+	html := renderToString(t, components.Calendar(calendarFixture()))
+	if !strings.Contains(html, "month=2026-10") && !strings.Contains(html, "month=2026-09") {
+		t.Errorf("nav links should carry month=: %s", html)
+	}
+	if strings.Contains(html, "mes=") || strings.Contains(html, "foco=") {
+		t.Error("the Portuguese query names are gone in v0.3.0")
+	}
+}
+
+// The script needs the week's first day for Home and End.
+func TestCalendarCarriesWeekStart(t *testing.T) {
+	en := renderToString(t, components.Calendar(calendarFixture()))
+	if !strings.Contains(en, `, 0)"`) {
+		t.Errorf("English weeks start on Sunday (0): %s", en[:400])
+	}
+	ru := renderInContext(t, malphas.WithLocale(context.Background(), malphas.RU), components.Calendar(calendarFixture()))
+	if !strings.Contains(ru, `, 1)"`) {
+		t.Errorf("Russian weeks start on Monday (1): %s", ru[:400])
+	}
+	if !strings.Contains(ru, ">пн<") || !strings.Contains(ru, "Октябрь 2026") {
+		t.Error("the Russian calendar should speak Russian")
 	}
 }

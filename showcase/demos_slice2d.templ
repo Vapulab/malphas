@@ -15,10 +15,10 @@ templ demoCountdown() {
 templ demoCountdownOnEnd() {
 	<div class="flex items-center gap-4" x-data="{ done: false }" x-on:countdown-end="done = true">
 		@components.Countdown(components.CountdownProps{Seconds: 5, Format: "mm:ss", OnEnd: "notify"})
-		<span x-show="!done" class="text-sm text-muted">Aguardando…</span>
+		<span x-show="!done" class="text-sm text-muted">Waiting…</span>
 		<span x-show="done" style="display:none">
 			@components.Badge(components.BadgeProps{Variant: "success"}) {
-				Tempo esgotado
+				Time is up
 			}
 		</span>
 	</div>

@@ -101,8 +101,8 @@ templ Questionnaire(props QuestionnaireProps) {
 		{ props.Attrs... }
 	>
 		<div class="flex flex-col gap-2">
-			<p class="text-xs font-medium text-muted">{ "Pergunta " + strconv.Itoa(props.Step) + " de " + strconv.Itoa(props.Total) }</p>
-			@Progress(ProgressProps{Value: props.Step, Max: props.Total, Attrs: templ.Attributes{"aria-label": "Progresso do questionário"}})
+			<p class="text-xs font-medium text-muted">{ msg(ctx).QuestionOf(props.Step, props.Total) }</p>
+			@Progress(ProgressProps{Value: props.Step, Max: props.Total, Attrs: templ.Attributes{"aria-label": msg(ctx).QuestionnaireProgress}})
 		</div>
 		for _, h := range props.hidden() {
 			<input type="hidden" name={ h.Name } value={ h.Value }/>
@@ -192,20 +192,20 @@ templ Questionnaire(props QuestionnaireProps) {
 		<div class="flex flex-row-reverse flex-wrap items-center justify-between gap-2">
 			@Button(ButtonProps{Type: "submit", Attrs: templ.Attributes{"name": "nav", "value": "next"}}) {
 				if props.isLast() {
-					Concluir
+					{ msg(ctx).QuestionnaireFinish }
 				} else {
-					Próxima
+					{ msg(ctx).QuestionnaireNext }
 				}
 			}
 			<div class="flex gap-2">
 				if props.Step > 1 {
 					@Button(ButtonProps{Type: "submit", Variant: "secondary", Attrs: templ.Attributes{"name": "nav", "value": "back", "formnovalidate": true}}) {
-						Voltar
+						{ msg(ctx).QuestionnaireBack }
 					}
 				}
 				if !props.Question.Required {
 					@Button(ButtonProps{Type: "submit", Variant: "secondary", Attrs: templ.Attributes{"name": "nav", "value": "skip", "formnovalidate": true}}) {
-						Pular
+						{ msg(ctx).QuestionnaireSkip }
 					}
 				}
 			</div>

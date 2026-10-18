@@ -2,8 +2,10 @@ package showcase
 
 import "strings"
 
-// categorySlug turns "Entrada de dados" into "entrada-de-dados" for anchors.
+// categorySlug turns "Layout & utilities" into "layout-utilities" for
+// anchors: letters and digits, words joined by single hyphens.
 func categorySlug(category string) string {
-	r := strings.NewReplacer(" ", "-", "ç", "c", "õ", "o", "ã", "a", "é", "e")
-	return r.Replace(strings.ToLower(category))
+	return strings.Join(strings.FieldsFunc(strings.ToLower(category), func(r rune) bool {
+		return !(r >= 'a' && r <= 'z' || r >= '0' && r <= '9')
+	}), "-")
 }

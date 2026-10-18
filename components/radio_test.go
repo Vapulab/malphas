@@ -12,7 +12,7 @@ func radioFixture() components.RadioProps {
 		Name:  "plano",
 		Value: "pro",
 		Options: []components.RadioOption{
-			{Label: "Grátis", Value: "free"},
+			{Label: "Free", Value: "free"},
 			{Label: "Pro", Value: "pro"},
 			{Label: "Enterprise", Value: "ent", Disabled: true},
 		},

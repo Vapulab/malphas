@@ -10,8 +10,8 @@ import (
 
 func alertDialogFixture() components.AlertDialogProps {
 	return components.AlertDialogProps{
-		ID: "excluir", Title: "Excluir protocolo?", Description: "Não dá para desfazer.",
-		ConfirmLabel: "Excluir", ConfirmAttrs: templ.Attributes{"hx-delete": "/protocolos/1"},
+		ID: "excluir", Title: "Delete the protocol?", Description: "This cannot be undone.",
+		ConfirmLabel: "Delete", ConfirmAttrs: templ.Attributes{"hx-delete": "/protocolos/1"},
 	}
 }
 
@@ -31,11 +31,11 @@ func TestAlertDialogRolesAndOrder(t *testing.T) {
 	}
 	// Cancel comes first, so modalOverlay's "focus the first focusable" lands
 	// on the safe choice, never on the destructive one.
-	if c, x := strings.Index(html, ">Cancelar<"), strings.Index(html, ">Excluir<"); c < 0 || x < 0 || c > x {
-		t.Errorf("Cancelar must come before the confirm button, got: %s", html)
+	if c, x := strings.Index(html, ">Cancel<"), strings.Index(html, ">Delete<"); c < 0 || x < 0 || c > x {
+		t.Errorf("Cancel must come before the confirm button, got: %s", html)
 	}
 	// No close button: the only ways out are the two decisions (and Escape).
-	if strings.Contains(html, `aria-label="Fechar"`) {
+	if strings.Contains(html, `aria-label="Close"`) {
 		t.Errorf("an alert dialog offers no × button, got: %s", html)
 	}
 }

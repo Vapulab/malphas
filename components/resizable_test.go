@@ -10,8 +10,8 @@ import (
 
 func TestResizableSeparatorARIA(t *testing.T) {
 	html := renderToString(t, components.Resizable(components.ResizableProps{
-		ID: "rz", Label: "Redimensionar editor", DefaultSize: 30, Min: 20, Max: 70,
-		First: templ.Raw("<p>lista</p>"), Second: templ.Raw("<p>editor</p>"),
+		ID: "rz", Label: "Resize editor", DefaultSize: 30, Min: 20, Max: 70,
+		First: templ.Raw("<p>list</p>"), Second: templ.Raw("<p>editor</p>"),
 	}))
 	for _, want := range []string{
 		`role="separator"`,
@@ -21,11 +21,11 @@ func TestResizableSeparatorARIA(t *testing.T) {
 		`aria-valuemin="20"`,
 		`aria-valuemax="70"`,
 		`aria-controls="rz-first"`,
-		`aria-label="Redimensionar editor"`,
+		`aria-label="Resize editor"`,
 		`id="rz-first"`,
 		`style="flex-basis: 30%;"`,
 		`x-data="resizable(&#34;rz&#34;, 30, 20, 70, false)"`,
-		"lista", "editor",
+		"list", "editor",
 	} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)

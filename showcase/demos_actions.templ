@@ -32,7 +32,7 @@ templ demoButtonSizes() {
 
 templ demoButtonDisabled() {
 	@components.Button(components.ButtonProps{Attrs: templ.Attributes{"disabled": true}}) {
-		Indisponível
+		Unavailable
 	}
 }
 
@@ -41,10 +41,10 @@ templ demoButtonDisabled() {
 templ demoModal() {
 	<div x-data>
 		@components.Button(components.ButtonProps{Attrs: templ.Attributes{"x-on:click": "$dispatch('open-modal', 'demo-modal')"}}) {
-			Abrir modal
+			Open modal
 		}
 	</div>
-	@components.Modal(components.ModalProps{ID: "demo-modal", Title: "Confirmar ação"}) {
-		<p class="text-fg">Feche com Escape, com o botão × ou clicando no fundo.</p>
+	@components.Modal(components.ModalProps{ID: "demo-modal", Title: "Confirm action"}) {
+		<p class="text-fg">Close it with Escape, with the × button or by clicking the backdrop.</p>
 	}
 }

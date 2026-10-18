@@ -15,11 +15,11 @@ func TestTextareaCounterFollowsTyping(t *testing.T) {
 	ctx := openPage(t, "/components/textarea")
 
 	focus(t, ctx, "#ta-bio")
-	press(t, ctx, "olá 😀")
+	press(t, ctx, "hey 😀")
 	settle(t, ctx)
 
 	if got := eval[string](t, ctx, `document.querySelector('#ta-bio').closest('[x-data]').querySelector('[x-text="count"]').textContent`); got != "6" {
-		t.Errorf("counter shows %q after typing \"olá 😀\", want 6 (emoji counts 2, as maxlength does)", got)
+		t.Errorf("counter shows %q after typing \"hey 😀\", want 6 (emoji counts 2, as maxlength does)", got)
 	}
 }
 
@@ -28,7 +28,7 @@ func TestTextareaCounterFollowsTyping(t *testing.T) {
 func TestTextareaKeepsALeadingNewlineInTheBrowser(t *testing.T) {
 	ctx := openPage(t, "/components/textarea")
 
-	if got := eval[string](t, ctx, `document.querySelector('#ta-nota').value`); got != "\nComeça com uma linha em branco." {
+	if got := eval[string](t, ctx, `document.querySelector('#ta-nota').value`); got != "\nStarts with a blank line." {
 		t.Errorf("the parsed value is %q; the leading newline was lost", got)
 	}
 }
@@ -119,14 +119,14 @@ func TestToggleGroupSingleSwitchesAndReleases(t *testing.T) {
 		t.Fatalf("fixture changed: %v", got)
 	}
 
-	clickByText(t, ctx, "Esquerda")
+	clickByText(t, ctx, "Left")
 	settle(t, ctx)
 	if got := values(); len(got) != 1 || got[0] != "esq" {
 		t.Errorf("single mode should switch to esq, form sends %v", got)
 	}
 
 	// Pressing the pressed item releases it: nothing is submitted.
-	clickByText(t, ctx, "Esquerda")
+	clickByText(t, ctx, "Left")
 	settle(t, ctx)
 	if got := values(); len(got) != 0 {
 		t.Errorf("pressing the pressed item should release it, form sends %v", got)
@@ -136,7 +136,7 @@ func TestToggleGroupSingleSwitchesAndReleases(t *testing.T) {
 func TestToggleGroupMultipleSubmitsEveryPressedValue(t *testing.T) {
 	ctx := openPage(t, "/components/toggle-group")
 
-	clickByText(t, ctx, "Negrito")
+	clickByText(t, ctx, "Bold")
 	settle(t, ctx)
 	got := eval[[]string](t, ctx, `(`+groupValues+`)('formato')`)
 	if strings.Join(got, ",") != "negrito,italico" {
@@ -148,11 +148,11 @@ func TestToggleGroupMultipleSubmitsEveryPressedValue(t *testing.T) {
 func TestToggleGroupArrowsMoveFocusNotState(t *testing.T) {
 	ctx := openPage(t, "/components/toggle-group")
 
-	focus(t, ctx, `[aria-label="Formatação"] [tabindex="0"]`)
+	focus(t, ctx, `[aria-label="Formatting"] [tabindex="0"]`)
 	press(t, ctx, kb.ArrowRight)
 	settle(t, ctx)
-	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Tachado" {
-		t.Errorf("→ from Itálico should skip the disabled Sublinhado and land on Tachado, got %q", got)
+	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Strikethrough" {
+		t.Errorf("→ from Italic should skip the disabled Underline and land on Strikethrough, got %q", got)
 	}
 	if got := eval[[]string](t, ctx, `(`+groupValues+`)('formato')`); strings.Join(got, ",") != "italico" {
 		t.Errorf("arrows changed the pressed state: form sends %v", got)
@@ -164,7 +164,7 @@ func TestToggleGroupArrowsMoveFocusNotState(t *testing.T) {
 // The whole point of tabindex=0: the keyboard alone can scroll it.
 func TestScrollAreaScrollsFromTheKeyboard(t *testing.T) {
 	ctx := openPage(t, "/components/scroll-area")
-	const area = `[aria-label="Termos de uso"]`
+	const area = `[aria-label="Terms of use"]`
 
 	focus(t, ctx, area)
 	press(t, ctx, kb.PageDown)
@@ -189,7 +189,7 @@ func TestItemActionDoesNotFollowTheLink(t *testing.T) {
 	if got := eval[string](t, ctx, `location.search`); got != "?marca=1" {
 		t.Errorf("clicking the action navigated (location.search=%q)", got)
 	}
-	if got := eval[string](t, ctx, `document.querySelector('#item-baixar').textContent`); got != "Baixado" {
+	if got := eval[string](t, ctx, `document.querySelector('#item-baixar').textContent`); got != "Downloaded" {
 		t.Errorf("the action did not run: %q", got)
 	}
 }

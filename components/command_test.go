@@ -9,15 +9,15 @@ import (
 
 func commandFixture() components.CommandProps {
 	return components.CommandProps{
-		ID: "cmd", Placeholder: "Busque um comando…", Hotkey: true,
+		ID: "cmd", Placeholder: "Search for a command…", Hotkey: true,
 		Groups: []components.CommandGroup{
-			{Heading: "Navegar", Items: []components.CommandItem{
-				{Label: "Componentes", Href: "/components"},
+			{Heading: "Navigate", Items: []components.CommandItem{
+				{Label: "Components", Href: "/components"},
 				{Label: "Landing", Href: "/"},
 			}},
-			{Heading: "Ações", Items: []components.CommandItem{
-				{Label: "Alternar tema", OnClick: "x()", Shortcut: "Ctrl T"},
-				{Label: "Sair", OnClick: "y()", Disabled: true},
+			{Heading: "Actions", Items: []components.CommandItem{
+				{Label: "Toggle theme", OnClick: "x()", Shortcut: "Ctrl T"},
+				{Label: "Sign out", OnClick: "y()", Disabled: true},
 			}},
 		},
 	}
@@ -41,7 +41,7 @@ func TestCommandWiresComboboxToListbox(t *testing.T) {
 		}
 	}
 	// One index space across groups, so the arrows walk straight through.
-	for i, label := range []string{"Componentes", "Landing", "Alternar tema", "Sair"} {
+	for i, label := range []string{"Components", "Landing", "Toggle theme", "Sign out"} {
 		if !strings.Contains(html, `data-option-index="`+string(rune('0'+i))+`" data-label="`+label+`"`) {
 			t.Errorf("option %q should have index %d, got: %s", label, i, html)
 		}
@@ -69,7 +69,7 @@ func TestCommandWithoutHotkeyRegistersNoShortcut(t *testing.T) {
 // data would otherwise run when the item is chosen.
 func TestCommandSanitizesHref(t *testing.T) {
 	props := components.CommandProps{ID: "c", Groups: []components.CommandGroup{{Heading: "x", Items: []components.CommandItem{
-		{Label: "Mau", Href: "javascript:alert(1)"},
+		{Label: "Bad", Href: "javascript:alert(1)"},
 	}}}}
 	html := renderToString(t, components.Command(props))
 	if strings.Contains(html, "javascript:") {

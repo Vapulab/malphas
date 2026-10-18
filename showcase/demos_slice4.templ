@@ -5,7 +5,7 @@ import "github.com/vapulab/malphas/components"
 templ demoLabel() {
 	<div class="flex flex-col gap-2">
 		@components.Label(components.LabelProps{For: "l-nome"}) {
-			Nome
+			Name
 		}
 		@components.Label(components.LabelProps{For: "l-email", Required: true}) {
 			Email
@@ -14,8 +14,8 @@ templ demoLabel() {
 }
 
 templ demoField() {
-	{{ ok := components.FieldProps{ID: "f-email", Label: "Email", Description: "Usado para entrar na conta.", Required: true} }}
-	{{ bad := components.FieldProps{ID: "f-site", Label: "Site", Description: "Comece com https://", Error: "Endereço inválido."} }}
+	{{ ok := components.FieldProps{ID: "f-email", Label: "Email", Description: "Used to sign in to your account.", Required: true} }}
+	{{ bad := components.FieldProps{ID: "f-site", Label: "Website", Description: "Start with https://", Error: "Invalid address."} }}
 	<div class="flex max-w-sm flex-col gap-6">
 		@components.Field(ok) {
 			@components.Input(components.InputProps{ID: ok.ID, Name: "email", Type: "email", Attrs: ok.ControlAttrs()})
@@ -30,20 +30,20 @@ templ demoTextarea() {
 	<form class="flex max-w-md flex-col gap-6" x-on:submit.prevent>
 		@components.Textarea(components.TextareaProps{
 			ID: "ta-bio", Name: "bio", Label: "Bio", MaxLength: 160,
-			Placeholder: "Conte em poucas palavras quem você é.",
+			Placeholder: "Tell us who you are in a few words.",
 		})
 		// A saved value that starts with a blank line: the parser drops one
 		// newline after <textarea>, and the component pads for it.
 		@components.Textarea(components.TextareaProps{
-			ID: "ta-nota", Name: "nota", Label: "Nota salva", Rows: 3,
-			Value: "\nComeça com uma linha em branco.",
+			ID: "ta-nota", Name: "nota", Label: "Saved note", Rows: 3,
+			Value: "\nStarts with a blank line.",
 		})
 		@components.Textarea(components.TextareaProps{
-			ID: "ta-off", Name: "off", Label: "Observações", Value: "Campo bloqueado.", Disabled: true,
+			ID: "ta-off", Name: "off", Label: "Notes", Value: "Locked field.", Disabled: true,
 		})
 		<div>
 			@components.Button(components.ButtonProps{Variant: "secondary", Type: "reset"}) {
-				Limpar
+				Clear
 			}
 		</div>
 	</form>
@@ -52,35 +52,35 @@ templ demoTextarea() {
 templ demoInputGroup() {
 	<div class="flex max-w-sm flex-col gap-6">
 		@components.InputGroup(components.InputGroupProps{
-			ID: "ig-preco", Name: "preco", Label: "Preço",
-			Prefix: components.InputGroupText("R$"),
+			ID: "ig-preco", Name: "preco", Label: "Price",
+			Prefix: components.InputGroupText("$"),
 			Attrs:  templ.Attributes{"inputmode": "decimal"},
 		})
 		@components.InputGroup(components.InputGroupProps{
-			ID: "ig-usuario", Name: "usuario", Label: "Email corporativo",
+			ID: "ig-usuario", Name: "usuario", Label: "Work email",
 			Suffix: components.InputGroupText("@vapulab.com"),
 		})
 		@components.InputGroup(components.InputGroupProps{
-			ID: "ig-busca", Name: "q", Label: "Busca", Type: "search", Placeholder: "Buscar componentes…",
+			ID: "ig-busca", Name: "q", Label: "Search", Type: "search", Placeholder: "Search components…",
 			Suffix: demoInputGroupButton(),
 		})
 	</div>
 }
 
 templ demoInputGroupButton() {
-	<button type="button" class="h-full px-3 text-sm font-medium text-primary hover:bg-muted/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50">Buscar</button>
+	<button type="button" class="h-full px-3 text-sm font-medium text-primary hover:bg-muted/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50">Search</button>
 }
 
 templ demoToggleButton() {
 	<form class="flex flex-wrap items-center gap-2" x-on:submit.prevent>
-		@components.ToggleButton(components.ToggleButtonProps{ID: "tb-fav", Name: "favorito", Label: "Favorito"}) {
+		@components.ToggleButton(components.ToggleButtonProps{ID: "tb-fav", Name: "favorito", Label: "Favorite"}) {
 			<span aria-hidden="true">&#9733;</span>
 		}
-		@components.ToggleButton(components.ToggleButtonProps{ID: "tb-bold", Name: "negrito", Pressed: true, Label: "Negrito"}) {
+		@components.ToggleButton(components.ToggleButtonProps{ID: "tb-bold", Name: "negrito", Pressed: true, Label: "Bold"}) {
 			<span aria-hidden="true" class="font-bold">B</span>
 		}
 		@components.ToggleButton(components.ToggleButtonProps{ID: "tb-off", Name: "bloqueado", Pressed: true, Disabled: true}) {
-			Bloqueado
+			Locked
 		}
 	</form>
 }
@@ -88,25 +88,25 @@ templ demoToggleButton() {
 templ demoToggleGroup() {
 	<form class="flex flex-col gap-4" x-on:submit.prevent>
 		<p class="text-sm text-muted">
-			Tab entra no grupo pelo item pressionado; ← → ↑ ↓ andam entre os itens sem
-			mudar o que está pressionado. Espaço ou Enter alternam.
+			Tab enters the group at the pressed item; ← → ↑ ↓ move between items without
+			changing what is pressed. Space or Enter toggles.
 		</p>
 		@components.ToggleGroup(components.ToggleGroupProps{
-			Name: "alinhamento", Label: "Alinhamento",
+			Name: "alinhamento", Label: "Alignment",
 			Items: []components.ToggleGroupItem{
-				{Label: "Esquerda", Value: "esq"},
-				{Label: "Centro", Value: "centro"},
-				{Label: "Direita", Value: "dir"},
+				{Label: "Left", Value: "esq"},
+				{Label: "Center", Value: "centro"},
+				{Label: "Right", Value: "dir"},
 			},
 			Value: []string{"centro"},
 		})
 		@components.ToggleGroup(components.ToggleGroupProps{
-			Name: "formato", Label: "Formatação", Type: "multiple",
+			Name: "formato", Label: "Formatting", Type: "multiple",
 			Items: []components.ToggleGroupItem{
-				{Label: "Negrito", Value: "negrito"},
-				{Label: "Itálico", Value: "italico"},
-				{Label: "Sublinhado", Value: "sublinhado", Disabled: true},
-				{Label: "Tachado", Value: "tachado"},
+				{Label: "Bold", Value: "negrito"},
+				{Label: "Italic", Value: "italico"},
+				{Label: "Underline", Value: "sublinhado", Disabled: true},
+				{Label: "Strikethrough", Value: "tachado"},
 			},
 			Value: []string{"italico"},
 		})
@@ -126,10 +126,10 @@ templ demoAspectRatio() {
 
 templ demoScrollArea() {
 	<div class="flex max-w-md flex-col gap-6">
-		@components.ScrollArea(components.ScrollAreaProps{Label: "Termos de uso", Class: "max-h-48 border border-border"}) {
+		@components.ScrollArea(components.ScrollAreaProps{Label: "Terms of use", Class: "max-h-48 border border-border"}) {
 			<div id="sa-termos" class="flex flex-col gap-3 p-4 text-sm text-fg">
 				for i := 1; i <= 12; i++ {
-					<p>Cláusula { intToString(i) }: o uso do serviço implica a aceitação destes termos, que podem mudar com aviso prévio.</p>
+					<p>Clause { intToString(i) }: using the service means accepting these terms, which may change with prior notice.</p>
 				}
 			</div>
 		}
@@ -147,12 +147,12 @@ templ demoScrollArea() {
 
 templ demoEmpty() {
 	@components.Empty(components.EmptyProps{
-		Title:       "Nenhum projeto ainda",
-		Description: "Projetos guardam seus protocolos e resultados. Crie o primeiro para começar.",
+		Title:       "No projects yet",
+		Description: "Projects hold your protocols and results. Create the first one to get started.",
 		Icon:        templ.Raw("&#9671;"),
 	}) {
 		@components.Button(components.ButtonProps{}) {
-			Novo projeto
+			New project
 		}
 	}
 }
@@ -162,24 +162,24 @@ templ demoItemAction() {
 		type="button"
 		id="item-baixar"
 		x-data
-		x-on:click="$el.textContent = 'Baixado'"
+		x-on:click="$el.textContent = 'Downloaded'"
 		class="rounded px-2 py-1 text-sm font-medium text-primary hover:bg-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-	>Baixar</button>
+	>Download</button>
 }
 
 templ demoItem() {
 	<div class="flex max-w-lg flex-col gap-6">
 		@components.Item(components.ItemProps{
-			Title: "Relatório trimestral", Description: "PDF · 2,4 MB · atualizado ontem",
+			Title: "Quarterly report", Description: "PDF · 2.4 MB · updated yesterday",
 			Href: "/components/item", Variant: "outline",
 			Media:   components.Avatar(components.AvatarProps{Initials: "RT"}),
 			Actions: demoItemAction(),
 		})
 		@components.ItemGroup(components.ItemGroupProps{
-			Label: "Arquivos recentes",
+			Label: "Recent files",
 			Items: []components.ItemProps{
-				{Title: "protocolo-v2.pdf", Description: "Enviado por Lincoln", Size: "sm"},
-				{Title: "resultados.csv", Description: "Gerado automaticamente", Size: "sm"},
+				{Title: "protocol-v2.pdf", Description: "Uploaded by Lincoln", Size: "sm"},
+				{Title: "results.csv", Description: "Generated automatically", Size: "sm"},
 			},
 		})
 	</div>
@@ -187,13 +187,13 @@ templ demoItem() {
 
 templ demoProse() {
 	@components.Prose(components.ProseProps{}) {
-		<h2>Como funciona o protocolo</h2>
-		<p>O vapulab registra cada etapa do experimento. Veja a <a href="/components">lista de componentes</a> para montar a sua tela.</p>
+		<h2>How the protocol works</h2>
+		<p>vapulab records every step of the experiment. See the <a href="/components">component list</a> to build your own screen.</p>
 		<ul>
-			<li>Planeje as etapas</li>
-			<li>Execute e <strong>anote</strong> os desvios</li>
+			<li>Plan the steps</li>
+			<li>Run them and <strong>log</strong> the deviations</li>
 		</ul>
-		<blockquote>Medir duas vezes, cortar uma.</blockquote>
-		<p>Rode <code>task dev</code> para subir tudo localmente.</p>
+		<blockquote>Measure twice, cut once.</blockquote>
+		<p>Run <code>task dev</code> to bring everything up locally.</p>
 	}
 }

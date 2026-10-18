@@ -32,8 +32,8 @@ func demoBreadcrumbs() templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = components.Breadcrumbs(components.BreadcrumbsProps{Items: []components.BreadcrumbItem{
-			{Label: "Início", Href: "/"},
-			{Label: "Componentes", Href: "/"},
+			{Label: "Home", Href: "/"},
+			{Label: "Components", Href: "/"},
 			{Label: "Breadcrumbs"},
 		}}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -65,9 +65,9 @@ func demoSteps() templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = components.Steps(components.StepsProps{Items: []components.Step{
-			{Label: "Conta", State: "done"},
-			{Label: "Pagamento", State: "current"},
-			{Label: "Confirmação"},
+			{Label: "Account", State: "done"},
+			{Label: "Payment", State: "current"},
+			{Label: "Confirmation"},
 		}}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -98,8 +98,8 @@ func demoStepsVertical() templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = components.Steps(components.StepsProps{Vertical: true, Items: []components.Step{
-			{Label: "Repositório clonado", State: "done"},
-			{Label: "Migrations aplicadas", State: "done"},
+			{Label: "Repository cloned", State: "done"},
+			{Label: "Migrations applied", State: "done"},
 			{Label: "Build", State: "current"},
 			{Label: "Deploy"},
 		}}).Render(ctx, templ_7745c5c3_Buffer)
@@ -132,9 +132,9 @@ func demoTimeline() templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		templ_7745c5c3_Err = components.Timeline(components.TimelineProps{Items: []components.TimelineItem{
-			{Time: "09:00", Title: "Deploy iniciado", Description: "build #481, branch main"},
-			{Time: "09:02", Title: "Migrations aplicadas", Variant: "muted"},
-			{Time: "09:04", Title: "Deploy concluído", Description: "sem downtime", Variant: "success"},
+			{Time: "09:00", Title: "Deploy started", Description: "build #481, branch main"},
+			{Time: "09:02", Title: "Migrations applied", Variant: "muted"},
+			{Time: "09:04", Title: "Deploy finished", Description: "zero downtime", Variant: "success"},
 		}}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -192,7 +192,7 @@ func demoIndicator() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "Caixa de entrada")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "Inbox")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -226,7 +226,7 @@ func demoIndicator() templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = components.Indicator(components.IndicatorProps{Label: "novo", Variant: "primary", Position: "top-left"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Indicator(components.IndicatorProps{Label: "new", Variant: "primary", Position: "top-left"}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -287,7 +287,7 @@ func demoJoin() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "Dia")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "Day")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -313,7 +313,7 @@ func demoJoin() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "Semana")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "Week")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -339,7 +339,7 @@ func demoJoin() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "Mês")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "Month")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -379,7 +379,7 @@ func demoJoin() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "Acima")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "Top")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -405,7 +405,7 @@ func demoJoin() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "Meio")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "Middle")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -431,7 +431,7 @@ func demoJoin() templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "Abaixo")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "Bottom")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

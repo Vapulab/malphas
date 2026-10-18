@@ -5,28 +5,28 @@ import "github.com/vapulab/malphas/components"
 templ demoPopover() {
 	<div class="flex flex-col gap-4">
 		<p class="text-sm text-muted">
-			O foco entra no painel ao abrir. Escape fecha e devolve o foco ao botão; Tab
-			percorre o conteúdo e segue para a página, fechando o painel.
+			Focus moves into the panel when it opens. Escape closes it and returns focus to the button; Tab
+			goes through the content and on to the page, closing the panel.
 		</p>
 		<div class="flex flex-wrap gap-4">
-			@components.Popover(components.PopoverProps{ID: "pop-filtros", Label: "Filtros", Title: "Filtros da busca"}) {
+			@components.Popover(components.PopoverProps{ID: "pop-filtros", Label: "Filters", Title: "Search filters"}) {
 				<div class="flex flex-col gap-3">
-					@components.Input(components.InputProps{ID: "pop-autor", Name: "autor", Label: "Autor"})
-					@components.Checkbox(components.CheckboxProps{ID: "pop-recentes", Name: "recentes", Label: "Só os últimos 30 dias"})
+					@components.Input(components.InputProps{ID: "pop-autor", Name: "autor", Label: "Author"})
+					@components.Checkbox(components.CheckboxProps{ID: "pop-recentes", Name: "recentes", Label: "Last 30 days only"})
 				</div>
 			}
 			<div x-data>
 				@components.Button(components.ButtonProps{Variant: "secondary", Attrs: templ.Attributes{
 					"id": "abrir-modal-popover", "x-on:click": "$dispatch('open-modal', 'modal-popover')",
 				}}) {
-					Popover dentro de um modal
+					Popover inside a modal
 				}
 			</div>
 		</div>
-		@components.Modal(components.ModalProps{ID: "modal-popover", Title: "Editar protocolo"}) {
-			<p class="mb-4 text-sm text-muted">Escape com o popover aberto fecha só o popover.</p>
-			@components.Popover(components.PopoverProps{ID: "pop-no-modal", Label: "Ajuda"}) {
-				<p class="text-sm text-fg">O protocolo é salvo a cada etapa concluída.</p>
+		@components.Modal(components.ModalProps{ID: "modal-popover", Title: "Edit protocol"}) {
+			<p class="mb-4 text-sm text-muted">Escape with the popover open closes only the popover.</p>
+			@components.Popover(components.PopoverProps{ID: "pop-no-modal", Label: "Help"}) {
+				<p class="text-sm text-fg">The protocol is saved after each completed step.</p>
 			}
 		}
 	</div>
@@ -36,57 +36,57 @@ templ demoHoverCard() {
 	<p class="text-sm text-fg">
 		// templ trims the whitespace around a component call; the spaces in
 		// the sentence have to be explicit.
-		Protocolo revisado por{ " " }
+		Protocol reviewed by{ " " }
 		@components.HoverCard(components.HoverCardProps{ID: "hc-lincoln", Label: "@lincoln", Href: "/components/hover-card"}) {
 			<span class="flex flex-col gap-1">
 				<span class="text-sm font-semibold text-fg">Lincoln Santos</span>
-				<span class="text-sm text-muted">Pesquisador · 42 protocolos publicados</span>
+				<span class="text-sm text-muted">Researcher · 42 published protocols</span>
 			</span>
 		}
-		{ " " }ontem às 18h.
+		{ " " }yesterday at 6 pm.
 	</p>
 }
 
 templ demoAlertDialog() {
 	<div class="flex flex-col gap-4">
 		<p class="text-sm text-muted">
-			O foco começa em Cancelar. Clicar fora não fecha: só as duas respostas ou Escape.
+			Focus starts on Cancel. Clicking outside does not close it: only the two answers or Escape do.
 		</p>
 		<div class="flex items-center gap-4" x-data>
 			@components.Button(components.ButtonProps{Variant: "danger", Attrs: templ.Attributes{
 				"id": "abrir-ad", "x-on:click": "$dispatch('open-alert-dialog', 'ad-excluir')",
 			}}) {
-				Excluir protocolo
+				Delete protocol
 			}
 			<span id="ad-resultado" class="text-sm text-muted" aria-live="polite"></span>
 		</div>
 		@components.AlertDialog(components.AlertDialogProps{
 			ID:           "ad-excluir",
-			Title:        "Excluir o protocolo?",
-			Description:  "As etapas e os resultados vão junto. Não dá para desfazer.",
-			ConfirmLabel: "Excluir",
-			ConfirmAttrs: templ.Attributes{"x-on:click": "document.getElementById('ad-resultado').textContent = 'excluído'"},
+			Title:        "Delete the protocol?",
+			Description:  "Its steps and results go with it. This cannot be undone.",
+			ConfirmLabel: "Delete",
+			ConfirmAttrs: templ.Attributes{"x-on:click": "document.getElementById('ad-resultado').textContent = 'deleted'"},
 		})
 		<div x-data>
 			@components.Button(components.ButtonProps{Variant: "secondary", Attrs: templ.Attributes{
 				"id": "abrir-md-editar", "x-on:click": "$dispatch('open-modal', 'md-editar')",
 			}}) {
-				Confirmação sobre um modal
+				Confirmation over a modal
 			}
 		</div>
-		@components.Modal(components.ModalProps{ID: "md-editar", Title: "Editar protocolo"}) {
-			<p class="mb-4 text-sm text-muted">Escape fecha só a confirmação; o formulário continua aberto.</p>
+		@components.Modal(components.ModalProps{ID: "md-editar", Title: "Edit protocol"}) {
+			<p class="mb-4 text-sm text-muted">Escape closes only the confirmation; the form stays open.</p>
 			<div x-data>
 				@components.Button(components.ButtonProps{Variant: "danger", Attrs: templ.Attributes{
 					"id": "abrir-ad-descartar", "x-on:click": "$dispatch('open-alert-dialog', 'ad-descartar')",
 				}}) {
-					Descartar alterações
+					Discard changes
 				}
 			</div>
 		}
 		@components.AlertDialog(components.AlertDialogProps{
-			ID: "ad-descartar", Title: "Descartar as alterações?", Description: "O que você editou neste protocolo será perdido.",
-			ConfirmLabel: "Descartar",
+			ID: "ad-descartar", Title: "Discard your changes?", Description: "What you edited in this protocol will be lost.",
+			ConfirmLabel: "Discard",
 		})
 	</div>
 }
@@ -94,19 +94,19 @@ templ demoAlertDialog() {
 templ demoContextMenu() {
 	<div class="flex flex-col gap-3">
 		@components.ContextMenu(components.ContextMenuProps{
-			ID: "cm-arquivo", Label: "Ações do arquivo",
+			ID: "cm-arquivo", Label: "File actions",
 			Entries: []components.MenuEntry{
-				{Label: "Renomear", OnClick: "document.getElementById('cm-resultado').textContent = 'renomear'"},
-				{Label: "Duplicar", OnClick: "document.getElementById('cm-resultado').textContent = 'duplicar'"},
+				{Label: "Rename", OnClick: "document.getElementById('cm-resultado').textContent = 'rename'"},
+				{Label: "Duplicate", OnClick: "document.getElementById('cm-resultado').textContent = 'duplicate'"},
 				components.MenuDivider(),
-				{Label: "Excluir", OnClick: "document.getElementById('cm-resultado').textContent = 'excluir'"},
+				{Label: "Delete", OnClick: "document.getElementById('cm-resultado').textContent = 'delete'"},
 			},
 		}) {
 			<div class="flex h-32 w-full items-center justify-center rounded border border-dashed border-border text-sm text-muted">
-				relatorio-trimestral.pdf — clique com o botão direito
+				quarterly-report.pdf — right-click here
 			</div>
 		}
-		<p class="text-sm text-muted">Última ação: <span id="cm-resultado" aria-live="polite">nenhuma</span></p>
+		<p class="text-sm text-muted">Last action: <span id="cm-resultado" aria-live="polite">none</span></p>
 	</div>
 }
 
@@ -117,26 +117,26 @@ func mbSet(what string) string {
 templ demoMenubar() {
 	<div class="flex flex-col gap-3">
 		@components.Menubar(components.MenubarProps{
-			Label: "Editor de protocolo",
+			Label: "Protocol editor",
 			Menus: []components.MenubarMenu{
-				{Label: "Arquivo", Entries: []components.MenuEntry{
-					{Label: "Novo protocolo", OnClick: mbSet("novo")},
-					{Label: "Abrir…", OnClick: mbSet("abrir")},
+				{Label: "File", Entries: []components.MenuEntry{
+					{Label: "New protocol", OnClick: mbSet("new")},
+					{Label: "Open…", OnClick: mbSet("open")},
 					components.MenuDivider(),
-					{Label: "Exportar PDF", OnClick: mbSet("exportar")},
+					{Label: "Export PDF", OnClick: mbSet("export")},
 				}},
-				{Label: "Editar", Entries: []components.MenuEntry{
-					{Label: "Desfazer", OnClick: mbSet("desfazer")},
-					{Label: "Refazer", OnClick: mbSet("refazer"), Disabled: true},
-					{Label: "Duplicar etapa", OnClick: mbSet("duplicar")},
+				{Label: "Edit", Entries: []components.MenuEntry{
+					{Label: "Undo", OnClick: mbSet("undo")},
+					{Label: "Redo", OnClick: mbSet("redo"), Disabled: true},
+					{Label: "Duplicate step", OnClick: mbSet("duplicate")},
 				}},
-				{Label: "Exibir", Entries: []components.MenuEntry{
-					{Label: "Modo foco", OnClick: mbSet("foco")},
-					{Label: "Mostrar comentários", OnClick: mbSet("comentarios")},
+				{Label: "View", Entries: []components.MenuEntry{
+					{Label: "Focus mode", OnClick: mbSet("focus")},
+					{Label: "Show comments", OnClick: mbSet("comments")},
 				}},
 			},
 		})
-		<p class="text-sm text-muted">Última ação: <span id="mb-resultado" aria-live="polite">nenhuma</span></p>
+		<p class="text-sm text-muted">Last action: <span id="mb-resultado" aria-live="polite">none</span></p>
 	</div>
 }
 
@@ -150,10 +150,10 @@ templ demoCommand() {
 			@components.Button(components.ButtonProps{Variant: "secondary", Attrs: templ.Attributes{
 				"id": "abrir-cmd", "x-on:click": "$dispatch('open-command', 'cmd-paleta')",
 			}}) {
-				Abrir paleta
+				Open palette
 			}
 			<span class="text-sm text-muted">
-				ou
+				or
 				@components.Kbd(components.KbdProps{}) {
 					Ctrl
 				}
@@ -163,18 +163,18 @@ templ demoCommand() {
 				}
 			</span>
 		</div>
-		<p class="text-sm text-muted">Último comando: <span id="cmd-resultado" aria-live="polite">nenhum</span></p>
+		<p class="text-sm text-muted">Last command: <span id="cmd-resultado" aria-live="polite">none</span></p>
 		@components.Command(components.CommandProps{
-			ID: "cmd-paleta", Placeholder: "Busque um comando ou página…", Hotkey: true,
+			ID: "cmd-paleta", Placeholder: "Search for a command or page…", Hotkey: true,
 			Groups: []components.CommandGroup{
-				{Heading: "Ações", Items: []components.CommandItem{
-					{Label: "Alternar tema", OnClick: cmdSet("alternar tema"), Shortcut: "Ctrl T"},
-					{Label: "Tema do sistema", OnClick: cmdSet("tema do sistema")},
-					{Label: "Novo protocolo", OnClick: cmdSet("novo protocolo"), Shortcut: "Ctrl N"},
-					{Label: "Sair", OnClick: cmdSet("sair"), Disabled: true},
+				{Heading: "Actions", Items: []components.CommandItem{
+					{Label: "Toggle theme", OnClick: cmdSet("toggle theme"), Shortcut: "Ctrl T"},
+					{Label: "System theme", OnClick: cmdSet("system theme")},
+					{Label: "New protocol", OnClick: cmdSet("new protocol"), Shortcut: "Ctrl N"},
+					{Label: "Sign out", OnClick: cmdSet("sign out"), Disabled: true},
 				}},
-				{Heading: "Páginas", Items: []components.CommandItem{
-					{Label: "Todos os componentes", Href: "/components"},
+				{Heading: "Pages", Items: []components.CommandItem{
+					{Label: "All components", Href: "/components"},
 					{Label: "Combobox", Href: "/components/combobox"},
 				}},
 			},
@@ -187,14 +187,14 @@ templ demoDrawerBottom() {
 		@components.Button(components.ButtonProps{Variant: "secondary", Attrs: templ.Attributes{
 			"id": "abrir-drawer-bottom", "x-on:click": "$dispatch('open-drawer', 'demo-drawer-bottom')",
 		}}) {
-			Abrir por baixo
+			Open from the bottom
 		}
 	</div>
-	@components.Drawer(components.DrawerProps{ID: "demo-drawer-bottom", Title: "Compartilhar protocolo", Side: "bottom"}) {
+	@components.Drawer(components.DrawerProps{ID: "demo-drawer-bottom", Title: "Share protocol", Side: "bottom"}) {
 		<div class="flex flex-col gap-4">
-			@components.Input(components.InputProps{ID: "db-email", Name: "email", Label: "Email de quem recebe", Type: "email"})
+			@components.Input(components.InputProps{ID: "db-email", Name: "email", Label: "Recipient email", Type: "email"})
 			@components.Button(components.ButtonProps{Size: "sm"}) {
-				Enviar convite
+				Send invite
 			}
 		</div>
 	}

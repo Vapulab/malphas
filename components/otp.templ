@@ -48,7 +48,7 @@ templ OTP(props OTPProps) {
 						autocomplete="off"
 					}
 					maxlength="1"
-					aria-label={ otpDigitLabel(i+1, props.length()) }
+					aria-label={ msg(ctx).Digit(i+1, props.length()) }
 					data-otp-index={ intJS(i) }
 					x-on:input={ "onInput($event, " + intJS(i) + ")" }
 					x-on:keydown={ "onKeydown($event, " + intJS(i) + ")" }

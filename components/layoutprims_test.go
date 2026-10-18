@@ -29,9 +29,9 @@ func TestAspectRatioClasses(t *testing.T) {
 // focusable region with no name is announced as just "region".
 func TestScrollAreaIsAFocusableNamedRegion(t *testing.T) {
 	html := renderWithChildren(t,
-		components.ScrollArea(components.ScrollAreaProps{Label: "Termos de uso", Class: "max-h-64"}),
-		templ.Raw("<p>texto</p>"))
-	for _, want := range []string{`role="region"`, `aria-label="Termos de uso"`, `tabindex="0"`, `max-h-64`, `overflow-y-auto`} {
+		components.ScrollArea(components.ScrollAreaProps{Label: "Terms of use", Class: "max-h-64"}),
+		templ.Raw("<p>text</p>"))
+	for _, want := range []string{`role="region"`, `aria-label="Terms of use"`, `tabindex="0"`, `max-h-64`, `overflow-y-auto`} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)
 		}

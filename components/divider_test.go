@@ -8,8 +8,8 @@ import (
 )
 
 func TestDividerWithLabel(t *testing.T) {
-	html := renderToString(t, components.Divider(components.DividerProps{Label: "ou"}))
-	if !strings.Contains(html, "ou") {
+	html := renderToString(t, components.Divider(components.DividerProps{Label: "or continue with"}))
+	if !strings.Contains(html, "or continue with") {
 		t.Errorf("expected the label, got: %s", html)
 	}
 }

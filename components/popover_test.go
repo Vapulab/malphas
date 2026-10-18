@@ -10,14 +10,14 @@ import (
 
 func TestPopoverWiresTriggerToADialog(t *testing.T) {
 	html := renderWithChildren(t,
-		components.Popover(components.PopoverProps{ID: "filtros", Label: "Filtros"}),
+		components.Popover(components.PopoverProps{ID: "filtros", Label: "Filters"}),
 		templ.Raw(`<input id="q">`))
 	for _, want := range []string{
 		`aria-haspopup="dialog"`,
 		`aria-expanded="false"`,
 		`aria-controls="filtros-panel"`,
 		`id="filtros-panel" role="dialog"`,
-		`aria-label="Filtros"`,
+		`aria-label="Filters"`,
 		`style="display:none"`,
 		`x-data="popover"`,
 	} {
@@ -41,8 +41,8 @@ func TestPopoverPosition(t *testing.T) {
 
 func TestPopoverTitleNamesTheDialog(t *testing.T) {
 	html := renderWithChildren(t,
-		components.Popover(components.PopoverProps{ID: "p", Label: "Abrir", Title: "Filtros da busca"}), templ.Raw("x"))
-	if !strings.Contains(html, `aria-label="Filtros da busca"`) {
+		components.Popover(components.PopoverProps{ID: "p", Label: "Open", Title: "Search filters"}), templ.Raw("x"))
+	if !strings.Contains(html, `aria-label="Search filters"`) {
 		t.Errorf("Title should name the dialog, got: %s", html)
 	}
 }

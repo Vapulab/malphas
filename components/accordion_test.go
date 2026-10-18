@@ -13,9 +13,9 @@ func accordionFixture(exclusive bool) components.AccordionProps {
 		ID:        "faq",
 		Exclusive: exclusive,
 		Items: []components.AccordionItem{
-			{Title: "O que é?", Content: templ.Raw("<p>Um boilerplate.</p>")},
-			{Title: "Como uso?", Content: templ.Raw("<p>go get.</p>"), Open: true},
-			{Title: "Custa?", Content: templ.Raw("<p>Não.</p>")},
+			{Title: "What is it?", Content: templ.Raw("<p>A boilerplate.</p>")},
+			{Title: "How do I use it?", Content: templ.Raw("<p>go get.</p>"), Open: true},
+			{Title: "Does it cost anything?", Content: templ.Raw("<p>No.</p>")},
 		},
 	}
 }
@@ -47,7 +47,7 @@ func TestAccordionRespectsInitiallyOpenItem(t *testing.T) {
 
 func TestAccordionRendersAllTitlesAndContent(t *testing.T) {
 	html := renderToString(t, components.Accordion(accordionFixture(false)))
-	for _, want := range []string{"O que é?", "Como uso?", "Custa?", "Um boilerplate.", "go get."} {
+	for _, want := range []string{"What is it?", "How do I use it?", "Does it cost anything?", "A boilerplate.", "go get."} {
 		if !strings.Contains(want, "") && !strings.Contains(html, want) {
 			t.Errorf("expected %q, got: %s", want, html)
 		}

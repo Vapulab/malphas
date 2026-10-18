@@ -8,12 +8,12 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "strconv"
+import "context"
 
 type AttachmentProps struct {
 	ID       string
 	Name     string
-	Meta     string // type and size, e.g. "PDF · 2,4 MB"
+	Meta     string // type and size, e.g. "PDF · 2.4 MB"
 	Kind     string // file | image (default file)
 	Src      string // image preview, for Kind image
 	Href     string // where the finished file opens
@@ -26,12 +26,12 @@ type AttachmentProps struct {
 
 func (p AttachmentProps) state() string { return or(p.State, "idle") }
 
-func (p AttachmentProps) statusText() string {
+func (p AttachmentProps) statusText(ctx context.Context) string {
 	switch p.state() {
 	case "uploading":
-		return "Enviando " + strconv.Itoa(clampInt(p.Progress, 0, 100)) + "%"
+		return msg(ctx).UploadingStatus(clampInt(p.Progress, 0, 100))
 	case "processing":
-		return "Processando…"
+		return msg(ctx).ProcessingStatus
 	}
 	return ""
 }
@@ -39,7 +39,7 @@ func (p AttachmentProps) statusText() string {
 // Attachment is a file or image in a composer, a message or an upload list,
 // with its upload state.
 //
-// The state is text, not just a bar: "Enviando 45%" and "Processando…" live in
+// The state is text, not just a bar: "Uploading 45%" and "Processing…" live in
 // role="status", an error in role="alert", so they are announced as they
 // change. The name only becomes a link once the file is done — a link to a
 // half-uploaded file is a dead end. Actions (remove, retry) stay reachable in
@@ -219,12 +219,12 @@ func Attachment(props AttachmentProps) templ.Component {
 		}
 		switch props.state() {
 		case "uploading":
-			templ_7745c5c3_Err = Progress(ProgressProps{Value: clampInt(props.Progress, 0, 100), Attrs: templ.Attributes{"aria-label": "Envio de " + props.Name}}).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = Progress(ProgressProps{Value: clampInt(props.Progress, 0, 100), Attrs: templ.Attributes{"aria-label": msg(ctx).UploadOf(props.Name)}}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "processing":
-			templ_7745c5c3_Err = Progress(ProgressProps{Indeterminate: true, Attrs: templ.Attributes{"aria-label": "Processamento de " + props.Name}}).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = Progress(ProgressProps{Indeterminate: true, Attrs: templ.Attributes{"aria-label": msg(ctx).ProcessingOf(props.Name)}}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -234,9 +234,9 @@ func Attachment(props AttachmentProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var10 string
-			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(or(props.Error, "Não foi possível enviar."))
+			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(or(props.Error, msg(ctx).SendFailed))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/attachment.templ`, Line: 69, Col: 96}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/attachment.templ`, Line: 69, Col: 87}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -252,9 +252,9 @@ func Attachment(props AttachmentProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 string
-		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(props.statusText())
+		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(props.statusText(ctx))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/attachment.templ`, Line: 75, Col: 80}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/attachment.templ`, Line: 75, Col: 83}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -351,7 +351,7 @@ func AttachmentGroup(props AttachmentGroupProps) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = ScrollArea(ScrollAreaProps{Label: or(props.Label, "Anexos"), Horizontal: true, Attrs: props.Attrs}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = ScrollArea(ScrollAreaProps{Label: or(props.Label, msg(ctx).Attachments), Horizontal: true, Attrs: props.Attrs}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

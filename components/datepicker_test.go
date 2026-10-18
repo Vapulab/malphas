@@ -12,7 +12,7 @@ import (
 // calendar, which no custom widget matches for touch and accessibility.
 func TestDatePickerIsNativeWithBounds(t *testing.T) {
 	html := renderToString(t, components.DatePicker(components.DatePickerProps{
-		ID: "entrega", Name: "entrega", Label: "Entrega", Value: "2026-10-20",
+		ID: "entrega", Name: "entrega", Label: "Delivery", Value: "2026-10-20",
 		Min: "2026-10-10", Max: "2026-12-31", Required: true,
 		Attrs: templ.Attributes{"aria-describedby": "x"},
 	}))

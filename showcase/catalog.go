@@ -8,21 +8,21 @@ func catalog() []Component {
 			Slug:        "button",
 			Name:        "Button",
 			Category:    CategoryActions,
-			Description: "Botão clicável com variantes de cor, tamanhos e suporte a atributos arbitrários (HTMX, Alpine).",
+			Description: "Button with color variants, sizes and pass-through attributes (HTMX, Alpine).",
 			Examples: []Example{
 				{
-					Title:  "Variantes",
+					Title:  "Variants",
 					Code:   `@components.Button(components.ButtonProps{Variant: "danger"}) { Danger }`,
 					Render: demoButtonVariants(),
 				},
 				{
-					Title:  "Tamanhos",
+					Title:  "Sizes",
 					Code:   `@components.Button(components.ButtonProps{Size: "lg"}) { Large }`,
 					Render: demoButtonSizes(),
 				},
 				{
-					Title:  "Desabilitado",
-					Code:   `@components.Button(components.ButtonProps{Attrs: templ.Attributes{"disabled": true}}) { Indisponível }`,
+					Title:  "Disabled",
+					Code:   `@components.Button(components.ButtonProps{Attrs: templ.Attributes{"disabled": true}}) { Unavailable }`,
 					Render: demoButtonDisabled(),
 				},
 			},
@@ -31,17 +31,17 @@ func catalog() []Component {
 			Slug:        "modal",
 			Name:        "Modal",
 			Category:    CategoryActions,
-			Description: "Janela de diálogo sobreposta e realmente modal: o foco fica preso dentro, a página atrás não rola nem é alcançável por leitor de tela, e ao fechar o foco volta para quem abriu.",
+			Description: "Overlay dialog that is truly modal: focus is trapped inside, the page behind neither scrolls nor is reachable by a screen reader, and on close focus returns to whatever opened it.",
 			Examples: []Example{
 				{
-					Title: "Abrir e fechar",
+					Title: "Open and close",
 					Code: `<div x-data>
   @components.Button(components.ButtonProps{
     Attrs: templ.Attributes{"x-on:click": "$dispatch('open-modal', 'demo-modal')"},
-  }) { Abrir modal }
+  }) { Open modal }
 </div>
-@components.Modal(components.ModalProps{ID: "demo-modal", Title: "Confirmar ação"}) {
-  <p>Conteúdo do modal.</p>
+@components.Modal(components.ModalProps{ID: "demo-modal", Title: "Confirm action"}) {
+  <p>Modal content.</p>
 }`,
 					Render: demoModal(),
 				},
@@ -51,13 +51,13 @@ func catalog() []Component {
 			Slug:        "alert-dialog",
 			Name:        "Alert Dialog",
 			Category:    CategoryActions,
-			Description: "Modal que pede confirmação de uma ação com consequência. role=alertdialog com a descrição anunciada, foco inicial em Cancelar, e clicar fora não conta como resposta. ConfirmAttrs leva hx-delete e afins.",
+			Description: "Modal that asks the user to confirm a destructive or irreversible action. role=alertdialog with the description announced, initial focus on Cancel, and clicking outside does not count as an answer. ConfirmAttrs takes hx-delete and similar attributes.",
 			Examples: []Example{
 				{
-					Title: "Excluir com confirmação",
+					Title: "Delete with confirmation",
 					Code: `@components.AlertDialog(components.AlertDialogProps{
-  ID: "excluir", Title: "Excluir o protocolo?", Description: "Não dá para desfazer.",
-  ConfirmLabel: "Excluir", ConfirmAttrs: templ.Attributes{"hx-delete": "/protocolos/1"},
+  ID: "delete", Title: "Delete the protocol?", Description: "This cannot be undone.",
+  ConfirmLabel: "Delete", ConfirmAttrs: templ.Attributes{"hx-delete": "/protocols/1"},
 })`,
 					Render: demoAlertDialog(),
 				},
@@ -67,15 +67,15 @@ func catalog() []Component {
 			Slug:        "card",
 			Name:        "Card",
 			Category:    CategoryDataDisplay,
-			Description: "Contêiner com borda e sombra para agrupar um bloco de conteúdo.",
+			Description: "Bordered, shadowed container that groups a block of content.",
 			Examples: []Example{
 				{
-					Title:  "Simples",
-					Code:   `@components.Card(components.CardProps{}) { <p>Conteúdo</p> }`,
+					Title:  "Simple",
+					Code:   `@components.Card(components.CardProps{}) { <p>Content</p> }`,
 					Render: demoCard(),
 				},
 				{
-					Title:  "Com ação",
+					Title:  "With an action",
 					Code:   `@components.Card(components.CardProps{Class: "max-w-sm"}) { ... }`,
 					Render: demoCardWithActions(),
 				},
@@ -85,11 +85,11 @@ func catalog() []Component {
 			Slug:        "item",
 			Name:        "Item",
 			Category:    CategoryDataDisplay,
-			Description: "Linha com mídia, título, descrição e ações. Com Href a linha inteira é clicável, mas as ações continuam fora do link (padrão stretched link). ItemGroup monta a lista.",
+			Description: "Row with media, title, description and actions. With Href the whole row is clickable, while the actions stay outside the link (the stretched link pattern). ItemGroup builds the list.",
 			Examples: []Example{
 				{
-					Title:  "Link com ação e grupo",
-					Code:   `@components.Item(components.ItemProps{Title: "Relatório", Href: "/relatorios/1", Actions: baixar()})`,
+					Title:  "Link with action, and a group",
+					Code:   `@components.Item(components.ItemProps{Title: "Report", Href: "/reports/1", Actions: download()})`,
 					Render: demoItem(),
 				},
 			},
@@ -98,12 +98,12 @@ func catalog() []Component {
 			Slug:        "hover-card",
 			Name:        "Hover Card",
 			Category:    CategoryDataDisplay,
-			Description: "Prévia do que está atrás de um link, ao passar o mouse ou focar com o teclado, com atraso para não piscar. É só complemento: o gatilho é um link de verdade e nada pode existir apenas no card.",
+			Description: "Preview of what sits behind a link, on mouse hover or keyboard focus, with a delay so it does not flicker. It is only a complement: the trigger is a real link, and nothing should live only in the card.",
 			Examples: []Example{
 				{
-					Title: "Perfil de quem revisou",
-					Code: `@components.HoverCard(components.HoverCardProps{ID: "autor", Label: "@lincoln", Href: "/u/lincoln"}) {
-  <p>Pesquisador · 42 protocolos</p>
+					Title: "Reviewer profile",
+					Code: `@components.HoverCard(components.HoverCardProps{ID: "author", Label: "@lincoln", Href: "/u/lincoln"}) {
+  <p>Researcher · 42 protocols</p>
 }`,
 					Render: demoHoverCard(),
 				},
@@ -113,11 +113,11 @@ func catalog() []Component {
 			Slug:        "bubble",
 			Name:        "Bubble",
 			Category:    CategoryDataDisplay,
-			Description: "Balão de conversa com variantes, alinhado ao início ou ao fim. Mensagens seguidas do mesmo autor achatam os cantos onde se encontram; as reações dizem o que significam e quantas são, em vez de só o emoji.",
+			Description: "Chat bubble with variants, aligned to the start or the end. Consecutive messages from the same author flatten the corners where they meet; reactions expose their meaning and count to screen readers, not just the emoji.",
 			Examples: []Example{
 				{
-					Title:  "Grupo, reação, própria e citação",
-					Code:   `@components.Bubble(components.BubbleProps{Variant: "primary", Align: "end"}) { Repete, e separa uma alíquota. }`,
+					Title:  "Group, reaction, own message and quote",
+					Code:   `@components.Bubble(components.BubbleProps{Variant: "primary", Align: "end"}) { Rerun it, and set aside a control aliquot. }`,
 					Render: demoBubble(),
 				},
 			},
@@ -126,11 +126,11 @@ func catalog() []Component {
 			Slug:        "marker",
 			Name:        "Marker",
 			Category:    CategoryDataDisplay,
-			Description: "Linha da conversa que ninguém disse: alguém entrou, uma resposta sendo gerada, a data entre dias. Atualizações usam role=status; o divisor mantém o rótulo legível para leitor de tela.",
+			Description: "System line in a conversation, not written by any participant: someone joined, a reply is being generated, a date separator. Live updates use role=status; the divider's label stays readable to screen readers.",
 			Examples: []Example{
 				{
-					Title:  "Divisor, nota e status",
-					Code:   `@components.Marker(components.MarkerProps{Variant: "border", Status: true}) { Gerando o resumo… }`,
+					Title:  "Divider, note and status",
+					Code:   `@components.Marker(components.MarkerProps{Variant: "border", Status: true}) { Generating the summary… }`,
 					Render: demoMarker(),
 				},
 			},
@@ -139,13 +139,13 @@ func catalog() []Component {
 			Slug:        "message",
 			Name:        "Message",
 			Category:    CategoryDataDisplay,
-			Description: "Mensagem com avatar, nome, hora e Bubble. Em sequência do mesmo autor, só a primeira mostra o cabeçalho, mas toda mensagem mantém autor e hora no nome acessível.",
+			Description: "Message with avatar, name, time and a Bubble. In consecutive messages from the same author, only the first shows the header, but every message keeps author and time in its accessible name.",
 			Examples: []Example{
 				{
-					Title: "Conversa curta",
+					Title: "Short conversation",
 					Code: `@components.Message(components.MessageProps{
-  Author: "Ana Lima", Initials: "AL", Time: "14:02", Datetime: "2026-10-10T14:02", Group: "first",
-}) { A curva saiu acima do limiar. }`,
+  Author: "Amara Okafor", Initials: "AO", Time: "14:02", Datetime: "2026-10-10T14:02", Group: "first",
+}) { The curve for cycle 32 came out above the threshold. }`,
 					Render: demoMessage(),
 				},
 			},
@@ -154,13 +154,13 @@ func catalog() []Component {
 			Slug:        "attachment",
 			Name:        "Attachment",
 			Category:    CategoryDataDisplay,
-			Description: "Arquivo ou imagem num composer, numa mensagem ou numa lista de envio, com o estado em texto (enviando, processando, erro, pronto) além da barra. O nome só vira link quando o arquivo está pronto; as ações continuam alcançáveis, sobretudo no erro. AttachmentGroup rola na horizontal.",
+			Description: "File or image in a composer, a message or an upload list, with its state shown as text (uploading, processing, error, done), not only as a progress bar. The name only becomes a link once the file is ready; the actions stay reachable, especially on error. AttachmentGroup scrolls horizontally.",
 			Examples: []Example{
 				{
-					Title: "Os quatro estados",
-					Code: `@components.AttachmentGroup(components.AttachmentGroupProps{Label: "Anexos", Items: []components.AttachmentProps{
-  {Name: "protocolo.pdf", Meta: "PDF · 2,4 MB", State: "done", Href: "/arquivos/protocolo.pdf"},
-  {Name: "curva.png", State: "uploading", Progress: 45},
+					Title: "The four states",
+					Code: `@components.AttachmentGroup(components.AttachmentGroupProps{Label: "Attachments", Items: []components.AttachmentProps{
+  {Name: "protocol.pdf", Meta: "PDF · 2.4 MB", State: "done", Href: "/files/protocol.pdf"},
+  {Name: "curve.png", State: "uploading", Progress: 45},
 }})`,
 					Render: demoAttachment(),
 				},
@@ -170,14 +170,14 @@ func catalog() []Component {
 			Slug:        "message-scroller",
 			Name:        "Message Scroller",
 			Category:    CategoryDataDisplay,
-			Description: "Transcrição de conversa que se comporta como chat: acompanha mensagens novas só se você está no fim, mostra \"Ir para o fim\" (com quantas chegaram) quando você subiu, e mantém a posição quando mensagens antigas entram no topo. Não importa como as mensagens chegam: observa o próprio conteúdo. role=log, educado.",
+			Description: "Conversation transcript that behaves like a chat: it follows new messages only if you are at the bottom, shows \"Jump to latest\" (with how many arrived) when you have scrolled up, and keeps your position when older messages are added at the top. It does not care how messages arrive: it watches its own content. Uses role=log with aria-live=polite.",
 			Examples: []Example{
 				{
-					Title: "Novas por HTMX, antigas no topo e streaming",
-					Code: `@components.MessageScroller(components.MessageScrollerProps{ID: "chat", Label: "Conversa"}) {
-  for _, m := range mensagens { @components.Message(...) { { m.Texto } } }
+					Title: "New via HTMX, older at the top, and streaming",
+					Code: `@components.MessageScroller(components.MessageScrollerProps{ID: "chat", Label: "Conversation"}) {
+  for _, m := range messages { @components.Message(...) { { m.Text } } }
 }
-// novas: hx-get="/mensagens" hx-target="#chat-content" hx-swap="beforeend"`,
+// new ones: hx-get="/messages" hx-target="#chat-content" hx-swap="beforeend"`,
 					Render: demoMessageScroller(),
 				},
 			},
@@ -186,32 +186,32 @@ func catalog() []Component {
 			Slug:        "typography",
 			Name:        "Typography",
 			Category:    CategoryDataDisplay,
-			Description: "Estilo para texto longo cujo HTML vem de fora (Markdown, ajuda, termos): headings, listas, citações e código, com os tokens do Malphas. Também disponível como a classe prose-malphas.",
+			Description: "Styling for long-form text whose HTML comes from elsewhere (Markdown, help pages, terms): headings, lists, quotes and code, using the Malphas tokens. Also available as the prose-malphas class.",
 			Examples: []Example{
 				{
-					Title:  "Conteúdo misto",
-					Code:   `@components.Prose(components.ProseProps{}) { @templ.Raw(markdownRenderizado) }`,
+					Title:  "Mixed content",
+					Code:   `@components.Prose(components.ProseProps{}) { @templ.Raw(renderedMarkdown) }`,
 					Render: demoProse(),
 				},
 			},
 		},
 		{
 			Slug:        "input",
-			Name:        "Text input",
+			Name:        "Input",
 			Category:    CategoryDataInput,
-			Description: "Campo de texto com label associado por id. Aceita qualquer type nativo.",
+			Description: "Text field with a label associated by id. Accepts any native type.",
 			Examples: []Example{
 				{
-					Title: "Com label e placeholder",
+					Title: "With label and placeholder",
 					Code: `@components.Input(components.InputProps{
   ID: "email", Name: "email", Label: "Email",
-  Type: "email", Placeholder: "voce@exemplo.com",
+  Type: "email", Placeholder: "you@example.com",
 })`,
 					Render: demoInput(),
 				},
 				{
-					Title:  "Com valor",
-					Code:   `@components.Input(components.InputProps{ID: "nome", Name: "nome", Label: "Nome", Value: "Lincoln"})`,
+					Title:  "With a value",
+					Code:   `@components.Input(components.InputProps{ID: "name", Name: "name", Label: "Name", Value: "Lincoln"})`,
 					Render: demoInputWithValue(),
 				},
 			},
@@ -220,12 +220,12 @@ func catalog() []Component {
 			Slug:        "link",
 			Name:        "Link",
 			Category:    CategoryActions,
-			Description: "Link de texto com variantes de cor. Href passa pelo sanitizador de URL do templ, e links externos ganham rel=noopener.",
+			Description: "Text link with color variants. Href goes through templ's URL sanitizer, and external links get rel=noopener.",
 			Examples: []Example{
 				{
-					Title: "Variantes",
-					Code: `@components.Link(components.LinkProps{Href: "/todos"}) { Link interno }
-@components.Link(components.LinkProps{Href: "https://templ.guide", External: true}) { Externo }`,
+					Title: "Variants",
+					Code: `@components.Link(components.LinkProps{Href: "/all"}) { Internal link }
+@components.Link(components.LinkProps{Href: "https://templ.guide", External: true}) { External }`,
 					Render: demoLink(),
 				},
 			},
@@ -234,15 +234,15 @@ func catalog() []Component {
 			Slug:        "badge",
 			Name:        "Badge",
 			Category:    CategoryDataDisplay,
-			Description: "Etiqueta compacta de status ou contagem, sólida ou apenas com contorno.",
+			Description: "Compact status or count label, solid or outlined.",
 			Examples: []Example{
 				{
-					Title:  "Sólido",
-					Code:   `@components.Badge(components.BadgeProps{Variant: "success"}) { Ativo }`,
+					Title:  "Solid",
+					Code:   `@components.Badge(components.BadgeProps{Variant: "success"}) { Active }`,
 					Render: demoBadgeSolid(),
 				},
 				{
-					Title:  "Contorno",
+					Title:  "Outline",
 					Code:   `@components.Badge(components.BadgeProps{Variant: "primary", Outline: true}) { Primary }`,
 					Render: demoBadgeOutline(),
 				},
@@ -252,10 +252,10 @@ func catalog() []Component {
 			Slug:        "kbd",
 			Name:        "Kbd",
 			Category:    CategoryDataDisplay,
-			Description: "Representação visual de uma tecla, usando o elemento semântico <kbd>.",
+			Description: "Visual representation of a key, using the semantic <kbd> element.",
 			Examples: []Example{
 				{
-					Title:  "Atalho",
+					Title:  "Shortcut",
 					Code:   `@components.Kbd(components.KbdProps{}) { Ctrl }`,
 					Render: demoKbd(),
 				},
@@ -265,12 +265,12 @@ func catalog() []Component {
 			Slug:        "divider",
 			Name:        "Divider",
 			Category:    CategoryLayout,
-			Description: "Linha divisória horizontal ou vertical, com texto opcional no meio. Sem rótulo é decorativa e fica oculta para leitores de tela.",
+			Description: "Horizontal or vertical rule, with optional text in the middle. Without a label it is decorative and hidden from screen readers.",
 			Examples: []Example{
 				{
-					Title: "Horizontal, com rótulo e vertical",
+					Title: "Horizontal, labeled and vertical",
 					Code: `@components.Divider(components.DividerProps{})
-@components.Divider(components.DividerProps{Label: "ou"})
+@components.Divider(components.DividerProps{Label: "or"})
 @components.Divider(components.DividerProps{Vertical: true})`,
 					Render: demoDivider(),
 				},
@@ -280,10 +280,10 @@ func catalog() []Component {
 			Slug:        "aspect-ratio",
 			Name:        "Aspect Ratio",
 			Category:    CategoryLayout,
-			Description: "Reserva a proporção de uma mídia antes de ela carregar, para a página não pular. Proporção desconhecida cai no 16/9 em vez de colapsar a caixa.",
+			Description: "Reserves a media element's aspect ratio before it loads, so the page does not jump. An unknown ratio falls back to 16/9 instead of collapsing the box.",
 			Examples: []Example{
 				{
-					Title:  "16/9 e 1/1",
+					Title:  "16/9 and 1/1",
 					Code:   `@components.AspectRatio(components.AspectRatioProps{Ratio: "16/9"}) { <img src="..." alt="..."> }`,
 					Render: demoAspectRatio(),
 				},
@@ -293,11 +293,11 @@ func catalog() []Component {
 			Slug:        "scroll-area",
 			Name:        "Scroll Area",
 			Category:    CategoryLayout,
-			Description: "Rolagem nativa com a barra no tema. Recebe foco (tabindex=0) para rolar pelo teclado, e por isso exige um Label.",
+			Description: "Native scrolling with a themed scrollbar. It takes focus (tabindex=0) so it can be scrolled from the keyboard, and therefore requires a Label.",
 			Examples: []Example{
 				{
-					Title:  "Vertical e horizontal",
-					Code:   `@components.ScrollArea(components.ScrollAreaProps{Label: "Termos de uso", Class: "max-h-48"}) { ... }`,
+					Title:  "Vertical and horizontal",
+					Code:   `@components.ScrollArea(components.ScrollAreaProps{Label: "Terms of use", Class: "max-h-48"}) { ... }`,
 					Render: demoScrollArea(),
 				},
 			},
@@ -306,13 +306,13 @@ func catalog() []Component {
 			Slug:        "resizable",
 			Name:        "Resizable",
 			Category:    CategoryLayout,
-			Description: "Dois painéis com uma divisória que se arrasta ou se move pelo teclado (setas, Shift para 1%, Home/End), no padrão APG de window splitter. O servidor renderiza o tamanho inicial; com ID, o último tamanho fica guardado neste navegador.",
+			Description: "Two panels with a divider you drag or move from the keyboard (arrows, Shift for 1%, Home/End), following the APG window splitter pattern. The server renders the initial size; with an ID, the last size is remembered in this browser.",
 			Examples: []Example{
 				{
-					Title: "Lado a lado e empilhado",
+					Title: "Side by side and stacked",
 					Code: `@components.Resizable(components.ResizableProps{
-  ID: "editor", Label: "Largura da lista", DefaultSize: 35, Min: 20, Max: 70,
-  First: lista(), Second: editor(),
+  ID: "editor", Label: "List width", DefaultSize: 35, Min: 20, Max: 70,
+  First: list(), Second: editor(),
 })`,
 					Render: demoResizable(),
 				},
@@ -322,15 +322,15 @@ func catalog() []Component {
 			Slug:        "footer",
 			Name:        "Footer",
 			Category:    CategoryLayout,
-			Description: "Rodapé estrutural com colunas de links e linha de nota. Anuncia-se como marco de navegação mesmo aninhado, e delega os links ao Link para herdar o saneamento de href.",
+			Description: "Structural footer with link columns and a note line. It keeps the contentinfo landmark even when nested (explicit role), and passes its links to Link so they inherit href sanitizing.",
 			Examples: []Example{
 				{
-					Title: "Colunas e nota",
+					Title: "Columns and note",
 					Code: `@components.Footer(components.FooterProps{
   Note: "© 2026 Vapulab",
   Columns: []components.FooterColumn{
-    {Title: "Produto", Links: []components.FooterLink{
-      {Label: "Componentes", Href: "/components"},
+    {Title: "Product", Links: []components.FooterLink{
+      {Label: "Components", Href: "/components"},
     }},
   },
 }) {
@@ -344,15 +344,15 @@ func catalog() []Component {
 			Slug:        "avatar",
 			Name:        "Avatar",
 			Category:    CategoryDataDisplay,
-			Description: "Imagem de perfil redonda ou quadrada, com fallback para iniciais e indicador de presença opcional.",
+			Description: "Round or square profile picture, falling back to initials, with an optional presence indicator.",
 			Examples: []Example{
 				{
-					Title:  "Tamanhos e formatos",
+					Title:  "Sizes and shapes",
 					Code:   `@components.Avatar(components.AvatarProps{Initials: "LS", Size: "lg"})`,
 					Render: demoAvatar(),
 				},
 				{
-					Title:  "Com status",
+					Title:  "With status",
 					Code:   `@components.Avatar(components.AvatarProps{Initials: "LS", Status: "online"})`,
 					Render: demoAvatarStatus(),
 				},
@@ -362,11 +362,11 @@ func catalog() []Component {
 			Slug:        "stat",
 			Name:        "Stat",
 			Category:    CategoryDataDisplay,
-			Description: "Bloco para destacar um número com título e contexto. Usa dt/dd, então deve ficar dentro de um <dl>.",
+			Description: "Block that highlights a number with a title and context. It uses dt/dd, so it must sit inside a <dl>.",
 			Examples: []Example{
 				{
-					Title:  "Grade de métricas",
-					Code:   `@components.Stat(components.StatProps{Title: "Receita", Value: "R$ 12.400", Description: "+12% no mês"})`,
+					Title:  "Metrics grid",
+					Code:   `@components.Stat(components.StatProps{Title: "Revenue", Value: "$12,400", Description: "+12% this month"})`,
 					Render: demoStat(),
 				},
 			},
@@ -375,14 +375,14 @@ func catalog() []Component {
 			Slug:        "table",
 			Name:        "Table",
 			Category:    CategoryDataDisplay,
-			Description: "Tabela para dados densos, com scroll horizontal próprio. Zebra e densidade são definidos uma vez na tabela e alcançam as células por seletor descendente.",
+			Description: "Table for dense data, with its own horizontal scroll. Zebra striping and density are set once on the table and reach the cells through a descendant selector.",
 			Examples: []Example{
 				{
-					Title: "Padrão",
+					Title: "Default",
 					Code: `@components.Table(components.TableProps{}) {
   @components.THead() {
     @components.TR() {
-      @components.TH(components.THProps{}) { Serviço }
+      @components.TH(components.THProps{}) { Service }
     }
   }
   @components.TBody() {
@@ -394,7 +394,7 @@ func catalog() []Component {
 					Render: demoTable(),
 				},
 				{
-					Title:  "Zebrada e compacta",
+					Title:  "Zebra and compact",
 					Code:   `@components.Table(components.TableProps{Zebra: true, Compact: true}) { ... }`,
 					Render: demoTableZebraCompact(),
 				},
@@ -404,12 +404,12 @@ func catalog() []Component {
 			Slug:        "data-table",
 			Name:        "Data Table",
 			Category:    CategoryDataDisplay,
-			Description: "Tabela com ordenação, busca e paginação feitas no servidor. Tudo é link ou campo GET de verdade (funciona sem JS); com JS, cada ação troca só a região da tabela e a URL guarda o estado. A busca fica fora da região trocada, então digitar nunca é interrompido.",
+			Description: "Table with sorting, search and pagination done on the server. Everything is a real link or GET field (it works without JS); with JS, each action swaps only the table region and the URL keeps the state. The search box sits outside the swapped region, so typing is never interrupted.",
 			Examples: []Example{
 				{
-					Title: "Protocolos",
+					Title: "Protocols",
 					Code: `@components.DataTable(components.DataTableProps{
-  ID: "protocolos", URL: "/protocolos", Columns: colunas,
+  ID: "protocols", URL: "/protocols", Columns: columns,
   Sort: r.Sort, Dir: r.Dir, Query: q, Page: r.Page, TotalPages: r.TotalPages, Total: r.Total,
   Searchable: true,
 }) { for _, p := range r.Rows { <tr>...</tr> } }`,
@@ -421,10 +421,10 @@ func catalog() []Component {
 			Slug:        "hero",
 			Name:        "Hero",
 			Category:    CategoryLayout,
-			Description: "Seção de destaque para o topo de uma página. Cuida do enquadramento — espaçamento, centralização e largura máxima — e deixa o conteúdo por sua conta.",
+			Description: "Highlight section for the top of a page. It handles the framing — spacing, centering and max width — and leaves the content to you.",
 			Examples: []Example{
 				{
-					Title:  "Chamada principal",
+					Title:  "Main call to action",
 					Code:   `@components.Hero(components.HeroProps{Class: "bg-primary/5"}) { <h1>...</h1> }`,
 					Render: demoHero(),
 				},
@@ -434,20 +434,20 @@ func catalog() []Component {
 			Slug:        "drawer",
 			Name:        "Drawer",
 			Category:    CategoryActions,
-			Description: "Painel modal que abre pela lateral ou por baixo (Side: \"bottom\"). Mesma primitiva do Modal — foco preso, scroll travado, conteúdo atrás inerte — porque um painel que deixa o Tab escapar é pior que um diálogo fazendo o mesmo: a página parece continuar utilizável.",
+			Description: "Modal panel that slides in from the side or from the bottom (Side: \"bottom\"). Same primitive as Modal — trapped focus, locked scroll, inert content behind. A side panel that lets Tab escape is even worse than a dialog that does, because the page behind still looks usable.",
 			Examples: []Example{
 				{
-					Title: "Esquerda e direita",
-					Code: `@components.Drawer(components.DrawerProps{ID: "nav", Title: "Navegação"}) {
-  @components.Menu(components.MenuProps{Entries: entradas})
+					Title: "Left and right",
+					Code: `@components.Drawer(components.DrawerProps{ID: "nav", Title: "Navigation"}) {
+  @components.Menu(components.MenuProps{Entries: entries})
 }
-// gatilho, dentro de um escopo Alpine:
+// trigger, inside an Alpine scope:
 // x-on:click="$dispatch('open-drawer', 'nav')"`,
 					Render: demoDrawer(),
 				},
 				{
-					Title:  "Por baixo",
-					Code:   `@components.Drawer(components.DrawerProps{ID: "compartilhar", Title: "Compartilhar", Side: "bottom"}) { ... }`,
+					Title:  "From the bottom",
+					Code:   `@components.Drawer(components.DrawerProps{ID: "share", Title: "Share", Side: "bottom"}) { ... }`,
 					Render: demoDrawerBottom(),
 				},
 			},
@@ -456,16 +456,16 @@ func catalog() []Component {
 			Slug:        "navbar",
 			Name:        "Navbar",
 			Category:    CategoryNavigation,
-			Description: "Barra de navegação superior. Sabe abrir um Drawer no mobile, mas não exige um: sem DrawerID, nenhum botão de menu é renderizado.",
+			Description: "Top navigation bar. It knows how to open a Drawer on mobile but does not require one: without a DrawerID, no menu button is rendered.",
 			Examples: []Example{
 				{
-					Title: "Com menu mobile",
+					Title: "With a mobile menu",
 					Code: `@components.Navbar(components.NavbarProps{
   Brand: "Vapulab", DrawerID: "menu",
   Entries: []components.MenuEntry{
-    {Label: "Componentes", Href: "/", Current: true},
+    {Label: "Components", Href: "/", Current: true},
   },
-}) { ...conteúdo à direita... }`,
+}) { ...right-hand content... }`,
 					Render: demoNavbar(),
 				},
 			},
@@ -474,13 +474,13 @@ func catalog() []Component {
 			Slug:        "menubar",
 			Name:        "Menubar",
 			Category:    CategoryNavigation,
-			Description: "Barra de menus de aplicação (Arquivo, Editar, Exibir). Uma parada de Tab para a barra inteira; ← → andam entre menus e levam o menu aberto junto, ↑ ↓ andam dentro dele, Escape volta ao topo e Tab fecha tudo.",
+			Description: "Application menu bar (File, Edit, View). One Tab stop for the whole bar; ← → move between menus and carry the open menu along, ↑ ↓ move inside it, Escape returns to the top level and Tab closes everything.",
 			Examples: []Example{
 				{
 					Title: "Editor",
 					Code: `@components.Menubar(components.MenubarProps{
   Label: "Editor",
-  Menus: []components.MenubarMenu{{Label: "Arquivo", Entries: []components.MenuEntry{...}}, ...},
+  Menus: []components.MenubarMenu{{Label: "File", Entries: []components.MenuEntry{...}}, ...},
 })`,
 					Render: demoMenubar(),
 				},
@@ -490,14 +490,14 @@ func catalog() []Component {
 			Slug:        "sidebar",
 			Name:        "Sidebar",
 			Category:    CategoryNavigation,
-			Description: "Moldura de aplicação: navegação lateral em grupos e o conteúdo ao lado. Recolhe para só ícones (os nomes continuam para leitor de tela e no title) e lembra a escolha; no celular vira um botão Menu que abre a mesma navegação num Drawer modal.",
+			Description: "Application frame: grouped side navigation with the content next to it. It collapses to icons only (labels stay available to screen readers and as a title tooltip) and remembers the choice; on a phone it becomes a Menu button that opens the same navigation in a modal Drawer.",
 			Examples: []Example{
 				{
-					Title: "Aplicação com dois grupos",
+					Title: "App with two groups",
 					Code: `@components.Sidebar(components.SidebarProps{
-  ID: "app", Label: "Navegação", Collapsible: true,
-  Groups: []components.SidebarGroup{{Label: "Trabalho", Items: []components.SidebarItem{{Label: "Protocolos", Href: "/protocolos", Icon: "◆", Current: true}}}},
-}) { conteúdo da página }`,
+  ID: "app", Label: "Navigation", Collapsible: true,
+  Groups: []components.SidebarGroup{{Label: "Work", Items: []components.SidebarItem{{Label: "Protocols", Href: "/protocols", Icon: "◆", Current: true}}}},
+}) { page content }`,
 					Render: demoSidebar(),
 				},
 			},
@@ -506,13 +506,13 @@ func catalog() []Component {
 			Slug:        "command",
 			Name:        "Command",
 			Category:    CategoryNavigation,
-			Description: "Paleta de comandos: modal com busca sobre ações e páginas agrupadas, aberta por Ctrl+K / ⌘K. O foco fica na busca e as setas andam pelos resultados (aria-activedescendant); a busca começa limpa a cada abertura.",
+			Description: "Command palette: a modal that searches grouped actions and pages, opened with Ctrl+K / ⌘K. Focus stays in the search box and the arrows move through the results (aria-activedescendant); the search starts empty every time it opens.",
 			Examples: []Example{
 				{
-					Title: "Ações e páginas",
+					Title: "Actions and pages",
 					Code: `@components.Command(components.CommandProps{
-  ID: "paleta", Hotkey: true,
-  Groups: []components.CommandGroup{{Heading: "Ações", Items: []components.CommandItem{{Label: "Alternar tema", OnClick: "..."}}}},
+  ID: "palette", Hotkey: true,
+  Groups: []components.CommandGroup{{Heading: "Actions", Items: []components.CommandItem{{Label: "Toggle theme", OnClick: "..."}}}},
 })`,
 					Render: demoCommand(),
 				},
@@ -522,16 +522,16 @@ func catalog() []Component {
 			Slug:        "dropdown",
 			Name:        "Dropdown",
 			Category:    CategoryActions,
-			Description: "Padrão menu button, com role=menu e navegação por setas. É o oposto do Drawer: não prende o foco — Escape devolve ao gatilho, mas Tab sai e fecha, como um menu deve fazer.",
+			Description: "Menu button pattern, with role=menu and arrow-key navigation. It is the opposite of the Drawer: it does not trap focus — Escape returns to the trigger, but Tab leaves and closes it, as a menu should.",
 			Examples: []Example{
 				{
-					Title: "Ações e conta",
+					Title: "Actions and account",
 					Code: `@components.Dropdown(components.DropdownProps{
-  ID: "acoes", Label: "Ações",
+  ID: "actions", Label: "Actions",
   Entries: []components.MenuEntry{
-    {Label: "Editar", OnClick: "$dispatch('edit')"},
+    {Label: "Edit", OnClick: "$dispatch('edit')"},
     components.MenuDivider(),
-    {Label: "Excluir", OnClick: "$dispatch('del')", Disabled: true},
+    {Label: "Delete", OnClick: "$dispatch('del')", Disabled: true},
   },
 })`,
 					Render: demoDropdown(),
@@ -542,12 +542,12 @@ func catalog() []Component {
 			Slug:        "popover",
 			Name:        "Popover",
 			Category:    CategoryActions,
-			Description: "Botão que abre um painel não-modal com conteúdo livre. O foco entra no painel, Escape fecha e devolve o foco, e sair com Tab fecha sem prender nada. Dentro de um Modal, Escape fecha só o popover.",
+			Description: "Button that opens a non-modal panel with free-form content. Focus moves into the panel, Escape closes it and returns focus, and tabbing out closes it without trapping anything. Inside a Modal, Escape closes only the popover.",
 			Examples: []Example{
 				{
-					Title: "Formulário no painel e dentro de um modal",
-					Code: `@components.Popover(components.PopoverProps{ID: "filtros", Label: "Filtros"}) {
-  @components.Input(components.InputProps{ID: "autor", Name: "autor", Label: "Autor"})
+					Title: "Form in the panel, and inside a modal",
+					Code: `@components.Popover(components.PopoverProps{ID: "filters", Label: "Filters"}) {
+  @components.Input(components.InputProps{ID: "author", Name: "author", Label: "Author"})
 }`,
 					Render: demoPopover(),
 				},
@@ -557,14 +557,14 @@ func catalog() []Component {
 			Slug:        "context-menu",
 			Name:        "Context Menu",
 			Category:    CategoryActions,
-			Description: "Menu de ações no botão direito, aberto no ponto do clique e empurrado para dentro da tela perto das bordas. A área recebe foco e abre o mesmo menu com Shift+F10 ou a tecla Menu.",
+			Description: "Right-click action menu, opened at the click point and pushed back inside the viewport near the edges. The area takes focus and opens the same menu with Shift+F10 or the Menu key.",
 			Examples: []Example{
 				{
-					Title: "Ações de um arquivo",
+					Title: "File actions",
 					Code: `@components.ContextMenu(components.ContextMenuProps{
-  ID: "arquivo", Label: "Ações do arquivo",
-  Entries: []components.MenuEntry{{Label: "Renomear", OnClick: "..."}, ...},
-}) { <div>relatorio.pdf</div> }`,
+  ID: "file", Label: "File actions",
+  Entries: []components.MenuEntry{{Label: "Rename", OnClick: "..."}, ...},
+}) { <div>report.pdf</div> }`,
 					Render: demoContextMenu(),
 				},
 			},
@@ -573,11 +573,11 @@ func catalog() []Component {
 			Slug:        "select",
 			Name:        "Select",
 			Category:    CategoryDataInput,
-			Description: "Seleção única sobre o <select> nativo — segunda exceção deliberada ao Alpine, depois do Range. Ganha seletor nativo no mobile, busca por digitação e teclado completo; em troca, não dá para estilizar as opções abertas.",
+			Description: "Single choice built on the native <select> — the second deliberate exception to Alpine, after Range. It gets the native picker on mobile, type-ahead and full keyboard support; in exchange, the open options cannot be styled.",
 			Examples: []Example{
 				{
-					Title:  "Com valor e com placeholder",
-					Code:   `@components.Select(components.SelectProps{ID: "plano", Name: "plano", Label: "Plano", Options: opcoes, Value: "pro"})`,
+					Title:  "With a value and with a placeholder",
+					Code:   `@components.Select(components.SelectProps{ID: "plan", Name: "plan", Label: "Plan", Options: options, Value: "pro"})`,
 					Render: demoSelect(),
 				},
 			},
@@ -586,13 +586,13 @@ func catalog() []Component {
 			Slug:        "combobox",
 			Name:        "Combobox",
 			Category:    CategoryDataInput,
-			Description: "Select com busca, para listas longas demais para rolar. O foco fica no campo de texto e a opção destacada é anunciada por aria-activedescendant; um input oculto carrega o valor, então texto livre nunca é enviado.",
+			Description: "Searchable select, for lists too long to scroll. Focus stays in the text field and the highlighted option is announced through aria-activedescendant; a hidden input carries the value, so free text is never submitted.",
 			Examples: []Example{
 				{
-					Title: "Lista longa e com placeholder",
+					Title: "Long list, and with a placeholder",
 					Code: `@components.Combobox(components.ComboboxProps{
-  ID: "estado", Name: "estado", Label: "Estado", Value: "sp",
-  Placeholder: "Busque um estado…", Options: estados,
+  ID: "city", Name: "city", Label: "City", Value: "ymq",
+  Placeholder: "Search for a city…", Options: cities,
 })`,
 					Render: demoCombobox(),
 				},
@@ -602,11 +602,11 @@ func catalog() []Component {
 			Slug:        "date-picker",
 			Name:        "Date Picker",
 			Category:    CategoryDataInput,
-			Description: "O <input type=\"date\"> nativo, estilizado — mesma escolha do Select: o seletor da plataforma (a roda do celular, a grade do desktop) é melhor em toque, teclado e leitor de tela, e o valor chega sempre como AAAA-MM-DD. Para um calendário visível na página, use o Calendar.",
+			Description: "The native <input type=\"date\">, styled — the same choice as Select: the platform picker (the wheel on a phone, the grid on desktop) is better at touch, keyboard and screen readers, and the value always arrives as YYYY-MM-DD. For a calendar that stays visible on the page, use Calendar.",
 			Examples: []Example{
 				{
-					Title:  "Com limites, dentro de um Field",
-					Code:   `@components.DatePicker(components.DatePickerProps{ID: "entrega", Name: "entrega", Min: "2026-10-10", Max: "2026-12-31"})`,
+					Title:  "With limits, inside a Field",
+					Code:   `@components.DatePicker(components.DatePickerProps{ID: "delivery", Name: "delivery", Min: "2026-10-10", Max: "2026-12-31"})`,
 					Render: demoDatePicker(),
 				},
 			},
@@ -615,13 +615,13 @@ func catalog() []Component {
 			Slug:        "calendar",
 			Name:        "Calendar",
 			Category:    CategoryDataInput,
-			Description: "Grade de um mês para escolher um dia ou um período, sempre visível na página. O servidor monta o mês; trocar de mês busca o vizinho e troca só o calendário. Teclado do padrão APG, nomes em pt-BR e semana começando no domingo.",
+			Description: "A month grid for picking a day or a range, always visible on the page. The server builds the month; changing months fetches the adjacent month and swaps only the calendar. APG keyboard pattern; month and weekday names, and the first day of the week, follow the locale.",
 			Examples: []Example{
 				{
-					Title: "Dia único com mínimo, e período",
+					Title: "Single day with a minimum, and a range",
 					Code: `@components.Calendar(components.CalendarProps{
-  ID: "entrega", Month: mes, Name: "entrega", Selected: escolhido,
-  Min: hoje, NavURL: "/agenda",
+  ID: "delivery", Month: month, Name: "delivery", Selected: chosen,
+  Min: today, NavURL: "/schedule",
 })`,
 					Render: demoCalendar(),
 				},
@@ -631,12 +631,12 @@ func catalog() []Component {
 			Slug:        "questionnaire",
 			Name:        "Questionnaire",
 			Category:    CategoryDataInput,
-			Description: "Formulário de várias etapas, uma pergunta por vez (única, múltipla, texto livre, pulável). Cada etapa é um POST e o servidor decide o que vem depois: validação, perguntas condicionais e retomada ficam no Go. Teclas 1–9 escolhem, Enter avança; Voltar nunca valida.",
+			Description: "Multi-step form, one question at a time (single choice, multiple choice, free text, skippable). Each step is a POST and the server decides what comes next: validation, conditional questions and resuming all live in Go. Keys 1–9 choose, Enter advances; Back never validates.",
 			Examples: []Example{
 				{
-					Title: "Com pergunta condicional e retomada",
+					Title: "With a conditional question and resuming",
 					Code: `@components.Questionnaire(components.QuestionnaireProps{
-  ID: "perfil", Action: "/perfil/responder",
+  ID: "profile", Action: "/profile/answer",
   Step: s.Step, Total: s.Total, Question: s.Question, Answers: s.Answers, Error: s.Error,
 })`,
 					Render: demoQuestionnaire(),
@@ -647,10 +647,10 @@ func catalog() []Component {
 			Slug:        "label",
 			Name:        "Label",
 			Category:    CategoryDataInput,
-			Description: "Rótulo de campo com marcador opcional de obrigatório. O asterisco é aria-hidden: quem anuncia a obrigatoriedade é o required do próprio campo.",
+			Description: "Field label with an optional required marker. The asterisk is aria-hidden: the field's own required attribute is what announces it as required.",
 			Examples: []Example{
 				{
-					Title:  "Simples e obrigatório",
+					Title:  "Plain and required",
 					Code:   `@components.Label(components.LabelProps{For: "email", Required: true}) { Email }`,
 					Render: demoLabel(),
 				},
@@ -660,11 +660,11 @@ func catalog() []Component {
 			Slug:        "field",
 			Name:        "Field",
 			Category:    CategoryDataInput,
-			Description: "Junta label, campo, descrição e erro vindo do servidor. ControlAttrs() entrega o aria-describedby e o aria-invalid que o campo precisa carregar.",
+			Description: "Brings together label, control, description and a server-side error. ControlAttrs() returns the aria-describedby and aria-invalid the control needs to carry.",
 			Examples: []Example{
 				{
-					Title: "Com descrição e com erro",
-					Code: `{{ f := components.FieldProps{ID: "site", Label: "Site", Error: "Endereço inválido."} }}
+					Title: "With a description and with an error",
+					Code: `{{ f := components.FieldProps{ID: "site", Label: "Website", Error: "Invalid address."} }}
 @components.Field(f) {
   @components.Input(components.InputProps{ID: f.ID, Name: "site", Attrs: f.ControlAttrs()})
 }`,
@@ -676,10 +676,10 @@ func catalog() []Component {
 			Slug:        "textarea",
 			Name:        "Textarea",
 			Category:    CategoryDataInput,
-			Description: "Campo de texto de várias linhas. Com MaxLength, ganha um contador que conta como o navegador (emoji vale 2) e já vem pintado do servidor.",
+			Description: "Multi-line text field. With MaxLength it gets a counter that counts the way the browser's maxlength does (an emoji counts as 2), already filled in on the server render.",
 			Examples: []Example{
 				{
-					Title:  "Com contador e desabilitado",
+					Title:  "With a counter, and disabled",
 					Code:   `@components.Textarea(components.TextareaProps{ID: "bio", Name: "bio", Label: "Bio", MaxLength: 160})`,
 					Render: demoTextarea(),
 				},
@@ -689,13 +689,13 @@ func catalog() []Component {
 			Slug:        "input-group",
 			Name:        "Input Group",
 			Category:    CategoryDataInput,
-			Description: "Campo com prefixo e sufixo colados — moeda, domínio, um botão. O anel de foco envolve o grupo inteiro.",
+			Description: "Field with an attached prefix and suffix — currency, domain, a button. The focus ring wraps the whole group.",
 			Examples: []Example{
 				{
-					Title: "Prefixo, sufixo e botão",
+					Title: "Prefix, suffix and button",
 					Code: `@components.InputGroup(components.InputGroupProps{
-  ID: "preco", Name: "preco", Label: "Preço",
-  Prefix: components.InputGroupText("R$"),
+  ID: "price", Name: "price", Label: "Price",
+  Prefix: components.InputGroupText("$"),
 })`,
 					Render: demoInputGroup(),
 				},
@@ -703,13 +703,13 @@ func catalog() []Component {
 		},
 		{
 			Slug:        "toggle-button",
-			Name:        "ToggleButton",
+			Name:        "Toggle Button",
 			Category:    CategoryDataInput,
-			Description: "Botão de dois estados com aria-pressed, como o negrito de um editor. Diferente do Toggle, que é um switch de configuração. Com Name, envia o valor só enquanto pressionado.",
+			Description: "Two-state button with aria-pressed, like bold in an editor. Not the same as Toggle, which is a settings switch. With Name, it submits its value only while pressed.",
 			Examples: []Example{
 				{
-					Title: "Ícone, pressionado e desabilitado",
-					Code: `@components.ToggleButton(components.ToggleButtonProps{Name: "favorito", Label: "Favorito"}) {
+					Title: "Icon, pressed and disabled",
+					Code: `@components.ToggleButton(components.ToggleButtonProps{Name: "favorite", Label: "Favorite"}) {
   <span aria-hidden="true">★</span>
 }`,
 					Render: demoToggleButton(),
@@ -718,16 +718,16 @@ func catalog() []Component {
 		},
 		{
 			Slug:        "toggle-group",
-			Name:        "ToggleGroup",
+			Name:        "Toggle Group",
 			Category:    CategoryDataInput,
-			Description: "Conjunto de ToggleButtons com uma única parada de Tab. Single pressiona no máximo um (e clicar no pressionado solta); multiple alterna cada um. As setas movem só o foco.",
+			Description: "A set of ToggleButtons with a single Tab stop. In single mode at most one is pressed (clicking it again releases it); in multiple mode each toggles independently. Arrow keys move focus only.",
 			Examples: []Example{
 				{
-					Title: "Single e multiple",
+					Title: "Single and multiple",
 					Code: `@components.ToggleGroup(components.ToggleGroupProps{
-  Name: "alinhamento", Label: "Alinhamento",
-  Items: []components.ToggleGroupItem{{Label: "Esquerda", Value: "esq"}, ...},
-  Value: []string{"centro"},
+  Name: "alignment", Label: "Alignment",
+  Items: []components.ToggleGroupItem{{Label: "Left", Value: "left"}, ...},
+  Value: []string{"center"},
 })`,
 					Render: demoToggleGroup(),
 				},
@@ -737,11 +737,11 @@ func catalog() []Component {
 			Slug:        "otp",
 			Name:        "OTP",
 			Category:    CategoryDataInput,
-			Description: "Código de verificação. O primeiro campo leva autocomplete=one-time-code, que é o que faz iOS e Android oferecerem o código do SMS direto no teclado.",
+			Description: "Verification code. The first field carries autocomplete=one-time-code, which is what makes iOS and Android offer the SMS code right on the keyboard.",
 			Examples: []Example{
 				{
-					Title:  "6 e 4 dígitos",
-					Code:   `@components.OTP(components.OTPProps{Name: "codigo", Label: "Código de verificação"})`,
+					Title:  "6 and 4 digits",
+					Code:   `@components.OTP(components.OTPProps{Name: "code", Label: "Verification code"})`,
 					Render: demoOTP(),
 				},
 			},
@@ -750,11 +750,11 @@ func catalog() []Component {
 			Slug:        "carousel",
 			Name:        "Carousel",
 			Category:    CategoryDataDisplay,
-			Description: "Slides horizontais com scroll-snap. Navegável só pelo teclado, com posição anunciada em cada slide, e o rolar respeita prefers-reduced-motion.",
+			Description: "Horizontal slides with scroll-snap. Fully navigable from the keyboard, with the position announced on each slide, and scrolling respects prefers-reduced-motion.",
 			Examples: []Example{
 				{
-					Title:  "Três slides",
-					Code:   `@components.Carousel(components.CarouselProps{ID: "shots", Label: "Capturas", Slides: slides})`,
+					Title:  "Three slides",
+					Code:   `@components.Carousel(components.CarouselProps{ID: "shots", Label: "Screenshots", Slides: slides})`,
 					Render: demoCarousel(),
 				},
 			},
@@ -763,16 +763,16 @@ func catalog() []Component {
 			Slug:        "pagination",
 			Name:        "Pagination",
 			Category:    CategoryNavigation,
-			Description: "Navegação entre páginas, colapsando intervalos longos. A página atual é um span com aria-current, não um link — linkar para onde já se está é um controle morto.",
+			Description: "Navigation between pages, collapsing long ranges. The current page is a span with aria-current, not a link — linking to where you already are is a dead control.",
 			Examples: []Example{
 				{
-					Title:  "Interativa",
+					Title:  "Interactive",
 					Code:   `@components.Pagination(components.PaginationProps{Current: page, Total: 20, BaseHref: "/components/pagination?page="})`,
 					Render: demoPagination(),
 				},
 				{
-					Title:  "Nas pontas",
-					Code:   `// Cada exemplo tem seu próprio parâmetro, e o BaseHref carrega o dos outros — sem isso, mover um zera os demais.`,
+					Title:  "At the edges",
+					Code:   `// Each example has its own parameter, and BaseHref carries the others along — without that, moving one resets the rest.`,
 					Render: demoPaginationEdges(),
 				},
 			},
@@ -781,14 +781,14 @@ func catalog() []Component {
 			Slug:        "menu",
 			Name:        "Menu",
 			Category:    CategoryNavigation,
-			Description: "Navegação vertical. Deliberadamente não usa role=menu — esse papel é para menus de aplicação, e aplicá-lo a links de site faz o leitor de tela anunciar a página como um menu de programa. Para o padrão menu button, use o Dropdown.",
+			Description: "Vertical navigation. It deliberately does not use role=menu — that role is for application menus, and applying it to site links makes screen readers announce the page as a program menu. For the menu button pattern, use Dropdown.",
 			Examples: []Example{
 				{
-					Title: "Com divisor e ação",
+					Title: "With a divider and an action",
 					Code: `@components.Menu(components.MenuProps{Entries: []components.MenuEntry{
-  {Label: "Início", Href: "/", Current: true},
+  {Label: "Home", Href: "/", Current: true},
   components.MenuDivider(),
-  {Label: "Sair", OnClick: "$dispatch('logout')"},
+  {Label: "Sign out", OnClick: "$dispatch('logout')"},
 }})`,
 					Render: demoMenu(),
 				},
@@ -798,11 +798,11 @@ func catalog() []Component {
 			Slug:        "collapse",
 			Name:        "Collapse",
 			Category:    CategoryDataDisplay,
-			Description: "Área expansível. O gatilho é um botão de verdade — uma div clicável não recebe foco, não responde a Enter ou Espaço, e é anunciada como nada.",
+			Description: "Expandable area. The trigger is a real button — a clickable div does not take focus, does not respond to Enter or Space, and exposes no role to screen readers.",
 			Examples: []Example{
 				{
-					Title:  "Fechado e aberto",
-					Code:   `@components.Collapse(components.CollapseProps{ID: "c1", Title: "Detalhes"}) { <p>corpo</p> }`,
+					Title:  "Closed and open",
+					Code:   `@components.Collapse(components.CollapseProps{ID: "c1", Title: "Details"}) { <p>body</p> }`,
 					Render: demoCollapse(),
 				},
 			},
@@ -811,20 +811,20 @@ func catalog() []Component {
 			Slug:        "accordion",
 			Name:        "Accordion",
 			Category:    CategoryDataDisplay,
-			Description: "Grupo de painéis expansíveis, com modo exclusivo opcional em que abrir um fecha os demais.",
+			Description: "Group of expandable panels, with an optional exclusive mode where opening one closes the others.",
 			Examples: []Example{
 				{
-					Title: "Independentes",
+					Title: "Independent",
 					Code: `@components.Accordion(components.AccordionProps{
   ID: "faq",
   Items: []components.AccordionItem{
-    {Title: "Precisa de Node?", Content: resposta()},
+    {Title: "Does it need Node?", Content: answer()},
   },
 })`,
 					Render: demoAccordion(),
 				},
 				{
-					Title:  "Exclusivo",
+					Title:  "Exclusive",
 					Code:   `@components.Accordion(components.AccordionProps{ID: "faq", Exclusive: true, ...})`,
 					Render: demoAccordionExclusive(),
 				},
@@ -834,15 +834,15 @@ func catalog() []Component {
 			Slug:        "tabs",
 			Name:        "Tabs",
 			Category:    CategoryNavigation,
-			Description: "Abas seguindo o padrão WAI-ARIA: Tab alcança a faixa uma vez, depois as setas navegam, Home e End vão às pontas e abas desabilitadas são puladas.",
+			Description: "Tabs following the WAI-ARIA pattern: Tab reaches the strip once, then the arrows navigate, Home and End go to the ends, and disabled tabs are skipped.",
 			Examples: []Example{
 				{
-					Title: "Com aba desabilitada",
+					Title: "With a disabled tab",
 					Code: `@components.Tabs(components.TabsProps{
-  ID: "conta", Label: "Configurações da conta",
+  ID: "account", Label: "Account settings",
   Items: []components.Tab{
-    {Label: "Perfil", Content: perfil()},
-    {Label: "Faturamento", Content: faturamento(), Disabled: true},
+    {Label: "Profile", Content: profile()},
+    {Label: "Billing", Content: billing(), Disabled: true},
   },
 })`,
 					Render: demoTabs(),
@@ -853,13 +853,13 @@ func catalog() []Component {
 			Slug:        "timeline",
 			Name:        "Timeline",
 			Category:    CategoryDataDisplay,
-			Description: "Linha do tempo cronológica de eventos, com trilho conectando os marcadores.",
+			Description: "Chronological list of events, with a rail connecting the markers.",
 			Examples: []Example{
 				{
-					Title: "Eventos de um deploy",
+					Title: "Deploy events",
 					Code: `@components.Timeline(components.TimelineProps{Items: []components.TimelineItem{
-  {Time: "09:00", Title: "Deploy iniciado", Description: "build #481"},
-  {Time: "09:04", Title: "Deploy concluído", Variant: "success"},
+  {Time: "09:00", Title: "Deploy started", Description: "build #481"},
+  {Time: "09:04", Title: "Deploy finished", Variant: "success"},
 }})`,
 					Render: demoTimeline(),
 				},
@@ -869,15 +869,15 @@ func catalog() []Component {
 			Slug:        "countdown",
 			Name:        "Countdown",
 			Category:    CategoryDataDisplay,
-			Description: "Temporizador regressivo. O valor inicial vem do servidor, então o relógio já nasce correto. aria-live fica desligado de propósito: um número anunciado a cada segundo torna a página inutilizável com leitor de tela.",
+			Description: "Countdown timer. The initial value comes from the server, so the clock is right from the first paint. aria-live is off on purpose: a number announced every second makes the page unusable with a screen reader.",
 			Examples: []Example{
 				{
-					Title:  "Formatos e tamanhos",
+					Title:  "Formats and sizes",
 					Code:   `@components.Countdown(components.CountdownProps{Seconds: 90, Format: "mm:ss", Size: "lg"})`,
 					Render: demoCountdown(),
 				},
 				{
-					Title:  "Reagindo ao fim",
+					Title:  "Reacting to the end",
 					Code:   `<div x-data="{ done: false }" x-on:countdown-end="done = true"> ... </div>`,
 					Render: demoCountdownOnEnd(),
 				},
@@ -887,12 +887,12 @@ func catalog() []Component {
 			Slug:        "breadcrumbs",
 			Name:        "Breadcrumbs",
 			Category:    CategoryNavigation,
-			Description: "Trilha de navegação. O último item nunca é link e recebe aria-current=page.",
+			Description: "Navigation trail. The last item is never a link and gets aria-current=page.",
 			Examples: []Example{
 				{
-					Title: "Trilha",
+					Title: "Trail",
 					Code: `@components.Breadcrumbs(components.BreadcrumbsProps{Items: []components.BreadcrumbItem{
-  {Label: "Início", Href: "/"},
+  {Label: "Home", Href: "/"},
   {Label: "Breadcrumbs"},
 }})`,
 					Render: demoBreadcrumbs(),
@@ -903,11 +903,11 @@ func catalog() []Component {
 			Slug:        "steps",
 			Name:        "Steps",
 			Category:    CategoryNavigation,
-			Description: "Indicador de progresso por etapas. O passo atual recebe aria-current=step, já que o estado é mostrado por cor.",
+			Description: "Step-by-step progress indicator. The current step gets aria-current=step, since the state is otherwise shown only by color.",
 			Examples: []Example{
 				{
 					Title:  "Horizontal",
-					Code:   `@components.Steps(components.StepsProps{Items: []components.Step{{Label: "Conta", State: "done"}, {Label: "Pagamento", State: "current"}}})`,
+					Code:   `@components.Steps(components.StepsProps{Items: []components.Step{{Label: "Account", State: "done"}, {Label: "Payment", State: "current"}}})`,
 					Render: demoSteps(),
 				},
 				{
@@ -921,11 +921,11 @@ func catalog() []Component {
 			Slug:        "indicator",
 			Name:        "Indicator",
 			Category:    CategoryLayout,
-			Description: "Fixa um badge no canto de qualquer elemento — contadores, pontos de status, selos de novidade.",
+			Description: "Pins a badge to the corner of any element — counters, status dots, \"new\" tags.",
 			Examples: []Example{
 				{
-					Title:  "Contador e selo",
-					Code:   `@components.Indicator(components.IndicatorProps{Label: "9"}) { ...botão... }`,
+					Title:  "Counter and tag",
+					Code:   `@components.Indicator(components.IndicatorProps{Label: "9"}) { ...button... }`,
 					Render: demoIndicator(),
 				},
 			},
@@ -934,13 +934,13 @@ func catalog() []Component {
 			Slug:        "join",
 			Name:        "Join",
 			Category:    CategoryLayout,
-			Description: "Agrupa botões ou inputs num único bloco visual, quadrando os cantos internos e sobrepondo as bordas adjacentes.",
+			Description: "Groups buttons or inputs into a single visual block, squaring the inner corners and overlapping adjacent borders.",
 			Examples: []Example{
 				{
-					Title: "Horizontal e vertical",
+					Title: "Horizontal and vertical",
 					Code: `@components.Join(components.JoinProps{}) {
-  @components.Button(components.ButtonProps{Variant: "secondary"}) { Dia }
-  @components.Button(components.ButtonProps{Variant: "secondary"}) { Semana }
+  @components.Button(components.ButtonProps{Variant: "secondary"}) { Day }
+  @components.Button(components.ButtonProps{Variant: "secondary"}) { Week }
 }`,
 					Render: demoJoin(),
 				},
@@ -950,10 +950,10 @@ func catalog() []Component {
 			Slug:        "skeleton",
 			Name:        "Skeleton",
 			Category:    CategoryFeedback,
-			Description: "Placeholder animado exibido enquanto os dados carregam. É aria-hidden: representa conteúdo que ainda não existe.",
+			Description: "Animated placeholder shown while data loads. It is aria-hidden: it stands for content that does not exist yet.",
 			Examples: []Example{
 				{
-					Title:  "Card carregando",
+					Title:  "Loading card",
 					Code:   `@components.Skeleton(components.SkeletonProps{Class: "h-4 w-2/3"})`,
 					Render: demoSkeleton(),
 				},
@@ -963,15 +963,15 @@ func catalog() []Component {
 			Slug:        "loading",
 			Name:        "Loading",
 			Category:    CategoryFeedback,
-			Description: "Indicador de carregamento em spinner, pontos ou barras. Anunciado com role=status e um rótulo textual.",
+			Description: "Loading indicator as a spinner, dots or bars. Announced with role=status and a text label.",
 			Examples: []Example{
 				{
-					Title:  "Tipos",
+					Title:  "Kinds",
 					Code:   `@components.Loading(components.LoadingProps{Kind: "dots"})`,
 					Render: demoLoadingKinds(),
 				},
 				{
-					Title:  "Tamanhos",
+					Title:  "Sizes",
 					Code:   `@components.Loading(components.LoadingProps{Size: "lg", Variant: "muted"})`,
 					Render: demoLoadingSizes(),
 				},
@@ -981,15 +981,15 @@ func catalog() []Component {
 			Slug:        "progress",
 			Name:        "Progress",
 			Category:    CategoryFeedback,
-			Description: "Barra de progresso linear sobre o elemento nativo <progress>, que já traz a acessibilidade pronta.",
+			Description: "Linear progress bar built on the native <progress> element, which comes with accessibility built in.",
 			Examples: []Example{
 				{
-					Title:  "Com valor",
+					Title:  "With a value",
 					Code:   `@components.Progress(components.ProgressProps{Value: 60, Variant: "success"})`,
 					Render: demoProgress(),
 				},
 				{
-					Title:  "Indeterminado",
+					Title:  "Indeterminate",
 					Code:   `@components.Progress(components.ProgressProps{Indeterminate: true})`,
 					Render: demoProgressIndeterminate(),
 				},
@@ -999,11 +999,11 @@ func catalog() []Component {
 			Slug:        "alert",
 			Name:        "Alert",
 			Category:    CategoryFeedback,
-			Description: "Banner de mensagem informativa, de sucesso, aviso ou erro. Sempre anunciado com role=alert.",
+			Description: "Message banner for info, success, warning or error. Always announced with role=alert.",
 			Examples: []Example{
 				{
-					Title:  "Variantes",
-					Code:   `@components.Alert(components.AlertProps{Variant: "warning"}) { <span>Seu token expira em 3 dias.</span> }`,
+					Title:  "Variants",
+					Code:   `@components.Alert(components.AlertProps{Variant: "warning"}) { <span>Your token expires in 3 days.</span> }`,
 					Render: demoAlertVariants(),
 				},
 			},
@@ -1012,16 +1012,16 @@ func catalog() []Component {
 			Slug:        "toggle",
 			Name:        "Toggle",
 			Category:    CategoryDataInput,
-			Description: "Interruptor deslizante. O visual é Alpine; por baixo vai um checkbox real com sr-only, então envia em formulário normalmente.",
+			Description: "Sliding switch. The visual is Alpine; underneath sits a real sr-only checkbox, so it submits with a form as usual.",
 			Examples: []Example{
 				{
-					Title:  "Estados",
-					Code:   `@components.Toggle(components.ToggleProps{ID: "notif", Name: "notif", Label: "Notificações"})`,
+					Title:  "States",
+					Code:   `@components.Toggle(components.ToggleProps{ID: "notif", Name: "notif", Label: "Notifications"})`,
 					Render: demoToggle(),
 				},
 				{
-					Title:  "Dentro de um formulário",
-					Code:   `<form method="get">...</form> — envie e veja os valores na query string`,
+					Title:  "Inside a form",
+					Code:   `<form method="get">...</form> — submit it and see the values in the query string`,
 					Render: demoFormSubmit(),
 				},
 			},
@@ -1030,16 +1030,16 @@ func catalog() []Component {
 			Slug:        "checkbox",
 			Name:        "Checkbox",
 			Category:    CategoryDataInput,
-			Description: "Caixa de seleção com terceiro estado. Indeterminate só existe como propriedade JS — não há atributo HTML — então é aplicado na inicialização e anunciado com aria-checked=mixed.",
+			Description: "Checkbox with a third state. Indeterminate only exists as a JS property — there is no HTML attribute — so it is applied on init and announced with aria-checked=mixed.",
 			Examples: []Example{
 				{
-					Title:  "Estados",
-					Code:   `@components.Checkbox(components.CheckboxProps{ID: "termos", Name: "termos", Label: "Aceito os termos"})`,
+					Title:  "States",
+					Code:   `@components.Checkbox(components.CheckboxProps{ID: "terms", Name: "terms", Label: "I accept the terms"})`,
 					Render: demoCheckbox(),
 				},
 				{
-					Title:  "Indeterminado",
-					Code:   `@components.Checkbox(components.CheckboxProps{ID: "todos", Name: "todos", Label: "Selecionar todos", Indeterminate: true})`,
+					Title:  "Indeterminate",
+					Code:   `@components.Checkbox(components.CheckboxProps{ID: "all", Name: "all", Label: "Select all", Indeterminate: true})`,
 					Render: demoCheckboxIndeterminate(),
 				},
 			},
@@ -1048,14 +1048,14 @@ func catalog() []Component {
 			Slug:        "radio",
 			Name:        "Radio",
 			Category:    CategoryDataInput,
-			Description: "Seleção única. Navegue com as setas: elas movem foco e seleção juntos, como num radiogroup nativo, e pulam opções desabilitadas.",
+			Description: "Single choice. Navigate with the arrows: they move focus and selection together, as in a native radio group, and skip disabled options.",
 			Examples: []Example{
 				{
 					Title: "Horizontal",
 					Code: `@components.Radio(components.RadioProps{
-  Name: "plano", Value: "pro",
+  Name: "plan", Value: "pro",
   Options: []components.RadioOption{
-    {Label: "Grátis", Value: "free"},
+    {Label: "Free", Value: "free"},
     {Label: "Pro", Value: "pro"},
   },
 })`,
@@ -1072,15 +1072,15 @@ func catalog() []Component {
 			Slug:        "rating",
 			Name:        "Rating",
 			Category:    CategoryDataInput,
-			Description: "Avaliação por estrelas, navegável pelas setas. Em modo somente leitura vira saída: sem foco, sem envio, com um rótulo textual único.",
+			Description: "Star rating, navigable with the arrows. In read-only mode it becomes output: no focus, nothing submitted, a single text label.",
 			Examples: []Example{
 				{
-					Title:  "Interativo",
-					Code:   `@components.Rating(components.RatingProps{Name: "nota", Value: 3})`,
+					Title:  "Interactive",
+					Code:   `@components.Rating(components.RatingProps{Name: "score", Value: 3})`,
 					Render: demoRating(),
 				},
 				{
-					Title:  "Somente leitura",
+					Title:  "Read-only",
 					Code:   `@components.Rating(components.RatingProps{Value: 4, ReadOnly: true})`,
 					Render: demoRatingReadOnly(),
 				},
@@ -1090,10 +1090,10 @@ func catalog() []Component {
 			Slug:        "range",
 			Name:        "Range",
 			Category:    CategoryDataInput,
-			Description: "Slider numérico. É o único controle da fatia que mantém o input nativo visível — reimplementar arrasto, toque e captura de ponteiro custaria muito para um resultado pior. Alpine só espelha o valor no rótulo.",
+			Description: "Numeric slider. Like Select and Date Picker, it keeps the native control visible: reimplementing dragging, touch and pointer capture would be a lot of work to end up worse than what the browser already does. Alpine only mirrors the value into the label.",
 			Examples: []Example{
 				{
-					Title:  "Com valor visível",
+					Title:  "With a visible value",
 					Code:   `@components.Range(components.RangeProps{ID: "vol", Name: "vol", Label: "Volume", Value: 40, ShowValue: true})`,
 					Render: demoRange(),
 				},
@@ -1103,12 +1103,12 @@ func catalog() []Component {
 			Slug:        "swap",
 			Name:        "Swap",
 			Category:    CategoryActions,
-			Description: "Alterna entre dois visuais. É um botão de verdade com aria-pressed — um toggle cujo estado a tecnologia assistiva não enxerga é só um desenho.",
+			Description: "Switches between two visuals. It is a real button with aria-pressed — a toggle whose state assistive technology cannot see is just a drawing.",
 			Examples: []Example{
 				{
-					Title: "Play/pause e favoritar",
+					Title: "Play/pause and favorite",
 					Code: `@components.Swap(components.SwapProps{
-  Label: "Reproduzir ou pausar",
+  Label: "Play or pause",
   On:    pauseIcon(), Off: playIcon(),
 })`,
 					Render: demoSwap(),
@@ -1118,17 +1118,17 @@ func catalog() []Component {
 		{
 			Slug:        "tooltip",
 			Name:        "Tooltip",
-			Category:    CategoryLayout,
-			Description: "Dica contextual. Abre no hover e também no foco, fecha com Escape, e entrega o texto por aria-describedby — o estilo sozinho não entrega para ninguém.",
+			Category:    CategoryDataDisplay,
+			Description: "Contextual hint. It opens on hover and also on focus, closes with Escape, and exposes its text through aria-describedby; a hint that exists only visually never reaches screen reader users.",
 			Examples: []Example{
 				{
-					Title:  "Posições",
-					Code:   `@components.Tooltip(components.TooltipProps{ID: "tip", Text: "Aparece acima"}) { ...gatilho... }`,
+					Title:  "Placements",
+					Code:   `@components.Tooltip(components.TooltipProps{ID: "tip", Text: "Shows above"}) { ...trigger... }`,
 					Render: demoTooltip(),
 				},
 				{
-					Title:  "Pelo teclado",
-					Code:   `Tab até o gatilho abre a dica; Escape fecha.`,
+					Title:  "From the keyboard",
+					Code:   `Tabbing to the trigger opens the hint; Escape closes it.`,
 					Render: demoTooltipKeyboard(),
 				},
 			},
@@ -1137,16 +1137,16 @@ func catalog() []Component {
 			Slug:        "toast",
 			Name:        "Toast",
 			Category:    CategoryFeedback,
-			Description: "Notificação flutuante temporária, fixada no canto inferior direito. Some sozinha após 3 segundos.",
+			Description: "Temporary floating notification, pinned to the bottom-right corner. It goes away on its own after 3 seconds.",
 			Examples: []Example{
 				{
-					Title:  "Sucesso",
-					Code:   `@components.Toast(components.ToastProps{Message: "Alterações salvas", Variant: "success"})`,
+					Title:  "Success",
+					Code:   `@components.Toast(components.ToastProps{Message: "Changes saved", Variant: "success"})`,
 					Render: demoToast(),
 				},
 				{
-					Title:  "Erro",
-					Code:   `@components.Toast(components.ToastProps{Message: "Não foi possível salvar", Variant: "error"})`,
+					Title:  "Error",
+					Code:   `@components.Toast(components.ToastProps{Message: "Could not save", Variant: "error"})`,
 					Render: demoToastError(),
 				},
 			},
@@ -1155,12 +1155,12 @@ func catalog() []Component {
 			Slug:        "empty",
 			Name:        "Empty",
 			Category:    CategoryFeedback,
-			Description: "Estado vazio com ícone, título, descrição e ação. O título é um parágrafo: o nível de heading depende da página, que o componente não conhece.",
+			Description: "Empty state with icon, title, description and action. The title is a paragraph: the heading level depends on the page, which the component does not know.",
 			Examples: []Example{
 				{
-					Title: "Com ação",
-					Code: `@components.Empty(components.EmptyProps{Title: "Nenhum projeto ainda", Description: "..."}) {
-  @components.Button(components.ButtonProps{}) { Novo projeto }
+					Title: "With an action",
+					Code: `@components.Empty(components.EmptyProps{Title: "No projects yet", Description: "..."}) {
+  @components.Button(components.ButtonProps{}) { New project }
 }`,
 					Render: demoEmpty(),
 				},

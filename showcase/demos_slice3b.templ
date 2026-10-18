@@ -5,31 +5,31 @@ import "github.com/vapulab/malphas/components"
 templ demoDropdown() {
 	<div class="flex flex-col gap-3">
 		<p class="text-sm text-muted">
-			Abra e navegue com ↓ ↑. Escape fecha e devolve o foco ao gatilho.
-			Tab também fecha, mas segue o fluxo natural da página — um menu não
-			prende o foco.
+			Open it and move with ↓ ↑. Escape closes it and returns focus to the trigger.
+			Tab closes it too, but follows the page's natural order — a menu does not
+			trap focus.
 		</p>
 		<div class="flex flex-wrap gap-4">
 			@components.Dropdown(components.DropdownProps{
 				ID:    "dd-acoes",
-				Label: "Ações",
+				Label: "Actions",
 				Entries: []components.MenuEntry{
-					{Label: "Editar", OnClick: "$dispatch('demo-edit')"},
-					{Label: "Duplicar", OnClick: "$dispatch('demo-dup')"},
+					{Label: "Edit", OnClick: "$dispatch('demo-edit')"},
+					{Label: "Duplicate", OnClick: "$dispatch('demo-dup')"},
 					components.MenuDivider(),
-					{Label: "Excluir", OnClick: "$dispatch('demo-del')", Disabled: true},
+					{Label: "Delete", OnClick: "$dispatch('demo-del')", Disabled: true},
 				},
 			})
 			@components.Dropdown(components.DropdownProps{
 				ID:       "dd-conta",
-				Label:    "Conta",
+				Label:    "Account",
 				Variant:  "primary",
 				Position: "bottom-end",
 				Entries: []components.MenuEntry{
-					{Label: "Perfil", Href: "/"},
-					{Label: "Componentes", Href: "/"},
+					{Label: "Profile", Href: "/"},
+					{Label: "Components", Href: "/"},
 					components.MenuDivider(),
-					{Label: "Sair", OnClick: "$dispatch('demo-logout')"},
+					{Label: "Sign out", OnClick: "$dispatch('demo-logout')"},
 				},
 			})
 		</div>
@@ -39,18 +39,18 @@ templ demoDropdown() {
 templ demoSelect() {
 	<div class="flex max-w-sm flex-col gap-4">
 		@components.Select(components.SelectProps{
-			ID: "s-plano", Name: "plano", Label: "Plano", Value: "pro",
+			ID: "s-plano", Name: "plano", Label: "Plan", Value: "pro",
 			Options: []components.SelectOption{
-				{Label: "Grátis", Value: "free"},
+				{Label: "Free", Value: "free"},
 				{Label: "Pro", Value: "pro"},
 				{Label: "Enterprise", Value: "ent", Disabled: true},
 			},
 		})
 		@components.Select(components.SelectProps{
-			ID: "s-pais", Name: "pais", Label: "País", Placeholder: "Escolha…",
+			ID: "s-pais", Name: "pais", Label: "Country", Placeholder: "Choose…",
 			Options: []components.SelectOption{
-				{Label: "Brasil", Value: "br"},
-				{Label: "Portugal", Value: "pt"},
+				{Label: "Canada", Value: "ca"},
+				{Label: "Japan", Value: "jp"},
 			},
 		})
 	</div>
@@ -59,19 +59,19 @@ templ demoSelect() {
 templ demoCombobox() {
 	<div class="flex max-w-sm flex-col gap-4">
 		<p class="text-sm text-muted">
-			Digite para filtrar — sem distinguir acentos, então "sao" acha "São Paulo".
-			↓ ↑ destacam, Enter escolhe, Escape fecha e, de novo, limpa. Texto que não
-			é uma opção volta para a seleção anterior ao sair do campo.
+			Type to filter — accents are ignored, so "zurich" finds "Zürich".
+			↓ ↑ highlight, Enter picks, Escape closes and, pressed again, clears. Text that is not
+			an option reverts to the previous selection when you leave the field.
 		</p>
 		@components.Combobox(components.ComboboxProps{
-			ID: "cb-estado", Name: "estado", Label: "Estado", Value: "sp",
-			Placeholder: "Busque um estado…",
-			Options:     demoEstados(),
+			ID: "cb-estado", Name: "city", Label: "City", Value: "ymq",
+			Placeholder: "Search for a city…",
+			Options:     demoCities(),
 		})
 		@components.Combobox(components.ComboboxProps{
-			ID: "cb-plano", Name: "plano", Label: "Plano", Placeholder: "Escolha…",
+			ID: "cb-plano", Name: "plano", Label: "Plan", Placeholder: "Choose…",
 			Options: []components.SelectOption{
-				{Label: "Grátis", Value: "free"},
+				{Label: "Free", Value: "free"},
 				{Label: "Pro", Value: "pro"},
 				{Label: "Enterprise", Value: "ent", Disabled: true},
 			},
@@ -82,27 +82,27 @@ templ demoCombobox() {
 templ demoOTP() {
 	<div class="flex flex-col gap-4">
 		<p class="text-sm text-muted">
-			Digite e o foco avança sozinho; backspace num campo vazio volta.
-			Colar o código inteiro preenche tudo de uma vez.
+			Type and focus moves forward on its own; backspace in an empty box moves back.
+			Pasting the whole code fills every box at once.
 		</p>
-		@components.OTP(components.OTPProps{Name: "codigo", Label: "Código de verificação"})
-		@components.OTP(components.OTPProps{Name: "pin", Label: "PIN de 4 dígitos", Length: 4})
+		@components.OTP(components.OTPProps{Name: "codigo", Label: "Verification code"})
+		@components.OTP(components.OTPProps{Name: "pin", Label: "4-digit PIN", Length: 4})
 	</div>
 }
 
 templ demoCarousel() {
 	<div class="max-w-xl">
 		<p class="mb-3 text-sm text-muted">
-			Dê Tab até a área dos slides e use ← →. O rolar respeita
+			Tab to the slides area and use ← →. Scrolling respects
 			prefers-reduced-motion.
 		</p>
 		@components.Carousel(components.CarouselProps{
 			ID:    "c-demo",
-			Label: "Exemplo",
+			Label: "Example",
 			Slides: []templ.Component{
-				carouselSlide("Primeiro", "primary"),
-				carouselSlide("Segundo", "success"),
-				carouselSlide("Terceiro", "warning"),
+				carouselSlide("First", "primary"),
+				carouselSlide("Second", "success"),
+				carouselSlide("Third", "warning"),
 			},
 		})
 	</div>
@@ -120,7 +120,7 @@ templ carouselSlide(title, variant string) {
 templ demoPagination() {
 	<div class="flex flex-col gap-6">
 		<p class="text-sm text-muted">
-			Clique numa página: a URL muda e o marcador acompanha.
+			Click a page: the URL changes and the marker follows.
 		</p>
 		@paginationExample("page", "")
 	</div>
@@ -132,17 +132,17 @@ templ demoPagination() {
 templ demoPaginationEdges() {
 	<div class="flex flex-col gap-6">
 		<p class="text-sm text-muted">
-			Cada um começa numa ponta e se move sozinho, sem mexer nos outros.
-			Ande com ← → pelas páginas para ver o intervalo colapsar e reabrir.
+			Each one starts at an edge and moves on its own, without touching the others.
+			Move through the pages with ← → to watch the range collapse and reopen.
 		</p>
-		@paginationExample("e1", "curto — cabe inteiro, nunca colapsa")
-		@paginationExample("e2", "longo, começando no início")
-		@paginationExample("e3", "longo, começando no fim")
+		@paginationExample("e1", "short — fits whole, never collapses")
+		@paginationExample("e2", "long, starting at the beginning")
+		@paginationExample("e3", "long, starting at the end")
 	</div>
 }
 
 // The label describes the example, never its current page — that would go stale
-// the moment someone clicks. The position lives in the "X de Y" beside it.
+// the moment someone clicks. The position lives in the "X of Y" beside it.
 templ paginationExample(param, label string) {
 	{{ page, total := paginationPage(ctx, param), paginationTotal(param) }}
 	<div class="flex flex-col gap-2">
@@ -150,12 +150,12 @@ templ paginationExample(param, label string) {
 			if label != "" {
 				{ label } &middot;{ " " }
 			}
-			página { intToString(page) } de { intToString(total) }
+			page { intToString(page) } of { intToString(total) }
 		</span>
 		@components.Pagination(components.PaginationProps{
 			Current:  page,
 			Total:    total,
-			Label:    "Paginação " + param,
+			Label:    "Pagination " + param,
 			BaseHref: paginationHref(ctx, param),
 		})
 	</div>

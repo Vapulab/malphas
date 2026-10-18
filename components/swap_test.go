@@ -12,7 +12,7 @@ func swapFixture(active bool) components.SwapProps {
 	return components.SwapProps{
 		On:    templ.Raw("<span>pause</span>"),
 		Off:   templ.Raw("<span>play</span>"),
-		Label: "Reproduzir",
+		Label: "Play",
 		Active: active,
 	}
 }
@@ -27,7 +27,7 @@ func TestSwapIsAToggleButton(t *testing.T) {
 	if !strings.Contains(html, `aria-pressed="false"`) {
 		t.Errorf("expected the initial pressed state, got: %s", html)
 	}
-	if !strings.Contains(html, "Reproduzir") {
+	if !strings.Contains(html, "Play") {
 		t.Errorf("expected an accessible label, got: %s", html)
 	}
 }

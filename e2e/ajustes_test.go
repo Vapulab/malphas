@@ -20,19 +20,19 @@ func TestAlertOverModalIsClickable(t *testing.T) {
 	if eval[bool](t, ctx, `!!document.querySelector('`+alert+`').closest('[inert]')`) {
 		t.Fatal("the confirmation sits inside an inert ancestor")
 	}
-	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Cancelar" {
-		t.Errorf("focus should start on Cancelar, is on %q", got)
+	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Cancel" {
+		t.Errorf("focus should start on Cancel, is on %q", got)
 	}
 
 	click(t, ctx, alert+` button[data-alert-close]`)
 	settle(t, ctx)
 	if eval[bool](t, ctx, `!!document.querySelector('`+alert+`')`) {
-		t.Fatal("clicking Cancelar did not close the confirmation")
+		t.Fatal("clicking Cancel did not close the confirmation")
 	}
 	if eval[bool](t, ctx, `!!document.querySelector('`+modal+`').closest('[inert]')`) {
 		t.Fatal("the modal underneath was left inert")
 	}
-	click(t, ctx, modal+` [aria-label="Fechar"]`)
+	click(t, ctx, modal+` [aria-label="Close"]`)
 	settle(t, ctx)
 	if eval[bool](t, ctx, `!!document.querySelector('`+modal+`')`) {
 		t.Error("the modal's close button did not close it")
@@ -45,13 +45,13 @@ func TestAlertOverModalIsClickable(t *testing.T) {
 // Every scroll container in Malphas uses the same thin, themed scrollbar as
 // Scroll Area, instead of the platform's default bar.
 func TestScrollContainersUseTheThemedScrollbar(t *testing.T) {
-	ctx := openPage(t, "/components/todos")
+	ctx := openPage(t, "/components/all")
 	click(t, ctx, "#abrir-modal-popover")
 	settle(t, ctx)
 	for _, sel := range []string{
 		`[role="dialog"][aria-labelledby="modal-popover-title"]`, // Modal panel
 		`#chat-demo-content`, // Message Scroller viewport (its parent)
-		`[aria-roledescription="carrossel"] [tabindex="0"]`, // Carousel track
+		`[aria-roledescription="carousel"] [tabindex="0"]`, // Carousel track
 	} {
 		style := eval[string](t, ctx, `(el => { const s = getComputedStyle(el.id === 'chat-demo-content' ? el.parentElement : el); return s.scrollbarWidth + '|' + s.scrollbarColor })(document.querySelector('`+sel+`'))`)
 		if !strings.HasPrefix(style, "thin|") || strings.HasSuffix(style, "|auto") {
@@ -64,7 +64,7 @@ func TestScrollContainersUseTheThemedScrollbar(t *testing.T) {
 func TestHoverCardSentenceKeepsItsSpaces(t *testing.T) {
 	ctx := openPage(t, "/components/hover-card")
 	got := eval[string](t, ctx, `document.querySelector('[x-data^="hoverCard"]').closest('p').innerText.replace(/\s+/g, ' ').trim()`)
-	if !strings.HasPrefix(got, "Protocolo revisado por @lincoln ontem às 18h.") {
+	if !strings.HasPrefix(got, "Protocol reviewed by @lincoln yesterday at 6 pm.") {
 		t.Errorf("the sentence lost its spaces: %q", got)
 	}
 }
@@ -72,7 +72,7 @@ func TestHoverCardSentenceKeepsItsSpaces(t *testing.T) {
 // Bubbles are shown as a conversation, inside a chat box.
 func TestBubbleDemoSitsInAConversation(t *testing.T) {
 	ctx := openPage(t, "/components/bubble")
-	if !eval[bool](t, ctx, `(b => !!b && getComputedStyle(b).borderTopStyle !== 'none')(document.querySelector('[aria-label="Conversa de exemplo"]'))`) {
+	if !eval[bool](t, ctx, `(b => !!b && getComputedStyle(b).borderTopStyle !== 'none')(document.querySelector('[aria-label="Sample conversation"]'))`) {
 		t.Error("the bubbles should sit inside a bordered conversation box")
 	}
 }

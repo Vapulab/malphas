@@ -26,9 +26,9 @@ type DemoQuery struct {
 }
 
 var demoProtocols = func() []DemoProtocol {
-	tecnicas := []string{"PCR quantitativo", "Cultura de célula", "Western blot", "ELISA", "Sequenciamento", "Microscopia confocal", "Citometria de fluxo", "Cromatografia"}
-	areas := []string{"Genética", "Imunologia", "Bioquímica", "Microbiologia", "Neurociência"}
-	pessoas := []string{"Ana Lima", "Bruno Reis", "Carla Souza", "Diego Alves", "Elisa Prado"}
+	tecnicas := []string{"Quantitative PCR", "Cell culture", "Western blot", "ELISA", "Sequencing", "Confocal microscopy", "Flow cytometry", "Chromatography"}
+	areas := []string{"Genetics", "Immunology", "Biochemistry", "Microbiology", "Neuroscience"}
+	pessoas := []string{"Amara Okafor", "Ben Carter", "Chloé Martin", "Daniel Kim", "Elena Rossi"}
 	var out []DemoProtocol
 	for i := 0; i < 40; i++ {
 		out = append(out, DemoProtocol{

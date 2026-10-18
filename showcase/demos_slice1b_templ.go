@@ -260,15 +260,15 @@ func demoStat() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Stat(components.StatProps{Title: "Receita", Value: "R$ 12.400", Description: "+12% no mês"}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Stat(components.StatProps{Title: "Revenue", Value: "$12,400", Description: "+12% this month"}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Stat(components.StatProps{Title: "Assinantes", Value: "1.284", Description: "+3% no mês", Variant: "success"}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Stat(components.StatProps{Title: "Subscribers", Value: "1,284", Description: "+3% this month", Variant: "success"}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.Stat(components.StatProps{Title: "Falhas", Value: "3", Description: "últimas 24h", Variant: "danger"}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.Stat(components.StatProps{Title: "Failures", Value: "3", Description: "last 24h", Variant: "danger"}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

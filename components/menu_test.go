@@ -10,10 +10,10 @@ import (
 func menuFixture() components.MenuProps {
 	return components.MenuProps{
 		Entries: []components.MenuEntry{
-			{Label: "Início", Href: "/", Current: true},
-			{Label: "Componentes", Href: "/components"},
+			{Label: "Home", Href: "/", Current: true},
+			{Label: "Components", Href: "/components"},
 			components.MenuDivider(),
-			{Label: "Sair", OnClick: "$dispatch('logout')"},
+			{Label: "Sign out", OnClick: "$dispatch('logout')"},
 		},
 	}
 }
@@ -84,9 +84,9 @@ func TestMenuLandmarkIsOptional(t *testing.T) {
 
 	props := menuFixture()
 	props.Landmark = true
-	props.Label = "Principal"
+	props.Label = "Main"
 	landmark := renderToString(t, components.Menu(props))
-	if !strings.Contains(landmark, "<nav") || !strings.Contains(landmark, `aria-label="Principal"`) {
+	if !strings.Contains(landmark, "<nav") || !strings.Contains(landmark, `aria-label="Main"`) {
 		t.Errorf("expected a labelled nav landmark, got: %s", landmark)
 	}
 }

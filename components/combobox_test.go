@@ -9,7 +9,7 @@ import (
 
 func comboboxFixture() components.ComboboxProps {
 	return components.ComboboxProps{
-		ID: "cidade", Name: "cidade", Label: "Cidade", Value: "sp",
+		ID: "cidade", Name: "cidade", Label: "City", Value: "sp",
 		Options: []components.SelectOption{
 			{Label: "Rio de Janeiro", Value: "rj"},
 			{Label: "São Paulo", Value: "sp"},
@@ -110,9 +110,9 @@ func TestComboboxListboxStartsClosed(t *testing.T) {
 // announced on focus, and marked invalid.
 func TestComboboxLinksItsError(t *testing.T) {
 	p := comboboxFixture()
-	p.Error = "Escolha uma cidade."
+	p.Error = "Choose a city."
 	html := renderToString(t, components.Combobox(p))
-	for _, want := range []string{`aria-invalid="true"`, `aria-describedby="cidade-error"`, `id="cidade-error"`, "Escolha uma cidade."} {
+	for _, want := range []string{`aria-invalid="true"`, `aria-describedby="cidade-error"`, `id="cidade-error"`, "Choose a city."} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %q in: %s", want, html)
 		}

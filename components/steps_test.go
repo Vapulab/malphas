@@ -9,15 +9,15 @@ import (
 
 func stepsFixture() components.StepsProps {
 	return components.StepsProps{Items: []components.Step{
-		{Label: "Conta", State: "done"},
-		{Label: "Pagamento", State: "current"},
-		{Label: "Confirmação"},
+		{Label: "Account", State: "done"},
+		{Label: "Payment", State: "current"},
+		{Label: "Confirmation"},
 	}}
 }
 
 func TestStepsRendersEveryLabel(t *testing.T) {
 	html := renderToString(t, components.Steps(stepsFixture()))
-	for _, want := range []string{"Conta", "Pagamento", "Confirmação"} {
+	for _, want := range []string{"Account", "Payment", "Confirmation"} {
 		if !strings.Contains(html, want) {
 			t.Errorf("expected %q, got: %s", want, html)
 		}

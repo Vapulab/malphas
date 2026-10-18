@@ -14,7 +14,7 @@ type BreadcrumbsProps struct {
 // is where the user already is, so it is never a link and is marked with
 // aria-current.
 templ Breadcrumbs(props BreadcrumbsProps) {
-	<nav aria-label="Trilha de navegação" { props.Attrs... }>
+	<nav aria-label={ msg(ctx).Breadcrumb } { props.Attrs... }>
 		<ol class="flex flex-wrap items-center gap-2 text-sm">
 			for i, item := range props.Items {
 				<li class="flex items-center gap-2">

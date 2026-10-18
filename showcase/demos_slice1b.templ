@@ -45,9 +45,9 @@ templ demoSkeleton() {
 
 templ demoStat() {
 	<dl class="grid gap-4 sm:grid-cols-3">
-		@components.Stat(components.StatProps{Title: "Receita", Value: "R$ 12.400", Description: "+12% no mês"})
-		@components.Stat(components.StatProps{Title: "Assinantes", Value: "1.284", Description: "+3% no mês", Variant: "success"})
-		@components.Stat(components.StatProps{Title: "Falhas", Value: "3", Description: "últimas 24h", Variant: "danger"})
+		@components.Stat(components.StatProps{Title: "Revenue", Value: "$12,400", Description: "+12% this month"})
+		@components.Stat(components.StatProps{Title: "Subscribers", Value: "1,284", Description: "+3% this month", Variant: "success"})
+		@components.Stat(components.StatProps{Title: "Failures", Value: "3", Description: "last 24h", Variant: "danger"})
 	</dl>
 }
 

@@ -36,7 +36,7 @@ func demoDatePicker() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		f := components.FieldProps{ID: "dp-entrega", Label: "Entrega do relatório", Description: "Entre hoje e o fim do ano.", Required: true}
+		f := components.FieldProps{ID: "dp-entrega", Label: "Report due date", Description: "Between today and the end of the year.", Required: true}
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex max-w-xs flex-col gap-6\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -65,7 +65,7 @@ func demoDatePicker() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.DatePicker(components.DatePickerProps{ID: "dp-off", Name: "off", Label: "Início (bloqueado)", Value: "2026-10-01", Disabled: true}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.DatePicker(components.DatePickerProps{ID: "dp-off", Name: "off", Label: "Start (locked)", Value: "2026-10-01", Disabled: true}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -103,9 +103,9 @@ func demoCalendar() templ.Component {
 		ctx = templ.ClearChildren(ctx)
 		now := time.Now()
 		today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
-		month := QueryDate(ctx, "mes", today)
-		focus := QueryDate(ctx, "foco", time.Time{})
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"flex flex-col gap-6\"><p class=\"text-sm text-muted\">Setas andam por dia e semana, Home/End vão aos extremos da semana, PageUp/PageDown trocam o mês (com Shift, o ano). Andar além do mês carrega o mês vizinho e mantém o foco no dia. Enter ou Espaço escolhem.</p><div class=\"flex flex-wrap items-start gap-6\"><div class=\"flex flex-col gap-2\"><p class=\"text-sm font-medium text-fg\">Entrega (a partir de 5/10/2026)</p>")
+		month := QueryDate(ctx, "month", today)
+		focus := QueryDate(ctx, "focus", time.Time{})
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"flex flex-col gap-6\"><p class=\"text-sm text-muted\">Arrows move by day and week, Home/End go to the ends of the week, PageUp/PageDown change the month (with Shift, the year). Moving past the month loads the neighboring month and keeps focus on the day. Enter or Space picks.</p><div class=\"flex flex-wrap items-start gap-6\"><div class=\"flex flex-col gap-2\"><p class=\"text-sm font-medium text-fg\">Delivery (from Oct 5, 2026)</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -118,7 +118,7 @@ func demoCalendar() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div><div class=\"flex flex-col gap-2\"><p class=\"text-sm font-medium text-fg\">Período do experimento</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div><div class=\"flex flex-col gap-2\"><p class=\"text-sm font-medium text-fg\">Experiment period</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -300,15 +300,15 @@ func demoDataTable() templ.Component {
 		templ_7745c5c3_Err = components.DataTable(components.DataTableProps{
 			ID: "dt-protocolos", URL: "/components/data-table",
 			Columns: []components.DataTableColumn{
-				{Key: "nome", Label: "Protocolo", Sortable: true},
-				{Key: "area", Label: "Área", Sortable: true},
-				{Key: "responsavel", Label: "Responsável", Sortable: true},
-				{Key: "etapas", Label: "Etapas", Sortable: true, Align: "end"},
+				{Key: "nome", Label: "Protocol", Sortable: true},
+				{Key: "area", Label: "Area", Sortable: true},
+				{Key: "responsavel", Label: "Owner", Sortable: true},
+				{Key: "etapas", Label: "Steps", Sortable: true, Align: "end"},
 			},
 			Sort: r.Sort, Dir: r.Dir, Query: QueryString(ctx, "q", ""),
 			Page: r.Page, TotalPages: r.TotalPages, Total: r.Total,
-			Searchable: true, SearchLabel: "Buscar protocolos", SearchPlaceholder: "Buscar por protocolo, área ou pessoa…",
-			Empty: "Nenhum protocolo encontrado.",
+			Searchable: true, SearchLabel: "Search protocols", SearchPlaceholder: "Search by protocol, area or person…",
+			Empty: "No protocols found.",
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var5), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -340,7 +340,7 @@ func demoQuestionnaire() templ.Component {
 			templ_7745c5c3_Var14 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"flex flex-col gap-4\"><p class=\"text-sm text-muted\">Teclas 1–9 escolhem; Enter avança. \"Não\" na primeira pergunta pula a das áreas. <a href=\"/components/questionnaire?retomar=1\" class=\"text-primary underline\">Retomar respostas salvas</a></p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"flex flex-col gap-4\"><p class=\"text-sm text-muted\">Keys 1–9 choose; Enter advances. \"No\" on the first question skips the one about areas. <a href=\"/components/questionnaire?retomar=1\" class=\"text-primary underline\">Resume saved answers</a></p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -390,7 +390,7 @@ func QuestionnaireView(s QuestionnaireState, focus bool) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, " class=\"flex max-w-lg flex-col gap-4 rounded border border-border bg-surface p-6 focus:outline-none\"><h2 class=\"text-lg font-semibold text-fg\">Respostas enviadas</h2><dl class=\"flex flex-col gap-3 text-sm\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, " class=\"flex max-w-lg flex-col gap-4 rounded border border-border bg-surface p-6 focus:outline-none\"><h2 class=\"text-lg font-semibold text-fg\">Answers submitted</h2><dl class=\"flex flex-col gap-3 text-sm\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -442,7 +442,7 @@ func QuestionnaireView(s QuestionnaireState, focus bool) templ.Component {
 					}()
 				}
 				ctx = templ.InitializeContext(ctx)
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "Recomeçar")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "Start over")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

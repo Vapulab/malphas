@@ -11,8 +11,8 @@ import (
 // --- Bubble -------------------------------------------------------------------
 
 func TestBubbleVariantsAndAlign(t *testing.T) {
-	start := renderWithChildren(t, components.Bubble(components.BubbleProps{}), templ.Raw("oi"))
-	end := renderWithChildren(t, components.Bubble(components.BubbleProps{Variant: "primary", Align: "end"}), templ.Raw("oi"))
+	start := renderWithChildren(t, components.Bubble(components.BubbleProps{}), templ.Raw("hi"))
+	end := renderWithChildren(t, components.Bubble(components.BubbleProps{Variant: "primary", Align: "end"}), templ.Raw("hi"))
 	if !strings.Contains(start, "bg-muted/10") || !strings.Contains(start, "self-start") {
 		t.Errorf("default bubble should be muted and start-aligned: %s", start)
 	}
@@ -47,11 +47,11 @@ func TestBubbleGroupCorners(t *testing.T) {
 // and meaning.
 func TestBubbleReactionsAreLabelled(t *testing.T) {
 	html := renderWithChildren(t, components.Bubble(components.BubbleProps{
-		Reactions: []components.BubbleReaction{{Emoji: "👍", Label: "Curtir", Count: 3}},
+		Reactions: []components.BubbleReaction{{Emoji: "👍", Label: "Like", Count: 3}},
 	}), templ.Raw("x"))
 	// The meaning is real text (sr-only), not an aria-label on a list item,
 	// which NVDA and JAWS do not reliably read in browse mode.
-	for _, want := range []string{`aria-label="Reações"`, `<span class="sr-only">Curtir: 3</span>`, `aria-hidden="true">👍`} {
+	for _, want := range []string{`aria-label="Reactions"`, `<span class="sr-only">Like: 3</span>`, `aria-hidden="true">👍`} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)
 		}
@@ -61,21 +61,21 @@ func TestBubbleReactionsAreLabelled(t *testing.T) {
 // --- Marker -------------------------------------------------------------------
 
 func TestMarkerStatusIsLive(t *testing.T) {
-	html := renderWithChildren(t, components.Marker(components.MarkerProps{Status: true, Icon: "●"}), templ.Raw("Ana entrou na conversa"))
+	html := renderWithChildren(t, components.Marker(components.MarkerProps{Status: true, Icon: "●"}), templ.Raw("Ana joined the conversation"))
 	if !strings.Contains(html, `role="status"`) || !strings.Contains(html, `aria-hidden="true">●`) {
 		t.Errorf("a status marker is a live region with a decorative icon: %s", html)
 	}
 }
 
 // Not role="separator": a separator's children are presentational, so the
-// label ("Ontem") would vanish for screen readers. The text reads as text;
+// label ("Yesterday") would vanish for screen readers. The text reads as text;
 // only the rules beside it are hidden.
 func TestMarkerSeparatorKeepsItsLabelReadable(t *testing.T) {
-	html := renderWithChildren(t, components.Marker(components.MarkerProps{Variant: "separator"}), templ.Raw("Ontem"))
+	html := renderWithChildren(t, components.Marker(components.MarkerProps{Variant: "separator"}), templ.Raw("Yesterday"))
 	if strings.Contains(html, `role="separator"`) {
 		t.Errorf("role=separator would hide the label: %s", html)
 	}
-	if strings.Count(html, `aria-hidden="true"`) != 2 || !strings.Contains(html, "Ontem") {
+	if strings.Count(html, `aria-hidden="true"`) != 2 || !strings.Contains(html, "Yesterday") {
 		t.Errorf("expected two decorative rules around the readable label: %s", html)
 	}
 }
@@ -87,8 +87,8 @@ func messageFixture(group string) components.MessageProps {
 }
 
 func TestMessageHeaderOnlyOnFirst(t *testing.T) {
-	first := renderWithChildren(t, components.Message(messageFixture("first")), templ.Raw("oi"))
-	middle := renderWithChildren(t, components.Message(messageFixture("middle")), templ.Raw("tudo bem?"))
+	first := renderWithChildren(t, components.Message(messageFixture("first")), templ.Raw("hi"))
+	middle := renderWithChildren(t, components.Message(messageFixture("middle")), templ.Raw("how are you?"))
 	if !strings.Contains(first, ">AL<") || !strings.Contains(first, `<time datetime="2026-10-10T14:02"`) {
 		t.Errorf("the first message shows avatar and time: %s", first)
 	}
@@ -100,7 +100,7 @@ func TestMessageHeaderOnlyOnFirst(t *testing.T) {
 // Hidden visually is not hidden from screen readers: every message still says
 // who sent it and when.
 func TestMessageKeepsAuthorAndTimeForScreenReaders(t *testing.T) {
-	middle := renderWithChildren(t, components.Message(messageFixture("middle")), templ.Raw("tudo bem?"))
+	middle := renderWithChildren(t, components.Message(messageFixture("middle")), templ.Raw("how are you?"))
 	if !strings.Contains(middle, `aria-label="Ana Lima, 14:02"`) || !strings.Contains(middle, "<article") {
 		t.Errorf("every message keeps its author and time: %s", middle)
 	}
@@ -109,7 +109,7 @@ func TestMessageKeepsAuthorAndTimeForScreenReaders(t *testing.T) {
 func TestMessageEndAlignmentMirrors(t *testing.T) {
 	p := messageFixture("single")
 	p.Align = "end"
-	html := renderWithChildren(t, components.Message(p), templ.Raw("oi"))
+	html := renderWithChildren(t, components.Message(p), templ.Raw("hi"))
 	if !strings.Contains(html, "flex-row-reverse") || !strings.Contains(html, "self-end") {
 		t.Errorf("an end-aligned message mirrors: %s", html)
 	}
@@ -118,16 +118,16 @@ func TestMessageEndAlignmentMirrors(t *testing.T) {
 // --- Message Scroller ---------------------------------------------------------
 
 func TestMessageScrollerIsALog(t *testing.T) {
-	html := renderWithChildren(t, components.MessageScroller(components.MessageScrollerProps{ID: "chat", Label: "Conversa do protocolo"}), templ.Raw("<article>oi</article>"))
+	html := renderWithChildren(t, components.MessageScroller(components.MessageScrollerProps{ID: "chat", Label: "Protocol conversation"}), templ.Raw("<article>hi</article>"))
 	for _, want := range []string{
 		`role="log"`,
 		`aria-live="polite"`,
-		`aria-label="Conversa do protocolo"`,
+		`aria-label="Protocol conversation"`,
 		`tabindex="0"`,
 		`id="chat-content"`,
 		`x-data="messageScroller"`,
 		"[overflow-anchor:none]",
-		"Ir para o fim",
+		"Jump to latest",
 		`style="display:none"`,
 	} {
 		if !strings.Contains(html, want) {
@@ -138,7 +138,7 @@ func TestMessageScrollerIsALog(t *testing.T) {
 
 // Messages carry a hook the scroller counts by; markers and other rows do not.
 func TestMessageHasAMessageHook(t *testing.T) {
-	html := renderWithChildren(t, components.Message(messageFixture("single")), templ.Raw("oi"))
+	html := renderWithChildren(t, components.Message(messageFixture("single")), templ.Raw("hi"))
 	if !strings.Contains(html, "data-message") {
 		t.Errorf("expected data-message on the article: %s", html)
 	}

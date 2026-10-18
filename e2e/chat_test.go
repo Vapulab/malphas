@@ -14,7 +14,7 @@ const (
 	chatLog      = `document.querySelector('#chat-demo-content').parentElement`
 	chatAtBottom = `(() => { const v = ` + chatLog + `; return v.scrollHeight - v.scrollTop - v.clientHeight <= 24 })()`
 	chatCount    = `document.querySelectorAll('#chat-demo-content article').length`
-	chatJump     = `[...document.querySelectorAll('button')].find(b => b.textContent.includes('Ir para o fim'))`
+	chatJump     = `[...document.querySelectorAll('button')].find(b => b.textContent.includes('Jump to latest'))`
 	chatWatched  = `document.querySelectorAll('#chat-demo-content article')[5]`
 	chatContent  = `document.querySelector('#chat-demo-content')`
 )
@@ -72,7 +72,7 @@ func TestScrollerHoldsPositionAndCountsWhenScrolledUp(t *testing.T) {
 	if diff := movedBy(t, ctx, before); diff > 1 || diff < -1 {
 		t.Errorf("the message being read moved by %.1fpx", diff)
 	}
-	if got := eval[string](t, ctx, `(b => b && getComputedStyle(b).display !== 'none' ? b.textContent.replace(/\s+/g, ' ').trim() : '')(`+chatJump+`)`); !strings.Contains(got, "(2 novas)") {
+	if got := eval[string](t, ctx, `(b => b && getComputedStyle(b).display !== 'none' ? b.textContent.replace(/\s+/g, ' ').trim() : '')(`+chatJump+`)`); !strings.Contains(got, "(2 new)") {
 		t.Errorf("the jump button should show 2 new messages, shows %q", got)
 	}
 }
@@ -134,7 +134,7 @@ func TestScrollerFollowsStreaming(t *testing.T) {
 func TestScrollerKeepsPlaceWhenASentinelReplacesItself(t *testing.T) {
 	ctx := openPage(t, "/components/message-scroller")
 	before := scrolledTo(t, ctx, 150)
-	eval[bool](t, ctx, `(() => { const first = `+chatContent+`.firstElementChild; const older = [...`+chatContent+`.querySelectorAll('article')].slice(0, 3).map(a => a.outerHTML).join(''); first.outerHTML = '<div id="sentinela">carregar</div>' + older; return true })()`)
+	eval[bool](t, ctx, `(() => { const first = `+chatContent+`.firstElementChild; const older = [...`+chatContent+`.querySelectorAll('article')].slice(0, 3).map(a => a.outerHTML).join(''); first.outerHTML = '<div id="sentinela">load</div>' + older; return true })()`)
 	settle(t, ctx)
 	if d := movedBy(t, ctx, before); d > 1 || d < -1 {
 		t.Errorf("the message being read moved by %.1fpx when the sentinel swapped", d)
@@ -151,16 +151,16 @@ func TestScrollerPrependAndAppendInOneBatch(t *testing.T) {
 	if d := movedBy(t, ctx, before); d > 1 || d < -1 {
 		t.Errorf("the message being read moved by %.1fpx", d)
 	}
-	if got := eval[string](t, ctx, chatJump+`.textContent.replace(/\s+/g, ' ')`); !strings.Contains(got, "(1 nova)") {
+	if got := eval[string](t, ctx, chatJump+`.textContent.replace(/\s+/g, ' ')`); !strings.Contains(got, "(1 new)") {
 		t.Errorf("only the appended message is new, button says %q", got)
 	}
 }
 
-// Only messages count as new: a "Gerando resposta…" marker does not.
+// Only messages count as new: a "Generating a reply…" marker does not.
 func TestScrollerCountsOnlyMessages(t *testing.T) {
 	ctx := openPage(t, "/components/message-scroller")
 	scrolledTo(t, ctx, 150)
-	eval[bool](t, ctx, `(() => { const m = document.createElement('div'); m.setAttribute('role', 'status'); m.textContent = 'Gerando resposta…'; `+chatContent+`.append(m); return true })()`)
+	eval[bool](t, ctx, `(() => { const m = document.createElement('div'); m.setAttribute('role', 'status'); m.textContent = 'Generating a reply…'; `+chatContent+`.append(m); return true })()`)
 	settle(t, ctx)
 	if eval[bool](t, ctx, `/\(\d/.test(`+chatJump+`.innerText)`) { // innerText: the hidden counter span always holds text
 		t.Errorf("a marker was counted as a new message: %q", eval[string](t, ctx, chatJump+`.innerText`))
@@ -209,5 +209,17 @@ func TestScrollerStreamingIsBusyWhileItGrows(t *testing.T) {
 	// on a slow one: wait for the end, not for a guess at when it comes.
 	if !waitUntil(t, ctx, `![...document.querySelectorAll('#chat-demo-content article')].at(-1).hasAttribute('aria-busy')`, 15*time.Second) {
 		t.Errorf("aria-busy should clear when streaming ends, got %q", eval[string](t, ctx, `[...document.querySelectorAll('#chat-demo-content article')].at(-1).getAttribute('aria-busy') || ''`))
+	}
+}
+
+// A host whose page shell writes an invalid lang (pt_BR, with an underscore)
+// must not lose the counter: Intl.PluralRules throws on such a tag.
+func TestScrollerCounterSurvivesAnInvalidPageLang(t *testing.T) {
+	ctx := openPage(t, "/components/message-scroller")
+	eval[bool](t, ctx, `(document.documentElement.lang = "pt_BR", true)`)
+	scrolledTo(t, ctx, 150)
+	click(t, ctx, "#chat-nova")
+	if !waitUntil(t, ctx, `(b => !!b && /\(1 new\)/.test(b.textContent))(`+chatJump+`)`, 5*time.Second) {
+		t.Errorf("the counter should still read (1 new), shows %q", eval[string](t, ctx, `(b => b ? b.textContent.replace(/\s+/g, ' ').trim() : '')(`+chatJump+`)`))
 	}
 }

@@ -9,7 +9,7 @@ import (
 )
 
 func tooltipFixture() components.TooltipProps {
-	return components.TooltipProps{ID: "tip-save", Text: "Salva sem fechar"}
+	return components.TooltipProps{ID: "tip-save", Text: "Saves without closing"}
 }
 
 // aria-describedby is what makes the tip reach a screen reader; hover styling
@@ -17,7 +17,7 @@ func tooltipFixture() components.TooltipProps {
 func TestTooltipIsWiredWithDescribedby(t *testing.T) {
 	html := renderWithChildren(t,
 		components.Tooltip(tooltipFixture()),
-		templ.Raw("<button>Salvar</button>"))
+		templ.Raw("<button>Save</button>"))
 	if !strings.Contains(html, `aria-describedby="tip-save"`) {
 		t.Errorf("expected aria-describedby on the trigger, got: %s", html)
 	}
@@ -34,7 +34,7 @@ func TestTooltipIsWiredWithDescribedby(t *testing.T) {
 func TestTooltipOpensOnFocusAndClosesOnEscape(t *testing.T) {
 	html := renderWithChildren(t,
 		components.Tooltip(tooltipFixture()),
-		templ.Raw("<button>Salvar</button>"))
+		templ.Raw("<button>Save</button>"))
 	if !strings.Contains(html, "focusin") {
 		t.Errorf("tooltip must open on focus, not only hover, got: %s", html)
 	}
@@ -46,11 +46,11 @@ func TestTooltipOpensOnFocusAndClosesOnEscape(t *testing.T) {
 func TestTooltipRendersTextAndChildren(t *testing.T) {
 	html := renderWithChildren(t,
 		components.Tooltip(tooltipFixture()),
-		templ.Raw("<button>Salvar</button>"))
-	if !strings.Contains(html, "Salva sem fechar") {
+		templ.Raw("<button>Save</button>"))
+	if !strings.Contains(html, "Saves without closing") {
 		t.Errorf("expected the tip text, got: %s", html)
 	}
-	if !strings.Contains(html, "<button>Salvar</button>") {
+	if !strings.Contains(html, "<button>Save</button>") {
 		t.Errorf("expected the trigger rendered, got: %s", html)
 	}
 }

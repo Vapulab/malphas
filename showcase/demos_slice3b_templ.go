@@ -31,18 +31,18 @@ func demoDropdown() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col gap-3\"><p class=\"text-sm text-muted\">Abra e navegue com ↓ ↑. Escape fecha e devolve o foco ao gatilho. Tab também fecha, mas segue o fluxo natural da página — um menu não prende o foco.</p><div class=\"flex flex-wrap gap-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"flex flex-col gap-3\"><p class=\"text-sm text-muted\">Open it and move with ↓ ↑. Escape closes it and returns focus to the trigger. Tab closes it too, but follows the page's natural order — a menu does not trap focus.</p><div class=\"flex flex-wrap gap-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Dropdown(components.DropdownProps{
 			ID:    "dd-acoes",
-			Label: "Ações",
+			Label: "Actions",
 			Entries: []components.MenuEntry{
-				{Label: "Editar", OnClick: "$dispatch('demo-edit')"},
-				{Label: "Duplicar", OnClick: "$dispatch('demo-dup')"},
+				{Label: "Edit", OnClick: "$dispatch('demo-edit')"},
+				{Label: "Duplicate", OnClick: "$dispatch('demo-dup')"},
 				components.MenuDivider(),
-				{Label: "Excluir", OnClick: "$dispatch('demo-del')", Disabled: true},
+				{Label: "Delete", OnClick: "$dispatch('demo-del')", Disabled: true},
 			},
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -50,14 +50,14 @@ func demoDropdown() templ.Component {
 		}
 		templ_7745c5c3_Err = components.Dropdown(components.DropdownProps{
 			ID:       "dd-conta",
-			Label:    "Conta",
+			Label:    "Account",
 			Variant:  "primary",
 			Position: "bottom-end",
 			Entries: []components.MenuEntry{
-				{Label: "Perfil", Href: "/"},
-				{Label: "Componentes", Href: "/"},
+				{Label: "Profile", Href: "/"},
+				{Label: "Components", Href: "/"},
 				components.MenuDivider(),
-				{Label: "Sair", OnClick: "$dispatch('demo-logout')"},
+				{Label: "Sign out", OnClick: "$dispatch('demo-logout')"},
 			},
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -97,9 +97,9 @@ func demoSelect() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Select(components.SelectProps{
-			ID: "s-plano", Name: "plano", Label: "Plano", Value: "pro",
+			ID: "s-plano", Name: "plano", Label: "Plan", Value: "pro",
 			Options: []components.SelectOption{
-				{Label: "Grátis", Value: "free"},
+				{Label: "Free", Value: "free"},
 				{Label: "Pro", Value: "pro"},
 				{Label: "Enterprise", Value: "ent", Disabled: true},
 			},
@@ -108,10 +108,10 @@ func demoSelect() templ.Component {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Select(components.SelectProps{
-			ID: "s-pais", Name: "pais", Label: "País", Placeholder: "Escolha…",
+			ID: "s-pais", Name: "pais", Label: "Country", Placeholder: "Choose…",
 			Options: []components.SelectOption{
-				{Label: "Brasil", Value: "br"},
-				{Label: "Portugal", Value: "pt"},
+				{Label: "Canada", Value: "ca"},
+				{Label: "Japan", Value: "jp"},
 			},
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -146,22 +146,22 @@ func demoCombobox() templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"flex max-w-sm flex-col gap-4\"><p class=\"text-sm text-muted\">Digite para filtrar — sem distinguir acentos, então \"sao\" acha \"São Paulo\". ↓ ↑ destacam, Enter escolhe, Escape fecha e, de novo, limpa. Texto que não é uma opção volta para a seleção anterior ao sair do campo.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"flex max-w-sm flex-col gap-4\"><p class=\"text-sm text-muted\">Type to filter — accents are ignored, so \"zurich\" finds \"Zürich\". ↓ ↑ highlight, Enter picks, Escape closes and, pressed again, clears. Text that is not an option reverts to the previous selection when you leave the field.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Combobox(components.ComboboxProps{
-			ID: "cb-estado", Name: "estado", Label: "Estado", Value: "sp",
-			Placeholder: "Busque um estado…",
-			Options:     demoEstados(),
+			ID: "cb-estado", Name: "city", Label: "City", Value: "ymq",
+			Placeholder: "Search for a city…",
+			Options:     demoCities(),
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Combobox(components.ComboboxProps{
-			ID: "cb-plano", Name: "plano", Label: "Plano", Placeholder: "Escolha…",
+			ID: "cb-plano", Name: "plano", Label: "Plan", Placeholder: "Choose…",
 			Options: []components.SelectOption{
-				{Label: "Grátis", Value: "free"},
+				{Label: "Free", Value: "free"},
 				{Label: "Pro", Value: "pro"},
 				{Label: "Enterprise", Value: "ent", Disabled: true},
 			},
@@ -198,15 +198,15 @@ func demoOTP() templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"flex flex-col gap-4\"><p class=\"text-sm text-muted\">Digite e o foco avança sozinho; backspace num campo vazio volta. Colar o código inteiro preenche tudo de uma vez.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"flex flex-col gap-4\"><p class=\"text-sm text-muted\">Type and focus moves forward on its own; backspace in an empty box moves back. Pasting the whole code fills every box at once.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.OTP(components.OTPProps{Name: "codigo", Label: "Código de verificação"}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.OTP(components.OTPProps{Name: "codigo", Label: "Verification code"}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.OTP(components.OTPProps{Name: "pin", Label: "PIN de 4 dígitos", Length: 4}).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.OTP(components.OTPProps{Name: "pin", Label: "4-digit PIN", Length: 4}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -239,17 +239,17 @@ func demoCarousel() templ.Component {
 			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"max-w-xl\"><p class=\"mb-3 text-sm text-muted\">Dê Tab até a área dos slides e use ← →. O rolar respeita prefers-reduced-motion.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"max-w-xl\"><p class=\"mb-3 text-sm text-muted\">Tab to the slides area and use ← →. Scrolling respects prefers-reduced-motion.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		templ_7745c5c3_Err = components.Carousel(components.CarouselProps{
 			ID:    "c-demo",
-			Label: "Exemplo",
+			Label: "Example",
 			Slides: []templ.Component{
-				carouselSlide("Primeiro", "primary"),
-				carouselSlide("Segundo", "success"),
-				carouselSlide("Terceiro", "warning"),
+				carouselSlide("First", "primary"),
+				carouselSlide("Second", "success"),
+				carouselSlide("Third", "warning"),
 			},
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
@@ -347,7 +347,7 @@ func demoPagination() templ.Component {
 			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<div class=\"flex flex-col gap-6\"><p class=\"text-sm text-muted\">Clique numa página: a URL muda e o marcador acompanha.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<div class=\"flex flex-col gap-6\"><p class=\"text-sm text-muted\">Click a page: the URL changes and the marker follows.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -387,19 +387,19 @@ func demoPaginationEdges() templ.Component {
 			templ_7745c5c3_Var11 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"flex flex-col gap-6\"><p class=\"text-sm text-muted\">Cada um começa numa ponta e se move sozinho, sem mexer nos outros. Ande com ← → pelas páginas para ver o intervalo colapsar e reabrir.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"flex flex-col gap-6\"><p class=\"text-sm text-muted\">Each one starts at an edge and moves on its own, without touching the others. Move through the pages with ← → to watch the range collapse and reopen.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = paginationExample("e1", "curto — cabe inteiro, nunca colapsa").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = paginationExample("e1", "short — fits whole, never collapses").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = paginationExample("e2", "longo, começando no início").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = paginationExample("e2", "long, starting at the beginning").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = paginationExample("e3", "longo, começando no fim").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = paginationExample("e3", "long, starting at the end").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -412,7 +412,7 @@ func demoPaginationEdges() templ.Component {
 }
 
 // The label describes the example, never its current page — that would go stale
-// the moment someone clicks. The position lives in the "X de Y" beside it.
+// the moment someone clicks. The position lives in the "X of Y" beside it.
 func paginationExample(param, label string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -467,27 +467,27 @@ func paginationExample(param, label string) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "página ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "page ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var15 string
 		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(intToString(page))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `showcase/demos_slice3b.templ`, Line: 153, Col: 30}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `showcase/demos_slice3b.templ`, Line: 153, Col: 27}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, " de ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, " of ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(intToString(total))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `showcase/demos_slice3b.templ`, Line: 153, Col: 56}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `showcase/demos_slice3b.templ`, Line: 153, Col: 53}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -500,7 +500,7 @@ func paginationExample(param, label string) templ.Component {
 		templ_7745c5c3_Err = components.Pagination(components.PaginationProps{
 			Current:  page,
 			Total:    total,
-			Label:    "Paginação " + param,
+			Label:    "Pagination " + param,
 			BaseHref: paginationHref(ctx, param),
 		}).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
