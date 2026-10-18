@@ -3,6 +3,7 @@ package e2e_test
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/chromedp/cdproto/input"
 	"github.com/chromedp/chromedp"
@@ -98,8 +99,9 @@ func TestHoverCardOpensOnFocusAfterDelay(t *testing.T) {
 	if eval[bool](t, ctx, visible(`#hc-lincoln-card`)) {
 		t.Error("the card opened before its delay")
 	}
-	sleep(t, ctx, 600)
-	if !eval[bool](t, ctx, visible(`#hc-lincoln-card`)) {
+	// 400ms of delay plus the render, which on a slow machine is most of a
+	// second more. The early check above is what proves the delay.
+	if !waitUntil(t, ctx, visible(`#hc-lincoln-card`), 5*time.Second) {
 		t.Error("the card did not open on keyboard focus")
 	}
 }
@@ -108,8 +110,7 @@ func TestHoverCardEscapeCloses(t *testing.T) {
 	ctx := openPage(t, "/components/hover-card")
 
 	focus(t, ctx, hcTrigger)
-	sleep(t, ctx, 700)
-	if !eval[bool](t, ctx, visible(`#hc-lincoln-card`)) {
+	if !waitUntil(t, ctx, visible(`#hc-lincoln-card`), 5*time.Second) {
 		t.Fatal("the card never opened; this test would prove nothing")
 	}
 	press(t, ctx, kb.Escape)
@@ -222,7 +223,7 @@ func TestContextMenuStaysInsideTheViewport(t *testing.T) {
 	eval[bool](t, ctx, `(document.body.style.paddingTop = '100vh', document.querySelector('[x-ref="target"]').scrollIntoView({block: 'end'}), true)`)
 	settle(t, ctx)
 	target := rectOf(t, ctx, `[x-ref="target"]`)
-	vw :=eval[float64](t, ctx, `window.innerWidth`)
+	vw := eval[float64](t, ctx, `window.innerWidth`)
 	vh := eval[float64](t, ctx, `window.innerHeight`)
 
 	x, y := target.Right-5, target.Bottom-5
@@ -557,9 +558,10 @@ func TestMenubarFocusesTheNextMenuWhenFramesAreSlow(t *testing.T) {
 		{kb.ArrowRight, "Novo protocolo"},
 	} {
 		press(t, ctx, step.key)
-		sleep(t, ctx, 300)
-		if got := eval[string](t, ctx, mbActive); got != step.want {
-			t.Fatalf("after %q focus should be on %q, is on %q", step.key, step.want, got)
+		// The frames are slowed on purpose; how much longer the switch takes
+		// then depends on the machine. What matters is that focus lands.
+		if !waitUntil(t, ctx, mbActive+` === `+jsString(step.want), 5*time.Second) {
+			t.Fatalf("after %q focus should be on %q, is on %q", step.key, step.want, eval[string](t, ctx, mbActive))
 		}
 	}
 }
@@ -689,14 +691,15 @@ func TestHoverCardStaysOpenWhileFocusedAfterThePointerLeaves(t *testing.T) {
 		t.Fatal(err)
 	}
 	focus(t, ctx, hcTrigger)
-	sleep(t, ctx, 700)
-	if !eval[bool](t, ctx, visible(`#hc-lincoln-card`)) {
+	if !waitUntil(t, ctx, visible(`#hc-lincoln-card`), 5*time.Second) {
 		t.Fatal("fixture: the card did not open")
 	}
 	if err := chromedp.Run(ctx, chromedp.MouseEvent(input.MouseMoved, 2, 2)); err != nil {
 		t.Fatal(err)
 	}
-	sleep(t, ctx, 500)
+	// Here the wait is the point: long enough for a wrongly closing card to
+	// close (200ms delay plus the render), so it grows with a slowed CPU.
+	sleep(t, ctx, 500*cpuThrottle)
 	if !eval[bool](t, ctx, visible(`#hc-lincoln-card`)) {
 		t.Error("the pointer left, but focus is still on the link: the card should stay open")
 	}

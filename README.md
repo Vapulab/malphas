@@ -226,6 +226,17 @@ por quê. Duas coisas que valem saber ao mexer neles:
 - Use `$root`, não `$el`, quando um método do Alpine procura algo "neste
   componente". Dentro de um método chamado pelo handler de um filho, `$el` é o
   filho, e a busca não encontra nada sem dar erro.
+- **Espere a condição, não um tempo.** Um `sleep` seguido de uma checagem
+  única passa numa máquina rápida e falha num runner lento com o componente
+  certo: um timer, uma transição ou um frame levam o que a CPU deixar. Use
+  `waitUntil` para o que tem de acontecer. Um `sleep` só faz sentido para
+  provar que algo *não* acontece, e então escala com `cpuThrottle`.
+
+Para achar testes sensíveis a tempo antes da CI, rode com o Chrome mais lento:
+
+```bash
+E2E_CPU_THROTTLE=10 go test ./...   # CPU da página 10x mais lenta
+```
 
 ### Mexendo no Malphas a partir de um app
 
