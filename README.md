@@ -330,6 +330,22 @@ The app then builds against the local clone, and the `go list -m` in
 `.templ` files. To release, merge into Malphas's `main`, tag `vX.Y.Z` and update the app with
 `go get github.com/vapulab/malphas@vX.Y.Z`.
 
+## Support Malphas
+
+Malphas is free and open source. If it saved you work, you can help keep it
+going:
+
+- **GitHub Sponsors:** [github.com/sponsors/darkanum](https://github.com/sponsors/darkanum)
+- **Pix** (Brazil), any amount, to Vapulab:
+
+<img src=".github/pix-qr.png" alt="Vapulab's Pix QR code" width="220">
+
+Pix copy and paste:
+
+```
+00020126580014br.gov.bcb.pix01360de2b4e5-2274-4744-bb86-786b019352755204000053039865802BR5907VAPULAB6008LONDRINA62070503***6304DAAC
+```
+
 ## License
 
 [MIT](LICENSE). The Space Grotesk font (`assets/fonts/`) is distributed under
