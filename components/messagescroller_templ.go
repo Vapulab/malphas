@@ -111,7 +111,33 @@ func MessageScroller(props MessageScrollerProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</div></div><button type=\"button\" x-show=\"!atBottom\" style=\"display:none\" x-on:click=\"toEnd()\" class=\"absolute bottom-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-medium text-fg shadow-lg hover:bg-muted/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50\"><span aria-hidden=\"true\">&#8595;</span> Ir para o fim <span x-show=\"unread > 0\" style=\"display:none\" x-text=\"'(' + unread + (unread === 1 ? ' nova)' : ' novas)')\" class=\"text-primary\"></span></button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</div></div><button type=\"button\" x-show=\"!atBottom\" style=\"display:none\" x-on:click=\"toEnd()\" class=\"absolute bottom-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-medium text-fg shadow-lg hover:bg-muted/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50\"><span aria-hidden=\"true\">&#8595;</span> ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var4 string
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(msg(ctx).JumpToEnd)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/messagescroller.templ`, Line: 68, Col: 23}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, " <span x-show=\"unread > 0\" style=\"display:none\" x-text=\"unreadLabel()\" data-unread-forms=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var5 string
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(unreadFormsJSON(ctx))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/messagescroller.templ`, Line: 69, Col: 113}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\" class=\"text-primary\"></span></button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

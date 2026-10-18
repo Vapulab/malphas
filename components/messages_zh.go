@@ -17,6 +17,7 @@ var messagesZH = messages{
 	OpenMenu: "打开菜单", SideMenu: "侧边栏", Menu: "菜单", Rating: "评分",
 
 	QuestionnaireProgress: "问卷进度", QuestionnaireNext: "下一题", QuestionnaireBack: "上一题",
+	QuestionnaireFinish: "完成", QuestionnaireSkip: "跳过",
 
 	StatusOnline: "在线", StatusOffline: "离线", StatusBusy: "忙碌",
 

@@ -219,12 +219,12 @@ func Attachment(props AttachmentProps) templ.Component {
 		}
 		switch props.state() {
 		case "uploading":
-			templ_7745c5c3_Err = Progress(ProgressProps{Value: clampInt(props.Progress, 0, 100), Attrs: templ.Attributes{"aria-label": "Envio de " + props.Name}}).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = Progress(ProgressProps{Value: clampInt(props.Progress, 0, 100), Attrs: templ.Attributes{"aria-label": msg(ctx).UploadOf(props.Name)}}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		case "processing":
-			templ_7745c5c3_Err = Progress(ProgressProps{Indeterminate: true, Attrs: templ.Attributes{"aria-label": "Processamento de " + props.Name}}).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = Progress(ProgressProps{Indeterminate: true, Attrs: templ.Attributes{"aria-label": msg(ctx).ProcessingOf(props.Name)}}).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -234,9 +234,9 @@ func Attachment(props AttachmentProps) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var10 string
-			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(or(props.Error, "Não foi possível enviar."))
+			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(or(props.Error, msg(ctx).SendFailed))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/attachment.templ`, Line: 69, Col: 96}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/attachment.templ`, Line: 69, Col: 87}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -351,7 +351,7 @@ func AttachmentGroup(props AttachmentGroupProps) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = ScrollArea(ScrollAreaProps{Label: or(props.Label, "Anexos"), Horizontal: true, Attrs: props.Attrs}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = ScrollArea(ScrollAreaProps{Label: or(props.Label, msg(ctx).Attachments), Horizontal: true, Attrs: props.Attrs}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var13), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

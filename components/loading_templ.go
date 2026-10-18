@@ -12,7 +12,7 @@ type LoadingProps struct {
 	Kind    string // spinner | dots | bars (default spinner)
 	Size    string // sm | md | lg (default md)
 	Variant string // primary | muted | fg (default primary)
-	Label   string // announced text (default "Carregando")
+	Label   string // announced text (default: "Loading" in the request's language)
 	Attrs   templ.Attributes
 }
 
@@ -266,9 +266,9 @@ func Loading(props LoadingProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var18 string
-		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(or(props.Label, "Carregando"))
+		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(or(props.Label, msg(ctx).Loading))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/loading.templ`, Line: 60, Col: 55}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/loading.templ`, Line: 60, Col: 59}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 		if templ_7745c5c3_Err != nil {

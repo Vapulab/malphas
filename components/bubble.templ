@@ -58,7 +58,7 @@ templ Bubble(props BubbleProps) {
 			{ children... }
 		</div>
 		if len(props.Reactions) > 0 {
-			<ul aria-label="Reações" class="flex flex-wrap gap-1">
+			<ul aria-label={ msg(ctx).Reactions } class="flex flex-wrap gap-1">
 				for _, r := range props.Reactions {
 					// The meaning is real text, sr-only, rather than an aria-label
 					// on the list item: NVDA and JAWS do not reliably read an

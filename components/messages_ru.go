@@ -17,6 +17,7 @@ var messagesRU = messages{
 	OpenMenu: "Открыть меню", SideMenu: "Боковое меню", Menu: "Меню", Rating: "Оценка",
 
 	QuestionnaireProgress: "Прогресс опроса", QuestionnaireNext: "Далее", QuestionnaireBack: "Назад",
+	QuestionnaireFinish: "Завершить", QuestionnaireSkip: "Пропустить",
 
 	StatusOnline: "В сети", StatusOffline: "Не в сети", StatusBusy: "Занят",
 

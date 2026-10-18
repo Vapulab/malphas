@@ -119,7 +119,7 @@ func TestSidebarIconlessItemKeepsAVisibleMark(t *testing.T) {
 // the state twice ("Expandir menu, recolhido").
 func TestSidebarToggleHasOneStableName(t *testing.T) {
 	html := renderWithChildren(t, components.Sidebar(sidebarFixture()), templ.Raw(""))
-	if strings.Contains(html, "x-bind:aria-label") || !strings.Contains(html, `aria-label="Menu lateral"`) {
+	if strings.Contains(html, "x-bind:aria-label") || !strings.Contains(html, `aria-label="Sidebar"`) {
 		t.Errorf("expected a static aria-label with aria-expanded: %s", html)
 	}
 }

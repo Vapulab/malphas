@@ -33,7 +33,7 @@ func TestQuestionnaireMarkup(t *testing.T) {
 		// Earlier answers ride along; the current one comes from its inputs.
 		`<input type="hidden" name="a.experiencia" value="sim">`,
 		`<input type="hidden" name="atual" value="areas">`,
-		`Pergunta 2 de 4`,
+		`Question 2 of 4`,
 		`formnovalidate`,
 	} {
 		if !strings.Contains(html, want) {
@@ -81,7 +81,7 @@ func TestQuestionnaireSkippableText(t *testing.T) {
 	p.Question = components.QuestionnaireQuestion{Key: "objetivo", Title: "Qual o objetivo?", Kind: "text", Value: []string{"medir"}}
 	p.Step, p.Total = 4, 4
 	html := renderToString(t, components.Questionnaire(p))
-	for _, want := range []string{`type="text"`, `name="a.objetivo"`, `value="medir"`, `value="skip"`, `Concluir`} {
+	for _, want := range []string{`type="text"`, `name="a.objetivo"`, `value="medir"`, `value="skip"`, `Finish`} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)
 		}

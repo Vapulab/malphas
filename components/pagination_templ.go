@@ -18,7 +18,7 @@ type PaginationProps struct {
 	// and makes the component non-serialisable; callers with irregular URLs
 	// build the nav by hand.
 	BaseHref string
-	Label    string // accessible name (default "Paginação")
+	Label    string // accessible name (default: "Pagination" in the request's language)
 	Attrs    templ.Attributes
 }
 
@@ -85,9 +85,9 @@ func Pagination(props PaginationProps) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(or(props.Label, "Paginação"))
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.ResolveAttributeValue(or(props.Label, msg(ctx).Pagination))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/pagination.templ`, Line: 55, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/pagination.templ`, Line: 55, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var2)
 		if templ_7745c5c3_Err != nil {
@@ -105,7 +105,7 @@ func Pagination(props PaginationProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = paginationStep(props, props.Current-1, "Anterior", props.Current <= 1).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = paginationStep(props, props.Current-1, msg(ctx).PagePrevious, props.Current <= 1).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -160,9 +160,9 @@ func Pagination(props PaginationProps) templ.Component {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var5 string
-				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue("Página " + strconv.Itoa(page))
+				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.ResolveAttributeValue(msg(ctx).Page(page))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/pagination.templ`, Line: 72, Col: 51}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/pagination.templ`, Line: 72, Col: 39}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var5)
 				if templ_7745c5c3_Err != nil {
@@ -195,7 +195,7 @@ func Pagination(props PaginationProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = paginationStep(props, props.Current+1, "Próxima", props.Current >= props.Total).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = paginationStep(props, props.Current+1, msg(ctx).PageNext, props.Current >= props.Total).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

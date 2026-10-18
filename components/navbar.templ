@@ -22,7 +22,7 @@ templ Navbar(props NavbarProps) {
 				<div x-data class="md:hidden">
 					<button
 						type="button"
-						aria-label="Abrir menu"
+						aria-label={ msg(ctx).OpenMenu }
 						aria-haspopup="dialog"
 						class="rounded p-1 text-muted hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 						x-on:click={ "$dispatch('open-drawer', " + strconv.Quote(props.DrawerID) + ")" }

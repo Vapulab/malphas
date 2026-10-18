@@ -39,7 +39,7 @@ templ ContextMenu(props ContextMenuProps) {
 		>
 			{ children... }
 		</div>
-		<span id={ props.hintID() } class="sr-only">Clique com o botão direito ou use Shift+F10 para ver as ações.</span>
+		<span id={ props.hintID() } class="sr-only">{ msg(ctx).ContextMenuHint }</span>
 		<div
 			id={ props.menuID() }
 			role="menu"

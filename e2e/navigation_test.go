@@ -363,10 +363,10 @@ func TestComboboxEscapeDoesNotReachWindow(t *testing.T) {
 func TestCarouselMovesWithArrowKeys(t *testing.T) {
 	ctx := openPage(t, "/components/carousel")
 
-	const pos = `document.querySelector('[aria-roledescription="carrossel"] [tabindex="0"]').scrollLeft`
+	const pos = `document.querySelector('[aria-roledescription="carousel"] [tabindex="0"]').scrollLeft`
 
 	before := eval[float64](t, ctx, pos)
-	focus(t, ctx, `[aria-roledescription="carrossel"] [tabindex="0"]`)
+	focus(t, ctx, `[aria-roledescription="carousel"] [tabindex="0"]`)
 	press(t, ctx, kb.ArrowRight)
 	sleep(t, ctx, 700)
 

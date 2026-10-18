@@ -17,6 +17,7 @@ var messagesES = messages{
 	OpenMenu: "Abrir menú", SideMenu: "Menú lateral", Menu: "Menú", Rating: "Valoración",
 
 	QuestionnaireProgress: "Progreso del cuestionario", QuestionnaireNext: "Siguiente", QuestionnaireBack: "Atrás",
+	QuestionnaireFinish: "Finalizar", QuestionnaireSkip: "Omitir",
 
 	StatusOnline: "En línea", StatusOffline: "Desconectado", StatusBusy: "Ocupado",
 

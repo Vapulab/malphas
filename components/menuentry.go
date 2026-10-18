@@ -34,14 +34,6 @@ func (e MenuEntry) isDivider() bool {
 	return e.Kind == MenuEntryDivider
 }
 
-func carouselSlideLabel(n, total int) string {
-	return intJS(n) + " de " + intJS(total)
-}
-
-func otpDigitLabel(n, total int) string {
-	return "Dígito " + intJS(n) + " de " + intJS(total)
-}
-
 func dropdownTriggerClasses(variant string) string {
 	return map[string]string{
 		"primary":   "bg-primary text-primary-fg hover:bg-primary/90",

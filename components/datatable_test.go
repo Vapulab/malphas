@@ -36,7 +36,7 @@ func TestDataTableAriaSortAndLinks(t *testing.T) {
 		`aria-label="Buscar protocolos"`,
 		`value="pcr"`,
 		`hx-select-oob="#dt-state"`,
-		`25 resultados`,
+		`25 results`,
 	} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)
@@ -71,7 +71,7 @@ func TestDataTableEmpty(t *testing.T) {
 	if !strings.Contains(html, "Nenhum protocolo encontrado.") || !strings.Contains(html, `colspan="3"`) {
 		t.Errorf("expected the empty message across all columns: %s", html)
 	}
-	if strings.Contains(html, `aria-label="Paginação"`) {
+	if strings.Contains(html, `aria-label="Pagination"`) {
 		t.Errorf("no pages, no pagination: %s", html)
 	}
 }

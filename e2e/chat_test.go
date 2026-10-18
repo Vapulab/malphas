@@ -14,7 +14,7 @@ const (
 	chatLog      = `document.querySelector('#chat-demo-content').parentElement`
 	chatAtBottom = `(() => { const v = ` + chatLog + `; return v.scrollHeight - v.scrollTop - v.clientHeight <= 24 })()`
 	chatCount    = `document.querySelectorAll('#chat-demo-content article').length`
-	chatJump     = `[...document.querySelectorAll('button')].find(b => b.textContent.includes('Ir para o fim'))`
+	chatJump     = `[...document.querySelectorAll('button')].find(b => b.textContent.includes('Jump to the end'))`
 	chatWatched  = `document.querySelectorAll('#chat-demo-content article')[5]`
 	chatContent  = `document.querySelector('#chat-demo-content')`
 )
@@ -72,7 +72,7 @@ func TestScrollerHoldsPositionAndCountsWhenScrolledUp(t *testing.T) {
 	if diff := movedBy(t, ctx, before); diff > 1 || diff < -1 {
 		t.Errorf("the message being read moved by %.1fpx", diff)
 	}
-	if got := eval[string](t, ctx, `(b => b && getComputedStyle(b).display !== 'none' ? b.textContent.replace(/\s+/g, ' ').trim() : '')(`+chatJump+`)`); !strings.Contains(got, "(2 novas)") {
+	if got := eval[string](t, ctx, `(b => b && getComputedStyle(b).display !== 'none' ? b.textContent.replace(/\s+/g, ' ').trim() : '')(`+chatJump+`)`); !strings.Contains(got, "(2 new)") {
 		t.Errorf("the jump button should show 2 new messages, shows %q", got)
 	}
 }
@@ -151,7 +151,7 @@ func TestScrollerPrependAndAppendInOneBatch(t *testing.T) {
 	if d := movedBy(t, ctx, before); d > 1 || d < -1 {
 		t.Errorf("the message being read moved by %.1fpx", d)
 	}
-	if got := eval[string](t, ctx, chatJump+`.textContent.replace(/\s+/g, ' ')`); !strings.Contains(got, "(1 nova)") {
+	if got := eval[string](t, ctx, chatJump+`.textContent.replace(/\s+/g, ' ')`); !strings.Contains(got, "(1 new)") {
 		t.Errorf("only the appended message is new, button says %q", got)
 	}
 }

@@ -1277,6 +1277,16 @@ document.addEventListener("alpine:init", () => {
   Alpine.data("messageScroller", () => ({
     atBottom: true,
     unread: 0,
+
+    // The counter's words come from the server, one per plural category of
+    // the page's language ({"one": "(%d new)", "other": …}); Intl.PluralRules
+    // picks which, so Russian gets its three forms with no rules here.
+    unreadLabel() {
+      const el = this.$root.querySelector("[data-unread-forms]");
+      const forms = el ? JSON.parse(el.dataset.unreadForms) : {};
+      const cat = new Intl.PluralRules(document.documentElement.lang || "en").select(this.unread);
+      return (forms[cat] || forms.other || "(%d)").replace("%d", this.unread);
+    },
     // Set by toEnd(): the reader asked for the end, so the end keeps being
     // followed through a smooth scroll until they move away themselves.
     _following: false,

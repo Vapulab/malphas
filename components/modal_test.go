@@ -59,7 +59,7 @@ func TestModalUsesTheOverlayPrimitive(t *testing.T) {
 
 func TestModalCloseButtonIsLabelled(t *testing.T) {
 	html := modalHTML(t)
-	if !strings.Contains(html, `aria-label="Fechar"`) {
+	if !strings.Contains(html, `aria-label="Close"`) {
 		t.Errorf("a × with no label reads as \"times\", got: %s", html)
 	}
 }

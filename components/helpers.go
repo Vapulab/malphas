@@ -69,10 +69,6 @@ func ariaChecked(checked, indeterminate bool) string {
 	return ariaBool(checked)
 }
 
-func ratingLabel(value, max int) string {
-	return strconv.Itoa(value) + " de " + strconv.Itoa(max)
-}
-
 func ratingStarClass(filled bool) string {
 	if filled {
 		return "text-warning"

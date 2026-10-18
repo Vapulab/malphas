@@ -2,6 +2,7 @@ package components
 
 import (
 	"context"
+	"encoding/json"
 	"strconv"
 	"time"
 
@@ -26,6 +27,7 @@ type messages struct {
 	OpenMenu, SideMenu, Menu, Rating           string
 
 	QuestionnaireProgress, QuestionnaireNext, QuestionnaireBack string
+	QuestionnaireFinish, QuestionnaireSkip                      string
 
 	StatusOnline, StatusOffline, StatusBusy string
 
@@ -62,3 +64,9 @@ var allMessages = map[malphas.Locale]messages{
 func msg(ctx context.Context) messages { return allMessages[malphas.LocaleFrom(ctx)] }
 
 func itoa(n int) string { return strconv.Itoa(n) }
+
+// unreadFormsJSON hands the jump button's plural forms to the script.
+func unreadFormsJSON(ctx context.Context) string {
+	b, _ := json.Marshal(msg(ctx).Unread)
+	return string(b)
+}

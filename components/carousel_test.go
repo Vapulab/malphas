@@ -34,13 +34,13 @@ func TestCarouselIsKeyboardReachable(t *testing.T) {
 // Position has to be announced, not just visible.
 func TestCarouselSlidesAreLabelled(t *testing.T) {
 	html := renderToString(t, components.Carousel(carouselFixture()))
-	if !strings.Contains(html, `aria-roledescription="carrossel"`) {
+	if !strings.Contains(html, `aria-roledescription="carousel"`) {
 		t.Errorf("expected the carousel role description, got: %s", html)
 	}
 	if strings.Count(html, `aria-roledescription="slide"`) != 3 {
 		t.Errorf("expected 3 labelled slides, got: %s", html)
 	}
-	for _, want := range []string{"1 de 3", "2 de 3", "3 de 3"} {
+	for _, want := range []string{"1 of 3", "2 of 3", "3 of 3"} {
 		if !strings.Contains(html, want) {
 			t.Errorf("expected position %q announced, got: %s", want, html)
 		}
@@ -50,7 +50,7 @@ func TestCarouselSlidesAreLabelled(t *testing.T) {
 // Glyph-only buttons read as punctuation.
 func TestCarouselButtonsHaveText(t *testing.T) {
 	html := renderToString(t, components.Carousel(carouselFixture()))
-	if !strings.Contains(html, "Anterior") || !strings.Contains(html, "Próximo") {
+	if !strings.Contains(html, "Previous") || !strings.Contains(html, "Next") {
 		t.Errorf("expected text on the controls, got: %s", html)
 	}
 }

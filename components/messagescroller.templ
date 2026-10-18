@@ -65,8 +65,8 @@ templ MessageScroller(props MessageScrollerProps) {
 			class="absolute bottom-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-medium text-fg shadow-lg hover:bg-muted/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 		>
 			<span aria-hidden="true">&#8595;</span>
-			Ir para o fim
-			<span x-show="unread > 0" style="display:none" x-text="'(' + unread + (unread === 1 ? ' nova)' : ' novas)')" class="text-primary"></span>
+			{ msg(ctx).JumpToEnd }
+			<span x-show="unread > 0" style="display:none" x-text="unreadLabel()" data-unread-forms={ unreadFormsJSON(ctx) } class="text-primary"></span>
 		</button>
 	</div>
 }

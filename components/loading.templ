@@ -4,7 +4,7 @@ type LoadingProps struct {
 	Kind    string // spinner | dots | bars (default spinner)
 	Size    string // sm | md | lg (default md)
 	Variant string // primary | muted | fg (default primary)
-	Label   string // announced text (default "Carregando")
+	Label   string // announced text (default: "Loading" in the request's language)
 	Attrs   templ.Attributes
 }
 
@@ -57,6 +57,6 @@ templ Loading(props LoadingProps) {
 			default:
 				<span class={ "inline-block animate-spin rounded-full border-current border-r-transparent", props.spinnerSize() }></span>
 		}
-		<span class="sr-only">{ or(props.Label, "Carregando") }</span>
+		<span class="sr-only">{ or(props.Label, msg(ctx).Loading) }</span>
 	</span>
 }

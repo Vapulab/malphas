@@ -180,7 +180,7 @@ func TestDataTablePaginatesAndKeepsKeyboardPlace(t *testing.T) {
 	ctx := openPage(t, "/components/data-table")
 	first := eval[string](t, ctx, dtFirstRow)
 
-	click(t, ctx, `#dt-protocolos-region nav a[aria-label="Página 2"]`)
+	click(t, ctx, `#dt-protocolos-region nav a[aria-label="Page 2"]`)
 	sleep(t, ctx, 500)
 	if got := eval[string](t, ctx, `document.querySelector('#dt-protocolos-region [aria-current="page"]').textContent.trim()`); got != "2" {
 		t.Errorf("aria-current should be on page 2, is on %q", got)
@@ -236,7 +236,7 @@ func TestQuestionnaireAdvancesAndBranches(t *testing.T) {
 	if got := eval[string](t, ctx, qnTitle); got != "Qual o objetivo do próximo experimento?" {
 		t.Errorf("\"Não\" should skip the areas question, shows %q", got)
 	}
-	if got := eval[string](t, ctx, `document.querySelector('#qn-demo p.text-xs').textContent`); got != "Pergunta 2 de 3" {
+	if got := eval[string](t, ctx, `document.querySelector('#qn-demo p.text-xs').textContent`); got != "Question 2 of 3" {
 		t.Errorf("progress should count the shorter path: %q", got)
 	}
 }
@@ -276,7 +276,7 @@ func TestQuestionnaireDigitInTextAnswerIsText(t *testing.T) {
 func TestQuestionnaireResumesAndFinishes(t *testing.T) {
 	ctx := openPage(t, "/components/questionnaire?retomar=1")
 
-	if got := eval[string](t, ctx, `document.querySelector('#qn-demo p.text-xs').textContent`); got != "Pergunta 3 de 4" {
+	if got := eval[string](t, ctx, `document.querySelector('#qn-demo p.text-xs').textContent`); got != "Question 3 of 4" {
 		t.Fatalf("resume should open at question 3 of 4, shows %q", got)
 	}
 	click(t, ctx, `#qn-demo button[value="skip"]`)

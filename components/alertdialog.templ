@@ -6,8 +6,8 @@ type AlertDialogProps struct {
 	ID           string
 	Title        string
 	Description  string
-	ConfirmLabel string           // default "Confirmar"
-	CancelLabel  string           // default "Cancelar"
+	ConfirmLabel string           // default: "Confirm" in the request's language
+	CancelLabel  string           // default: "Cancel" in the request's language
 	Variant      string           // confirm button variant: danger | primary (default danger)
 	ConfirmAttrs templ.Attributes // on the confirm button: hx-delete, x-on:click…
 	Attrs        templ.Attributes
@@ -70,10 +70,10 @@ templ AlertDialog(props AlertDialogProps) {
 						x-on:click="if ($event.target.closest('[data-alert-close]')) closeOverlay()"
 					>
 						@Button(ButtonProps{Variant: "secondary", Attrs: templ.Attributes{"data-alert-close": true}}) {
-							{ or(props.CancelLabel, "Cancelar") }
+							{ or(props.CancelLabel, msg(ctx).Cancel) }
 						}
 						@Button(ButtonProps{Variant: or(props.Variant, "danger"), Attrs: props.confirmAttrs()}) {
-							{ or(props.ConfirmLabel, "Confirmar") }
+							{ or(props.ConfirmLabel, msg(ctx).Confirm) }
 						}
 					</div>
 				</div>

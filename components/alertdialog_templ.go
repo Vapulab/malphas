@@ -14,8 +14,8 @@ type AlertDialogProps struct {
 	ID           string
 	Title        string
 	Description  string
-	ConfirmLabel string           // default "Confirmar"
-	CancelLabel  string           // default "Cancelar"
+	ConfirmLabel string           // default: "Confirm" in the request's language
+	CancelLabel  string           // default: "Cancel" in the request's language
 	Variant      string           // confirm button variant: danger | primary (default danger)
 	ConfirmAttrs templ.Attributes // on the confirm button: hx-delete, x-on:click…
 	Attrs        templ.Attributes
@@ -188,9 +188,9 @@ func AlertDialog(props AlertDialogProps) templ.Component {
 			}
 			ctx = templ.InitializeContext(ctx)
 			var templ_7745c5c3_Var10 string
-			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(or(props.CancelLabel, "Cancelar"))
+			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(or(props.CancelLabel, msg(ctx).Cancel))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/alertdialog.templ`, Line: 73, Col: 42}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/alertdialog.templ`, Line: 73, Col: 47}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -215,9 +215,9 @@ func AlertDialog(props AlertDialogProps) templ.Component {
 			}
 			ctx = templ.InitializeContext(ctx)
 			var templ_7745c5c3_Var12 string
-			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(or(props.ConfirmLabel, "Confirmar"))
+			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(or(props.ConfirmLabel, msg(ctx).Confirm))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/alertdialog.templ`, Line: 76, Col: 44}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/alertdialog.templ`, Line: 76, Col: 49}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {

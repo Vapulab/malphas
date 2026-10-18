@@ -135,7 +135,7 @@ func TestAlertDialogFocusStartsOnCancel(t *testing.T) {
 	if !eval[bool](t, ctx, adOpen) {
 		t.Fatal("the alert dialog did not open")
 	}
-	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Cancelar" {
+	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Cancel" {
 		t.Errorf("initial focus is on %q; it must be on the safe choice", got)
 	}
 }
@@ -357,7 +357,7 @@ func TestMenubarItemRunsAndCloses(t *testing.T) {
 
 // --- Command ----------------------------------------------------------------
 
-const cmdOpen = `!!document.querySelector('[aria-label="Paleta de comandos"]')`
+const cmdOpen = `!!document.querySelector('[aria-label="Command palette"]')`
 const cmdVisibleOptions = `[...document.querySelectorAll('[role="listbox"] [role="option"]')].filter(o => getComputedStyle(o).display !== 'none').map(o => o.dataset.label)`
 
 // pressEnterNative sends Enter as one keyDown carrying its text, which is what

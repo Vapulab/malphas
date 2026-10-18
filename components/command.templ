@@ -18,7 +18,7 @@ type CommandGroup struct {
 type CommandProps struct {
 	ID          string
 	Placeholder string
-	Empty       string // shown when nothing matches (default "Nenhum resultado")
+	Empty       string // shown when nothing matches (default: "No results" in the request's language)
 	Groups      []CommandGroup
 	Hotkey      bool // open and close with Ctrl+K / ⌘K
 	Attrs       templ.Attributes
@@ -79,7 +79,7 @@ templ Command(props CommandProps) {
 					x-ref="panel"
 					role="dialog"
 					aria-modal="true"
-					aria-label="Paleta de comandos"
+					aria-label={ msg(ctx).CommandPalette }
 					tabindex="-1"
 					x-on:keydown.tab="onTab($event)"
 					class="relative z-10 w-full max-w-lg overflow-hidden rounded border border-border bg-surface shadow-lg focus:outline-none"
@@ -101,7 +101,7 @@ templ Command(props CommandProps) {
 					<div
 						id={ props.listboxID() }
 						role="listbox"
-						aria-label="Comandos"
+						aria-label={ msg(ctx).Commands }
 						x-show="hasMatches()"
 						class="max-h-80 overflow-y-auto [scrollbar-width:thin] p-2"
 					>
@@ -148,7 +148,7 @@ templ Command(props CommandProps) {
 						}
 					</div>
 					<p x-show="!hasMatches()" class="px-4 py-8 text-center text-sm text-muted" aria-live="polite">
-						{ or(props.Empty, "Nenhum resultado") }
+						{ or(props.Empty, msg(ctx).NoResults) }
 					</p>
 				</div>
 			</div>

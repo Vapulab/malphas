@@ -51,7 +51,7 @@ func TestBubbleReactionsAreLabelled(t *testing.T) {
 	}), templ.Raw("x"))
 	// The meaning is real text (sr-only), not an aria-label on a list item,
 	// which NVDA and JAWS do not reliably read in browse mode.
-	for _, want := range []string{`aria-label="Reações"`, `<span class="sr-only">Curtir: 3</span>`, `aria-hidden="true">👍`} {
+	for _, want := range []string{`aria-label="Reactions"`, `<span class="sr-only">Curtir: 3</span>`, `aria-hidden="true">👍`} {
 		if !strings.Contains(html, want) {
 			t.Errorf("missing %s in: %s", want, html)
 		}
@@ -127,7 +127,7 @@ func TestMessageScrollerIsALog(t *testing.T) {
 		`id="chat-content"`,
 		`x-data="messageScroller"`,
 		"[overflow-anchor:none]",
-		"Ir para o fim",
+		"Jump to the end",
 		`style="display:none"`,
 	} {
 		if !strings.Contains(html, want) {

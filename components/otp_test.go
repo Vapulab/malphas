@@ -37,7 +37,7 @@ func TestOTPOffersTheSMSCode(t *testing.T) {
 // Six unlabelled boxes are six anonymous fields to a screen reader.
 func TestOTPBoxesAreLabelled(t *testing.T) {
 	html := renderToString(t, components.OTP(components.OTPProps{Name: "codigo", Length: 3}))
-	for _, want := range []string{"Dígito 1 de 3", "Dígito 2 de 3", "Dígito 3 de 3"} {
+	for _, want := range []string{"Digit 1 of 3", "Digit 2 of 3", "Digit 3 of 3"} {
 		if !strings.Contains(html, want) {
 			t.Errorf("expected %q, got: %s", want, html)
 		}

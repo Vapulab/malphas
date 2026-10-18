@@ -17,6 +17,7 @@ var messagesEN = messages{
 	OpenMenu: "Open menu", SideMenu: "Sidebar", Menu: "Menu", Rating: "Rating",
 
 	QuestionnaireProgress: "Questionnaire progress", QuestionnaireNext: "Next", QuestionnaireBack: "Back",
+	QuestionnaireFinish: "Finish", QuestionnaireSkip: "Skip",
 
 	StatusOnline: "Online", StatusOffline: "Offline", StatusBusy: "Busy",
 

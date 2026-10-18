@@ -42,7 +42,7 @@ templ Modal(props ModalProps) {
 						<h2 id={ props.titleID() } class="text-lg font-semibold text-fg">{ props.Title }</h2>
 						<button
 							type="button"
-							aria-label="Fechar"
+							aria-label={ msg(ctx).Close }
 							class="rounded text-muted hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
 							x-on:click="closeOverlay()"
 						>&times;</button>

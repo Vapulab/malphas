@@ -20,19 +20,19 @@ func TestAlertOverModalIsClickable(t *testing.T) {
 	if eval[bool](t, ctx, `!!document.querySelector('`+alert+`').closest('[inert]')`) {
 		t.Fatal("the confirmation sits inside an inert ancestor")
 	}
-	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Cancelar" {
-		t.Errorf("focus should start on Cancelar, is on %q", got)
+	if got := eval[string](t, ctx, `document.activeElement.textContent.trim()`); got != "Cancel" {
+		t.Errorf("focus should start on Cancel, is on %q", got)
 	}
 
 	click(t, ctx, alert+` button[data-alert-close]`)
 	settle(t, ctx)
 	if eval[bool](t, ctx, `!!document.querySelector('`+alert+`')`) {
-		t.Fatal("clicking Cancelar did not close the confirmation")
+		t.Fatal("clicking Cancel did not close the confirmation")
 	}
 	if eval[bool](t, ctx, `!!document.querySelector('`+modal+`').closest('[inert]')`) {
 		t.Fatal("the modal underneath was left inert")
 	}
-	click(t, ctx, modal+` [aria-label="Fechar"]`)
+	click(t, ctx, modal+` [aria-label="Close"]`)
 	settle(t, ctx)
 	if eval[bool](t, ctx, `!!document.querySelector('`+modal+`')`) {
 		t.Error("the modal's close button did not close it")
@@ -51,7 +51,7 @@ func TestScrollContainersUseTheThemedScrollbar(t *testing.T) {
 	for _, sel := range []string{
 		`[role="dialog"][aria-labelledby="modal-popover-title"]`, // Modal panel
 		`#chat-demo-content`, // Message Scroller viewport (its parent)
-		`[aria-roledescription="carrossel"] [tabindex="0"]`, // Carousel track
+		`[aria-roledescription="carousel"] [tabindex="0"]`, // Carousel track
 	} {
 		style := eval[string](t, ctx, `(el => { const s = getComputedStyle(el.id === 'chat-demo-content' ? el.parentElement : el); return s.scrollbarWidth + '|' + s.scrollbarColor })(document.querySelector('`+sel+`'))`)
 		if !strings.HasPrefix(style, "thin|") || strings.HasSuffix(style, "|auto") {
