@@ -1,4 +1,6 @@
 /** Malphas design-system Tailwind preset. Import from a project's tailwind.config.js. */
+const fs = require("fs");
+const path = require("path");
 const rgb = (v) => `rgb(var(${v}) / <alpha-value>)`;
 
 // Semantic colors pair a background with a readable foreground: bg-success +
@@ -40,4 +42,13 @@ module.exports = {
       },
     },
   },
+
+  // tokens.css goes out through the preset, in the base layer. A consumer
+  // gets the module from Go's cache, at a path that changes per version and
+  // per machine; a static @import in their CSS could not point at it, and
+  // postcss-import resolves @import before Tailwind loads any config.
+  plugins: [
+    ({ addBase, postcss }) =>
+      addBase(postcss.parse(fs.readFileSync(path.join(__dirname, "tokens.css"), "utf8")).nodes),
+  ],
 };

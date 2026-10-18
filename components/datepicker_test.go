@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/a-h/templ"
-	"github.com/vapulab/vapulab/malphas/components"
+	"github.com/vapulab/malphas/components"
 )
 
 // The platform picker is the point: on a phone it is the system's own wheel or

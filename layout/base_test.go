@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/vapulab/vapulab/malphas"
-	"github.com/vapulab/vapulab/malphas/layout"
+	"github.com/vapulab/malphas"
+	"github.com/vapulab/malphas/layout"
 )
 
 func renderBase(t *testing.T, props layout.BaseProps) string {

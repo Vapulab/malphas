@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/vapulab/vapulab/malphas/components"
+	"github.com/vapulab/malphas/components"
 )
 
 // Each fill pairs with its own foreground token. A hardcoded text-white was

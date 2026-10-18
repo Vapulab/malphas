@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/vapulab/vapulab/malphas/components"
+	"github.com/vapulab/malphas/components"
 )
 
 func TestProgressUsesNativeElementWithValue(t *testing.T) {

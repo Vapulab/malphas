@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/vapulab/vapulab/malphas/components"
+	"github.com/vapulab/malphas/components"
 )
 
 func toggleGroupFixture() components.ToggleGroupProps {

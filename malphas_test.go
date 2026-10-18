@@ -4,7 +4,7 @@ import (
 	"io/fs"
 	"testing"
 
-	"github.com/vapulab/vapulab/malphas"
+	"github.com/vapulab/malphas"
 )
 
 func TestAssetsContainsFavicon(t *testing.T) {
