@@ -1,0 +1,50 @@
+package showcase
+
+import "github.com/vapulab/malphas/components"
+
+templ demoButtonVariants() {
+	<div class="flex flex-wrap items-center gap-3">
+		@components.Button(components.ButtonProps{Variant: "primary"}) {
+			Primary
+		}
+		@components.Button(components.ButtonProps{Variant: "secondary"}) {
+			Secondary
+		}
+		@components.Button(components.ButtonProps{Variant: "danger"}) {
+			Danger
+		}
+	</div>
+}
+
+templ demoButtonSizes() {
+	<div class="flex flex-wrap items-center gap-3">
+		@components.Button(components.ButtonProps{Size: "sm"}) {
+			Small
+		}
+		@components.Button(components.ButtonProps{Size: "md"}) {
+			Medium
+		}
+		@components.Button(components.ButtonProps{Size: "lg"}) {
+			Large
+		}
+	</div>
+}
+
+templ demoButtonDisabled() {
+	@components.Button(components.ButtonProps{Attrs: templ.Attributes{"disabled": true}}) {
+		Indisponível
+	}
+}
+
+// The trigger needs an x-data ancestor: Alpine only processes directives — and
+// only provides magics like $dispatch — inside an Alpine component tree.
+templ demoModal() {
+	<div x-data>
+		@components.Button(components.ButtonProps{Attrs: templ.Attributes{"x-on:click": "$dispatch('open-modal', 'demo-modal')"}}) {
+			Abrir modal
+		}
+	</div>
+	@components.Modal(components.ModalProps{ID: "demo-modal", Title: "Confirmar ação"}) {
+		<p class="text-fg">Feche com Escape, com o botão × ou clicando no fundo.</p>
+	}
+}

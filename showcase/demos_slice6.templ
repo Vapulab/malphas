@@ -1,0 +1,144 @@
+package showcase
+
+import (
+	"math"
+	"time"
+
+	"github.com/vapulab/malphas/components"
+)
+
+templ demoDatePicker() {
+	{{ f := components.FieldProps{ID: "dp-entrega", Label: "Entrega do relatório", Description: "Entre hoje e o fim do ano.", Required: true} }}
+	<div class="flex max-w-xs flex-col gap-6">
+		@components.Field(f) {
+			@components.DatePicker(components.DatePickerProps{
+				ID: f.ID, Name: "entrega", Min: "2026-10-10", Max: "2026-12-31", Attrs: f.ControlAttrs(),
+			})
+		}
+		@components.DatePicker(components.DatePickerProps{ID: "dp-off", Name: "off", Label: "Início (bloqueado)", Value: "2026-10-01", Disabled: true})
+	</div>
+}
+
+// The demo reads its state from the page's own query string — the same URL
+// the calendar's navigation fetches — so the month links work with and
+// without JavaScript.
+templ demoCalendar() {
+	// One clock for both "today" and the default month, so the month shown
+	// always contains today.
+	{{ now := time.Now() }}
+	{{ today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC) }}
+	{{ month := QueryDate(ctx, "mes", today) }}
+	{{ focus := QueryDate(ctx, "foco", time.Time{}) }}
+	<div class="flex flex-col gap-6">
+		<p class="text-sm text-muted">
+			Setas andam por dia e semana, Home/End vão aos extremos da semana,
+			PageUp/PageDown trocam o mês (com Shift, o ano). Andar além do mês carrega
+			o mês vizinho e mantém o foco no dia. Enter ou Espaço escolhem.
+		</p>
+		<div class="flex flex-wrap items-start gap-6">
+			<div class="flex flex-col gap-2">
+				<p class="text-sm font-medium text-fg">Entrega (a partir de 5/10/2026)</p>
+				@components.Calendar(components.CalendarProps{
+					ID: "cal-entrega", Month: month, Name: "entrega", Focus: focus, Today: today,
+					Selected: QueryDate(ctx, "entrega", time.Time{}),
+					Min:      time.Date(2026, 10, 5, 0, 0, 0, 0, time.UTC),
+					NavURL:   "/components/calendar",
+				})
+			</div>
+			<div class="flex flex-col gap-2">
+				<p class="text-sm font-medium text-fg">Período do experimento</p>
+				@components.Calendar(components.CalendarProps{
+					ID: "cal-periodo", Month: month, Mode: "range", Focus: focus, Today: today,
+					StartName: "inicio", EndName: "fim",
+					Start:     QueryDate(ctx, "inicio", time.Time{}),
+					End:       QueryDate(ctx, "fim", time.Time{}),
+					NavURL:    "/components/calendar",
+				})
+			</div>
+		</div>
+	</div>
+}
+
+// Same trick as the Calendar: the table's URL is this page, so each sort,
+// search and page request is answered by rendering the page with the new
+// query, and the component's hx-select keeps only its region.
+templ demoDataTable() {
+	{{ r := DemoProtocols(QueryString(ctx, "sort", "nome"), QueryString(ctx, "dir", "asc"), QueryString(ctx, "q", ""), QueryInt(ctx, "page", 1, 1, math.MaxInt), 8) }}
+	@components.DataTable(components.DataTableProps{
+		ID: "dt-protocolos", URL: "/components/data-table",
+		Columns: []components.DataTableColumn{
+			{Key: "nome", Label: "Protocolo", Sortable: true},
+			{Key: "area", Label: "Área", Sortable: true},
+			{Key: "responsavel", Label: "Responsável", Sortable: true},
+			{Key: "etapas", Label: "Etapas", Sortable: true, Align: "end"},
+		},
+		Sort: r.Sort, Dir: r.Dir, Query: QueryString(ctx, "q", ""),
+		Page: r.Page, TotalPages: r.TotalPages, Total: r.Total,
+		Searchable: true, SearchLabel: "Buscar protocolos", SearchPlaceholder: "Buscar por protocolo, área ou pessoa…",
+		Empty: "Nenhum protocolo encontrado.",
+	}) {
+		for _, row := range r.Rows {
+			<tr>
+				@components.TD(components.TDProps{}) {
+					{ row.Nome }
+				}
+				@components.TD(components.TDProps{}) {
+					{ row.Area }
+				}
+				@components.TD(components.TDProps{}) {
+					{ row.Responsavel }
+				}
+				@components.TD(components.TDProps{Class: "text-right tabular-nums"}) {
+					{ intToString(row.Etapas) }
+				}
+			</tr>
+		}
+	}
+}
+
+const questionnaireAction = "/components/questionnaire/responder"
+
+templ demoQuestionnaire() {
+	<div class="flex flex-col gap-4">
+		<p class="text-sm text-muted">
+			Teclas 1–9 escolhem; Enter avança. "Não" na primeira pergunta pula a das áreas.
+			<a href="/components/questionnaire?retomar=1" class="text-primary underline">Retomar respostas salvas</a>
+		</p>
+		@QuestionnaireView(questionnaireFrom(ctx), false)
+	</div>
+}
+
+// QuestionnaireView is both the demo's first render and every response from
+// the questionnaire handler, so a step always swaps into the same id.
+templ QuestionnaireView(s QuestionnaireState, focus bool) {
+	if s.Done {
+		<section
+			id="qn-demo"
+			tabindex="-1"
+			if focus {
+				x-data
+				x-init="$el.focus()"
+			}
+			class="flex max-w-lg flex-col gap-4 rounded border border-border bg-surface p-6 focus:outline-none"
+		>
+			<h2 class="text-lg font-semibold text-fg">Respostas enviadas</h2>
+			<dl class="flex flex-col gap-3 text-sm">
+				for _, pair := range QuestionnaireSummary(s.Answers) {
+					<div>
+						<dt class="text-muted">{ pair[0] }</dt>
+						<dd class="font-medium text-fg">{ pair[1] }</dd>
+					</div>
+				}
+			</dl>
+			@components.Link(components.LinkProps{Href: "/components/questionnaire"}) {
+				Recomeçar
+			}
+		</section>
+	} else {
+		@components.Questionnaire(components.QuestionnaireProps{
+			ID: "qn-demo", Action: questionnaireAction,
+			Step: s.Step, Total: s.Total, Question: s.Question, Answers: s.Answers,
+			Error: s.Error, FocusTitle: focus,
+		})
+	}
+}

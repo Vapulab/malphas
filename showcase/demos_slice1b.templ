@@ -1,0 +1,69 @@
+package showcase
+
+import "github.com/vapulab/malphas/components"
+
+templ demoLoadingKinds() {
+	<div class="flex flex-wrap items-center gap-8">
+		@components.Loading(components.LoadingProps{Kind: "spinner"})
+		@components.Loading(components.LoadingProps{Kind: "dots"})
+		@components.Loading(components.LoadingProps{Kind: "bars"})
+	</div>
+}
+
+templ demoLoadingSizes() {
+	<div class="flex flex-wrap items-center gap-8">
+		@components.Loading(components.LoadingProps{Size: "sm"})
+		@components.Loading(components.LoadingProps{Size: "md"})
+		@components.Loading(components.LoadingProps{Size: "lg", Variant: "muted"})
+	</div>
+}
+
+templ demoProgress() {
+	<div class="flex max-w-md flex-col gap-4">
+		@components.Progress(components.ProgressProps{Value: 25})
+		@components.Progress(components.ProgressProps{Value: 60, Variant: "success"})
+		@components.Progress(components.ProgressProps{Value: 85, Variant: "warning"})
+		@components.Progress(components.ProgressProps{Value: 3, Max: 5, Variant: "danger"})
+	</div>
+}
+
+templ demoProgressIndeterminate() {
+	<div class="max-w-md">
+		@components.Progress(components.ProgressProps{Indeterminate: true})
+	</div>
+}
+
+templ demoSkeleton() {
+	<div class="flex max-w-md items-center gap-4">
+		@components.Skeleton(components.SkeletonProps{Class: "size-12 rounded-full"})
+		<div class="flex-1 space-y-2">
+			@components.Skeleton(components.SkeletonProps{Class: "h-4 w-2/3"})
+			@components.Skeleton(components.SkeletonProps{Class: "h-4 w-1/3"})
+		</div>
+	</div>
+}
+
+templ demoStat() {
+	<dl class="grid gap-4 sm:grid-cols-3">
+		@components.Stat(components.StatProps{Title: "Receita", Value: "R$ 12.400", Description: "+12% no mês"})
+		@components.Stat(components.StatProps{Title: "Assinantes", Value: "1.284", Description: "+3% no mês", Variant: "success"})
+		@components.Stat(components.StatProps{Title: "Falhas", Value: "3", Description: "últimas 24h", Variant: "danger"})
+	</dl>
+}
+
+templ demoAvatar() {
+	<div class="flex flex-wrap items-center gap-4">
+		@components.Avatar(components.AvatarProps{Initials: "LS", Size: "sm"})
+		@components.Avatar(components.AvatarProps{Initials: "LS"})
+		@components.Avatar(components.AvatarProps{Initials: "LS", Size: "lg"})
+		@components.Avatar(components.AvatarProps{Initials: "VP", Shape: "square"})
+	</div>
+}
+
+templ demoAvatarStatus() {
+	<div class="flex flex-wrap items-center gap-4">
+		@components.Avatar(components.AvatarProps{Initials: "ON", Status: "online"})
+		@components.Avatar(components.AvatarProps{Initials: "OF", Status: "offline"})
+		@components.Avatar(components.AvatarProps{Initials: "BU", Status: "busy"})
+	</div>
+}

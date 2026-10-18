@@ -1,0 +1,199 @@
+package showcase
+
+import "github.com/vapulab/malphas/components"
+
+templ demoLabel() {
+	<div class="flex flex-col gap-2">
+		@components.Label(components.LabelProps{For: "l-nome"}) {
+			Nome
+		}
+		@components.Label(components.LabelProps{For: "l-email", Required: true}) {
+			Email
+		}
+	</div>
+}
+
+templ demoField() {
+	{{ ok := components.FieldProps{ID: "f-email", Label: "Email", Description: "Usado para entrar na conta.", Required: true} }}
+	{{ bad := components.FieldProps{ID: "f-site", Label: "Site", Description: "Comece com https://", Error: "Endereço inválido."} }}
+	<div class="flex max-w-sm flex-col gap-6">
+		@components.Field(ok) {
+			@components.Input(components.InputProps{ID: ok.ID, Name: "email", Type: "email", Attrs: ok.ControlAttrs()})
+		}
+		@components.Field(bad) {
+			@components.Input(components.InputProps{ID: bad.ID, Name: "site", Value: "vapulab", Attrs: bad.ControlAttrs()})
+		}
+	</div>
+}
+
+templ demoTextarea() {
+	<form class="flex max-w-md flex-col gap-6" x-on:submit.prevent>
+		@components.Textarea(components.TextareaProps{
+			ID: "ta-bio", Name: "bio", Label: "Bio", MaxLength: 160,
+			Placeholder: "Conte em poucas palavras quem você é.",
+		})
+		// A saved value that starts with a blank line: the parser drops one
+		// newline after <textarea>, and the component pads for it.
+		@components.Textarea(components.TextareaProps{
+			ID: "ta-nota", Name: "nota", Label: "Nota salva", Rows: 3,
+			Value: "\nComeça com uma linha em branco.",
+		})
+		@components.Textarea(components.TextareaProps{
+			ID: "ta-off", Name: "off", Label: "Observações", Value: "Campo bloqueado.", Disabled: true,
+		})
+		<div>
+			@components.Button(components.ButtonProps{Variant: "secondary", Type: "reset"}) {
+				Limpar
+			}
+		</div>
+	</form>
+}
+
+templ demoInputGroup() {
+	<div class="flex max-w-sm flex-col gap-6">
+		@components.InputGroup(components.InputGroupProps{
+			ID: "ig-preco", Name: "preco", Label: "Preço",
+			Prefix: components.InputGroupText("R$"),
+			Attrs:  templ.Attributes{"inputmode": "decimal"},
+		})
+		@components.InputGroup(components.InputGroupProps{
+			ID: "ig-usuario", Name: "usuario", Label: "Email corporativo",
+			Suffix: components.InputGroupText("@vapulab.com"),
+		})
+		@components.InputGroup(components.InputGroupProps{
+			ID: "ig-busca", Name: "q", Label: "Busca", Type: "search", Placeholder: "Buscar componentes…",
+			Suffix: demoInputGroupButton(),
+		})
+	</div>
+}
+
+templ demoInputGroupButton() {
+	<button type="button" class="h-full px-3 text-sm font-medium text-primary hover:bg-muted/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/50">Buscar</button>
+}
+
+templ demoToggleButton() {
+	<form class="flex flex-wrap items-center gap-2" x-on:submit.prevent>
+		@components.ToggleButton(components.ToggleButtonProps{ID: "tb-fav", Name: "favorito", Label: "Favorito"}) {
+			<span aria-hidden="true">&#9733;</span>
+		}
+		@components.ToggleButton(components.ToggleButtonProps{ID: "tb-bold", Name: "negrito", Pressed: true, Label: "Negrito"}) {
+			<span aria-hidden="true" class="font-bold">B</span>
+		}
+		@components.ToggleButton(components.ToggleButtonProps{ID: "tb-off", Name: "bloqueado", Pressed: true, Disabled: true}) {
+			Bloqueado
+		}
+	</form>
+}
+
+templ demoToggleGroup() {
+	<form class="flex flex-col gap-4" x-on:submit.prevent>
+		<p class="text-sm text-muted">
+			Tab entra no grupo pelo item pressionado; ← → ↑ ↓ andam entre os itens sem
+			mudar o que está pressionado. Espaço ou Enter alternam.
+		</p>
+		@components.ToggleGroup(components.ToggleGroupProps{
+			Name: "alinhamento", Label: "Alinhamento",
+			Items: []components.ToggleGroupItem{
+				{Label: "Esquerda", Value: "esq"},
+				{Label: "Centro", Value: "centro"},
+				{Label: "Direita", Value: "dir"},
+			},
+			Value: []string{"centro"},
+		})
+		@components.ToggleGroup(components.ToggleGroupProps{
+			Name: "formato", Label: "Formatação", Type: "multiple",
+			Items: []components.ToggleGroupItem{
+				{Label: "Negrito", Value: "negrito"},
+				{Label: "Itálico", Value: "italico"},
+				{Label: "Sublinhado", Value: "sublinhado", Disabled: true},
+				{Label: "Tachado", Value: "tachado"},
+			},
+			Value: []string{"italico"},
+		})
+	</form>
+}
+
+templ demoAspectRatio() {
+	<div class="grid max-w-xl grid-cols-2 gap-4">
+		@components.AspectRatio(components.AspectRatioProps{Ratio: "16/9"}) {
+			<div class="flex items-center justify-center bg-primary/10 text-sm text-primary">16/9</div>
+		}
+		@components.AspectRatio(components.AspectRatioProps{Ratio: "1/1"}) {
+			<div class="flex items-center justify-center bg-muted/10 text-sm text-muted">1/1</div>
+		}
+	</div>
+}
+
+templ demoScrollArea() {
+	<div class="flex max-w-md flex-col gap-6">
+		@components.ScrollArea(components.ScrollAreaProps{Label: "Termos de uso", Class: "max-h-48 border border-border"}) {
+			<div id="sa-termos" class="flex flex-col gap-3 p-4 text-sm text-fg">
+				for i := 1; i <= 12; i++ {
+					<p>Cláusula { intToString(i) }: o uso do serviço implica a aceitação destes termos, que podem mudar com aviso prévio.</p>
+				}
+			</div>
+		}
+		@components.ScrollArea(components.ScrollAreaProps{Label: "Tags", Horizontal: true, Class: "border border-border"}) {
+			<div class="flex w-max gap-2 p-3">
+				for _, tag := range []string{"templ", "htmx", "alpine", "tailwind", "postgres", "chromedp", "sqlc", "goose", "air", "cloudflare"} {
+					@components.Badge(components.BadgeProps{Variant: "primary", Outline: true}) {
+						{ tag }
+					}
+				}
+			</div>
+		}
+	</div>
+}
+
+templ demoEmpty() {
+	@components.Empty(components.EmptyProps{
+		Title:       "Nenhum projeto ainda",
+		Description: "Projetos guardam seus protocolos e resultados. Crie o primeiro para começar.",
+		Icon:        templ.Raw("&#9671;"),
+	}) {
+		@components.Button(components.ButtonProps{}) {
+			Novo projeto
+		}
+	}
+}
+
+templ demoItemAction() {
+	<button
+		type="button"
+		id="item-baixar"
+		x-data
+		x-on:click="$el.textContent = 'Baixado'"
+		class="rounded px-2 py-1 text-sm font-medium text-primary hover:bg-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+	>Baixar</button>
+}
+
+templ demoItem() {
+	<div class="flex max-w-lg flex-col gap-6">
+		@components.Item(components.ItemProps{
+			Title: "Relatório trimestral", Description: "PDF · 2,4 MB · atualizado ontem",
+			Href: "/components/item", Variant: "outline",
+			Media:   components.Avatar(components.AvatarProps{Initials: "RT"}),
+			Actions: demoItemAction(),
+		})
+		@components.ItemGroup(components.ItemGroupProps{
+			Label: "Arquivos recentes",
+			Items: []components.ItemProps{
+				{Title: "protocolo-v2.pdf", Description: "Enviado por Lincoln", Size: "sm"},
+				{Title: "resultados.csv", Description: "Gerado automaticamente", Size: "sm"},
+			},
+		})
+	</div>
+}
+
+templ demoProse() {
+	@components.Prose(components.ProseProps{}) {
+		<h2>Como funciona o protocolo</h2>
+		<p>O vapulab registra cada etapa do experimento. Veja a <a href="/components">lista de componentes</a> para montar a sua tela.</p>
+		<ul>
+			<li>Planeje as etapas</li>
+			<li>Execute e <strong>anote</strong> os desvios</li>
+		</ul>
+		<blockquote>Medir duas vezes, cortar uma.</blockquote>
+		<p>Rode <code>task dev</code> para subir tudo localmente.</p>
+	}
+}

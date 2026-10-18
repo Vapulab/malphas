@@ -1,0 +1,162 @@
+package showcase
+
+import "github.com/vapulab/malphas/components"
+
+templ demoDropdown() {
+	<div class="flex flex-col gap-3">
+		<p class="text-sm text-muted">
+			Abra e navegue com ↓ ↑. Escape fecha e devolve o foco ao gatilho.
+			Tab também fecha, mas segue o fluxo natural da página — um menu não
+			prende o foco.
+		</p>
+		<div class="flex flex-wrap gap-4">
+			@components.Dropdown(components.DropdownProps{
+				ID:    "dd-acoes",
+				Label: "Ações",
+				Entries: []components.MenuEntry{
+					{Label: "Editar", OnClick: "$dispatch('demo-edit')"},
+					{Label: "Duplicar", OnClick: "$dispatch('demo-dup')"},
+					components.MenuDivider(),
+					{Label: "Excluir", OnClick: "$dispatch('demo-del')", Disabled: true},
+				},
+			})
+			@components.Dropdown(components.DropdownProps{
+				ID:       "dd-conta",
+				Label:    "Conta",
+				Variant:  "primary",
+				Position: "bottom-end",
+				Entries: []components.MenuEntry{
+					{Label: "Perfil", Href: "/"},
+					{Label: "Componentes", Href: "/"},
+					components.MenuDivider(),
+					{Label: "Sair", OnClick: "$dispatch('demo-logout')"},
+				},
+			})
+		</div>
+	</div>
+}
+
+templ demoSelect() {
+	<div class="flex max-w-sm flex-col gap-4">
+		@components.Select(components.SelectProps{
+			ID: "s-plano", Name: "plano", Label: "Plano", Value: "pro",
+			Options: []components.SelectOption{
+				{Label: "Grátis", Value: "free"},
+				{Label: "Pro", Value: "pro"},
+				{Label: "Enterprise", Value: "ent", Disabled: true},
+			},
+		})
+		@components.Select(components.SelectProps{
+			ID: "s-pais", Name: "pais", Label: "País", Placeholder: "Escolha…",
+			Options: []components.SelectOption{
+				{Label: "Brasil", Value: "br"},
+				{Label: "Portugal", Value: "pt"},
+			},
+		})
+	</div>
+}
+
+templ demoCombobox() {
+	<div class="flex max-w-sm flex-col gap-4">
+		<p class="text-sm text-muted">
+			Digite para filtrar — sem distinguir acentos, então "sao" acha "São Paulo".
+			↓ ↑ destacam, Enter escolhe, Escape fecha e, de novo, limpa. Texto que não
+			é uma opção volta para a seleção anterior ao sair do campo.
+		</p>
+		@components.Combobox(components.ComboboxProps{
+			ID: "cb-estado", Name: "estado", Label: "Estado", Value: "sp",
+			Placeholder: "Busque um estado…",
+			Options:     demoEstados(),
+		})
+		@components.Combobox(components.ComboboxProps{
+			ID: "cb-plano", Name: "plano", Label: "Plano", Placeholder: "Escolha…",
+			Options: []components.SelectOption{
+				{Label: "Grátis", Value: "free"},
+				{Label: "Pro", Value: "pro"},
+				{Label: "Enterprise", Value: "ent", Disabled: true},
+			},
+		})
+	</div>
+}
+
+templ demoOTP() {
+	<div class="flex flex-col gap-4">
+		<p class="text-sm text-muted">
+			Digite e o foco avança sozinho; backspace num campo vazio volta.
+			Colar o código inteiro preenche tudo de uma vez.
+		</p>
+		@components.OTP(components.OTPProps{Name: "codigo", Label: "Código de verificação"})
+		@components.OTP(components.OTPProps{Name: "pin", Label: "PIN de 4 dígitos", Length: 4})
+	</div>
+}
+
+templ demoCarousel() {
+	<div class="max-w-xl">
+		<p class="mb-3 text-sm text-muted">
+			Dê Tab até a área dos slides e use ← →. O rolar respeita
+			prefers-reduced-motion.
+		</p>
+		@components.Carousel(components.CarouselProps{
+			ID:    "c-demo",
+			Label: "Exemplo",
+			Slides: []templ.Component{
+				carouselSlide("Primeiro", "primary"),
+				carouselSlide("Segundo", "success"),
+				carouselSlide("Terceiro", "warning"),
+			},
+		})
+	</div>
+}
+
+templ carouselSlide(title, variant string) {
+	<div class={ "flex h-40 items-center justify-center rounded text-lg font-semibold", carouselSlideClass(variant) }>
+		{ title }
+	</div>
+}
+
+// Reads the page from the request, so clicking actually moves the marker. A
+// hardcoded Current made the component look broken: the URL changed and the
+// highlight did not.
+templ demoPagination() {
+	<div class="flex flex-col gap-6">
+		<p class="text-sm text-muted">
+			Clique numa página: a URL muda e o marcador acompanha.
+		</p>
+		@paginationExample("page", "")
+	</div>
+}
+
+// Each example moves on its own. Sharing one query parameter meant clicking
+// here scrolled nothing and moved the interactive demo far above — the page
+// looked frozen at the very spot you clicked.
+templ demoPaginationEdges() {
+	<div class="flex flex-col gap-6">
+		<p class="text-sm text-muted">
+			Cada um começa numa ponta e se move sozinho, sem mexer nos outros.
+			Ande com ← → pelas páginas para ver o intervalo colapsar e reabrir.
+		</p>
+		@paginationExample("e1", "curto — cabe inteiro, nunca colapsa")
+		@paginationExample("e2", "longo, começando no início")
+		@paginationExample("e3", "longo, começando no fim")
+	</div>
+}
+
+// The label describes the example, never its current page — that would go stale
+// the moment someone clicks. The position lives in the "X de Y" beside it.
+templ paginationExample(param, label string) {
+	{{ page, total := paginationPage(ctx, param), paginationTotal(param) }}
+	<div class="flex flex-col gap-2">
+		<span class="text-xs uppercase tracking-wide text-muted">
+			if label != "" {
+				{ label } &middot;{ " " }
+			}
+			página { intToString(page) } de { intToString(total) }
+		</span>
+		@components.Pagination(components.PaginationProps{
+			Current:  page,
+			Total:    total,
+			Label:    "Paginação " + param,
+			BaseHref: paginationHref(ctx, param),
+		})
+	</div>
+}

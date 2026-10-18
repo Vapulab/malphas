@@ -1,0 +1,76 @@
+package showcase
+
+import "github.com/vapulab/malphas/components"
+
+templ demoRange() {
+	<div class="flex max-w-md flex-col gap-6">
+		@components.Range(components.RangeProps{ID: "r-vol", Name: "vol", Label: "Volume", Value: 40, ShowValue: true})
+		@components.Range(components.RangeProps{ID: "r-qual", Name: "qual", Label: "Qualidade", Min: 1, Max: 5, Value: 3, ShowValue: true, Variant: "success"})
+		@components.Range(components.RangeProps{ID: "r-off", Name: "off", Label: "Desabilitado", Value: 60, Disabled: true})
+	</div>
+}
+
+templ demoSwap() {
+	<div class="flex items-center gap-4">
+		@components.Swap(components.SwapProps{
+			Label: "Reproduzir ou pausar",
+			On:    swapPauseIcon(),
+			Off:   swapPlayIcon(),
+		})
+		@components.Swap(components.SwapProps{
+			Label:  "Favoritar",
+			Active: true,
+			On:     swapStarOn(),
+			Off:    swapStarOff(),
+		})
+	</div>
+}
+
+templ swapPlayIcon() {
+	<span class="text-lg">&#9654;</span>
+}
+
+templ swapPauseIcon() {
+	<span class="text-lg">&#10074;&#10074;</span>
+}
+
+templ swapStarOn() {
+	<span class="text-lg text-warning">&starf;</span>
+}
+
+templ swapStarOff() {
+	<span class="text-lg text-muted">&star;</span>
+}
+
+templ demoTooltip() {
+	<div class="flex flex-wrap items-center gap-8 py-8">
+		@components.Tooltip(components.TooltipProps{ID: "tip-cima", Text: "Aparece acima"}) {
+			@components.Button(components.ButtonProps{Variant: "secondary", Size: "sm"}) {
+				Acima
+			}
+		}
+		@components.Tooltip(components.TooltipProps{ID: "tip-baixo", Text: "Aparece abaixo", Position: "bottom"}) {
+			@components.Button(components.ButtonProps{Variant: "secondary", Size: "sm"}) {
+				Abaixo
+			}
+		}
+		@components.Tooltip(components.TooltipProps{ID: "tip-dir", Text: "Aparece à direita", Position: "right"}) {
+			@components.Button(components.ButtonProps{Variant: "secondary", Size: "sm"}) {
+				Direita
+			}
+		}
+	</div>
+}
+
+templ demoTooltipKeyboard() {
+	<div class="flex flex-col gap-3 py-8">
+		<p class="text-sm text-muted">
+			Navegue com Tab até o botão: a dica abre no foco, sem mouse. Escape fecha.
+		</p>
+		@components.Tooltip(components.TooltipProps{ID: "tip-teclado", Text: "Salva sem fechar o formulário"}) {
+			@components.Button(components.ButtonProps{Size: "sm"}) {
+				Salvar
+			}
+		}
+	</div>
+}
